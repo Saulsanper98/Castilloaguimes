@@ -88,29 +88,50 @@ export default function HeroSection() {
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reduceMotion ? { duration: 0 } : { duration: 0.6, delay: 0.35 }}
-          className="text-[#f5f5f0]/70 text-lg sm:text-xl lg:text-2xl font-light mb-10 max-w-2xl mx-auto"
+          className="text-[#f5f5f0]/75 text-lg sm:text-xl lg:text-2xl font-light mb-8 max-w-2xl mx-auto"
         >
           El mayor complejo indoor de pádel de Canarias
         </motion.p>
 
+        {/* Trust signals row */}
         <motion.div
           initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={reduceMotion ? { duration: 0 } : { duration: 0.5, delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.5, delay: 0.45 }}
+          className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] sm:text-xs text-[#f5f5f0]/60 font-bold uppercase tracking-widest mb-10"
+        >
+          <span className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-[#3a7d44]" aria-hidden="true" />
+            14 pistas cubiertas
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-[#3a7d44]" aria-hidden="true" />
+            Techo retráctil
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-[#3a7d44]" aria-hidden="true" />
+            Afiliado FEP
+          </span>
+        </motion.div>
+
+        <motion.div
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.5, delay: 0.55 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
         >
           <Link
             href="/reservas"
-            className="flex items-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-8 py-4 rounded-xl text-base transition-all duration-200 shadow-lg shadow-[#3a7d44]/30 group min-h-[48px]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-7 sm:px-8 py-4 rounded-xl text-base transition-all duration-200 shadow-lg shadow-[#3a7d44]/30 group min-h-[52px]"
           >
             Reservar pista
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
           <Link
             href="/partidos-abiertos"
-            className="flex items-center gap-2 border-2 border-white/30 hover:border-white/60 text-[#f5f5f0] font-bold px-8 py-4 rounded-xl text-base transition-all duration-200 hover:bg-white/5 min-h-[48px]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-white/25 hover:border-white/55 text-[#f5f5f0] font-bold px-7 sm:px-8 py-4 rounded-xl text-base transition-all duration-200 hover:bg-white/5 min-h-[52px]"
           >
-            Echa la firma — Partidos abiertos
+            Partidos abiertos
           </Link>
         </motion.div>
       </motion.div>

@@ -210,6 +210,14 @@ export default function ContactoPage() {
                       />
                     </div>
 
+                    {/* Captcha placeholder (anti-spam discreto) */}
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#1a1a1a]/60 border border-white/5 text-xs text-[#f5f5f0]/55">
+                      <span className="w-4 h-4 rounded-sm bg-[#3a7d44]/20 border border-[#3a7d44]/40 inline-flex items-center justify-center" aria-hidden="true">
+                        <span className="w-2 h-2 rounded-sm bg-[#3a7d44]" />
+                      </span>
+                      <span>Protegido contra spam · sin captcha intrusivo</span>
+                    </div>
+
                     <button
                       type="submit"
                       disabled={sending}

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import * as Dialog from "@radix-ui/react-dialog"
-import { ChevronUp, Clock } from "lucide-react"
+import { ChevronUp, Clock, Building2 } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { formatEuro } from "@/lib/booking"
@@ -20,6 +20,7 @@ type Props = {
   graceRemain: number
   graceActive: boolean
   onBook: () => void
+  onBookAtClub?: () => void
   bookingLoading: boolean
 }
 
@@ -35,6 +36,7 @@ export function ReservasMobileDock({
   graceRemain,
   graceActive,
   onBook,
+  onBookAtClub,
   bookingLoading,
 }: Props) {
   const [open, setOpen] = useState(false)
@@ -99,16 +101,43 @@ export function ReservasMobileDock({
                 Franja {selectedSlot} · Duración {duration} min{recurring ? ` · ${recurringWeeks} semanas` : ""}
               </p>
               <p className="text-lg font-black text-[#3a7d44]">{formatEuro(total)}</p>
-              <p className="text-xs text-[#f5f5f0]/45">IVA incluido. Confirma en la app o recepción.</p>
+              <p className="text-xs text-[#f5f5f0]/45">IVA incluido. Elige cómo confirmar la reserva.</p>
             </Dialog.Description>
-            <button
-              type="button"
-              className="mt-4 flex w-full items-center justify-center gap-1 rounded-xl border border-white/10 py-3 text-sm font-semibold text-[#f5f5f0]"
-              onClick={() => setOpen(false)}
-            >
-              <ChevronUp size={16} aria-hidden />
-              Cerrar
-            </button>
+            <div className="mt-4 space-y-2">
+              <button
+                type="button"
+                disabled={bookingLoading}
+                onClick={() => {
+                  setOpen(false)
+                  onBook()
+                }}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#e8d44d] py-3 text-sm font-black text-[#0a0a0a] disabled:opacity-60"
+              >
+                Reservar y pagar online
+              </button>
+              {onBookAtClub && (
+                <button
+                  type="button"
+                  disabled={bookingLoading}
+                  onClick={() => {
+                    setOpen(false)
+                    onBookAtClub()
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#3a7d44] py-3 text-sm font-bold text-[#f5f5f0] disabled:opacity-60"
+                >
+                  <Building2 size={14} aria-hidden />
+                  Reservar y pagar en recepción
+                </button>
+              )}
+              <button
+                type="button"
+                className="flex w-full items-center justify-center gap-1 rounded-xl border border-white/10 py-2.5 text-xs font-semibold text-[#f5f5f0]/65"
+                onClick={() => setOpen(false)}
+              >
+                <ChevronUp size={14} aria-hidden />
+                Cerrar
+              </button>
+            </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

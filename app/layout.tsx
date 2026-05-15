@@ -8,6 +8,10 @@ import { PromoBanner } from "@/components/layout/PromoBanner"
 import { MobileFAB } from "@/components/layout/MobileFAB"
 import { CommandPalette } from "@/components/layout/CommandPalette"
 import { LocalBusinessJsonLd } from "@/components/seo/LocalBusinessJsonLd"
+import { RouteLoader } from "@/components/effects/RouteLoader"
+import { EasterEgg } from "@/components/effects/EasterEgg"
+import { CookieBanner } from "@/components/layout/CookieBanner"
+import { PageTransition } from "@/components/layout/PageTransition"
 import { SITE_URL } from "@/lib/site"
 
 const inter = Inter({
@@ -96,16 +100,21 @@ export default function RootLayout({
         <PromoBanner />
         <Navbar />
         <main id="main-content" tabIndex={-1} className="outline-none">
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
         <Footer />
         <MobileFAB />
         <CommandPalette />
+        <RouteLoader />
+        <EasterEgg />
+        <CookieBanner />
         <Toaster
           theme="dark"
-          position="bottom-right"
+          position="top-center"
           richColors
           closeButton
+          offset="80px"
+          mobileOffset={{ top: "70px" }}
           toastOptions={{
             style: {
               background: "#1a1a1a",

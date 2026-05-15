@@ -6,6 +6,8 @@ import { format, formatRelative, isValid } from "date-fns"
 import { es } from "date-fns/locale"
 import noticiasData from "@/data/noticias.json"
 import { NoticiaShare } from "@/components/noticias/NoticiaShare"
+import { SaveButton } from "@/components/noticias/SaveButton"
+import { Newsletter } from "@/components/noticias/Newsletter"
 import { SITE_URL } from "@/lib/site"
 import { Noticia } from "@/types"
 
@@ -79,12 +81,15 @@ export default async function NoticiaPage({ params }: Props) {
               {noticia.categoria}
             </span>
           </div>
-          <h1
-            className="text-[#f5f5f0] font-display font-black leading-tight"
-            style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", letterSpacing: "-0.02em" }}
-          >
-            {noticia.titulo}
-          </h1>
+          <div className="flex items-start justify-between gap-4">
+            <h1
+              className="text-[#f5f5f0] font-display font-black leading-tight flex-1"
+              style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", letterSpacing: "-0.02em" }}
+            >
+              {noticia.titulo}
+            </h1>
+            <SaveButton slug={noticia.slug} compact />
+          </div>
         </div>
       </div>
 
@@ -126,6 +131,10 @@ export default async function NoticiaPage({ params }: Props) {
             </div>
 
             <NoticiaShare url={canonicalUrl} title={noticia.titulo} />
+
+            <div className="mt-10">
+              <Newsletter />
+            </div>
 
             {/* Tags */}
             <div className="mt-10 pt-6 border-t border-white/10">

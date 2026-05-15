@@ -1,7 +1,7 @@
 "use client"
 
 import * as Dialog from "@radix-ui/react-dialog"
-import { Check, Clock, CreditCard, Info, MapPin, MessageCircle, Share2, X, Link2 } from "lucide-react"
+import { Check, Clock, CreditCard, Info, MapPin, MessageCircle, Share2, X, Link2, Building2 } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { toast } from "sonner"
@@ -23,6 +23,7 @@ type Props = {
   bookingLoading: boolean
   liveMessage: string
   onBook: () => void
+  onBookAtClub?: () => void
   onShare: () => void
 }
 
@@ -39,6 +40,7 @@ export function ReservasSummaryAside({
   bookingLoading,
   liveMessage,
   onBook,
+  onBookAtClub,
   onShare,
 }: Props) {
   const minutesRemain = Math.floor(graceRemain / 60)
@@ -136,12 +138,32 @@ export function ReservasSummaryAside({
           ) : (
             <>
               <Check size={15} aria-hidden />
-              Iniciar sesión para confirmar
+              Reservar y pagar online
             </>
           )}
         </button>
 
-        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+        {/* Reservar y pagar en recepción */}
+        <button
+          type="button"
+          disabled={!selectedDate || !selectedSlot || bookingLoading}
+          onClick={onBookAtClub}
+          className={cn(
+            "mt-2 flex w-full items-center justify-center gap-2 rounded-xl border-2 py-3 text-sm font-bold transition-all",
+            selectedDate && selectedSlot && !bookingLoading
+              ? "border-[#3a7d44] text-[#f5f5f0] hover:bg-[#3a7d44]/10"
+              : "cursor-not-allowed border-white/10 text-[#f5f5f0]/40"
+          )}
+          title="Bloquea la pista y paga al llegar al club"
+        >
+          <Building2 size={14} aria-hidden />
+          Reservar y pagar en recepción
+        </button>
+        <p className="mt-1.5 text-[10px] text-[#f5f5f0]/45 text-center">
+          Pago al llegar al club. La pista queda bloqueada a tu nombre.
+        </p>
+
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
           <button
             type="button"
             disabled={!selectedDate || !selectedSlot}

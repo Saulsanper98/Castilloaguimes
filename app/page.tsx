@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import HeroSection from "@/components/home/HeroSection"
+import { SpecialEventBanner } from "@/components/home/SpecialEventBanner"
 import StatsBar from "@/components/home/StatsBar"
 import ServicesGrid from "@/components/home/ServicesGrid"
 import ScheduleSection from "@/components/home/ScheduleSection"
@@ -16,6 +17,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <SpecialEventBanner />
       <StatsBar />
       <ServicesGrid />
       <ScheduleSection />

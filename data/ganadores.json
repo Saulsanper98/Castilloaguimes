@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "torneo": "Open Navidad 2025",
+    "fecha": "2025-12-20",
+    "categoria": "Masculino A",
+    "campeones": ["David Ramos", "Pablo Vargas"],
+    "finalistas": ["Marcos Gil", "Javier Reyes"],
+    "resultado": "6–4 / 7–6",
+    "color": "#e8d44d"
+  },
+  {
+    "id": 2,
+    "torneo": "Liga Interna Primavera 2026",
+    "fecha": "2026-03-15",
+    "categoria": "Mixto",
+    "campeones": ["María García", "Carlos Martínez"],
+    "finalistas": ["Lucía Ojeda", "Iván Suárez"],
+    "resultado": "6–3 / 6–4",
+    "color": "#3a7d44"
+  },
+  {
+    "id": 3,
+    "torneo": "Americano de Invierno 2026",
+    "fecha": "2026-01-25",
+    "categoria": "Open",
+    "campeones": ["Sergio Falcón"],
+    "finalistas": ["Laura Pérez"],
+    "resultado": "32 puntos · ronda final",
+    "color": "#7c83ff"
+  }
+]

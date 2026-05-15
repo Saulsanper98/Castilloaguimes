@@ -197,16 +197,26 @@ export default function TarifasPage() {
             {bonos.map((b) => (
               <div
                 key={b.nombre}
-                className="bg-[#111111] border border-[#3a7d44]/40 hover:border-[#3a7d44] rounded-2xl p-7 relative overflow-hidden transition-colors group"
+                className="relative bg-gradient-to-br from-[#3a7d44]/15 via-[#111111] to-[#111111] border-2 border-[#3a7d44]/60 hover:border-[#3a7d44] rounded-2xl p-7 overflow-hidden transition-all group hover:shadow-2xl hover:shadow-[#3a7d44]/15"
               >
+                {/* Ribbon */}
+                <div className="absolute -top-1 -right-12 rotate-45 bg-[#e8d44d] text-[#0a0a0a] text-[10px] font-black uppercase tracking-widest px-12 py-1 shadow-lg">
+                  Top
+                </div>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#3a7d44]/5 rounded-full -translate-y-10 translate-x-10 group-hover:bg-[#3a7d44]/10 transition-colors" />
                 <div className="relative z-10">
-                  <span className="inline-block text-[10px] text-[#e8d44d] font-bold tracking-widest uppercase bg-[#e8d44d]/10 border border-[#e8d44d]/20 px-2.5 py-1 rounded-full mb-4">
-                    {b.badge}
+                  <span className="inline-block text-[10px] text-[#e8d44d] font-bold tracking-widest uppercase bg-[#e8d44d]/10 border border-[#e8d44d]/30 px-2.5 py-1 rounded-full mb-4">
+                    ★ {b.badge}
                   </span>
-                  <h3 className="text-[#f5f5f0] font-display font-black text-xl mb-2">{b.nombre}</h3>
-                  <p className="text-[#f5f5f0]/50 text-sm leading-relaxed mb-5">{b.descripcion}</p>
-                  <div className="text-[#3a7d44] font-black text-4xl">{b.precio}</div>
+                  <h3 className="text-[#f5f5f0] font-display font-black text-2xl mb-2">{b.nombre}</h3>
+                  <p className="text-[#f5f5f0]/65 text-sm leading-relaxed mb-5">{b.descripcion}</p>
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <div className="text-[#3a7d44] font-display font-black text-4xl">{b.precio}</div>
+                    <span className="text-[#f5f5f0]/55 text-xs">= 5 €/partida</span>
+                  </div>
+                  <p className="text-[10px] uppercase tracking-widest text-[#f5f5f0]/45 mt-1">
+                    Ahorras ≈ 15 € frente a precio suelto
+                  </p>
                 </div>
               </div>
             ))}

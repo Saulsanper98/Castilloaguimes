@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "1 hora de pista",
+    "description": "Reserva 1 hora gratuita en cualquier pista, válido 60 días.",
+    "cost": 250,
+    "category": "Pista",
+    "color": "#3a7d44"
+  },
+  {
+    "id": 2,
+    "name": "Bote de pelotas Head Pro",
+    "description": "3 pelotas oficiales para entrenamientos y partidos.",
+    "cost": 120,
+    "category": "Material",
+    "color": "#e8d44d"
+  },
+  {
+    "id": 3,
+    "name": "Clase magistral 1 a 1",
+    "description": "60 min con Javier Santos, director técnico del club.",
+    "cost": 500,
+    "category": "Escuela",
+    "color": "#7c83ff"
+  },
+  {
+    "id": 4,
+    "name": "Encordado pala premium",
+    "description": "Servicio profesional de encordado en la tienda del club.",
+    "cost": 180,
+    "category": "Material",
+    "color": "#e8d44d"
+  },
+  {
+    "id": 5,
+    "name": "Toalla técnica oficial",
+    "description": "Toalla Castillo de Agüimes en algodón egipcio 90×45 cm.",
+    "cost": 200,
+    "category": "Merchandising",
+    "color": "#ff8a5b"
+  },
+  {
+    "id": 6,
+    "name": "Inscripción torneo americano",
+    "description": "Plaza gratuita en el próximo americano interno del club.",
+    "cost": 350,
+    "category": "Competición",
+    "color": "#3a7d44"
+  }
+]

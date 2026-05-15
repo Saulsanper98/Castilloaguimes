@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "nombre": "Roberto Falcón",
+    "edad": 38,
+    "iniciales": "RF",
+    "color": "#3a7d44",
+    "texto": "Llegué siendo principiante absoluto y en un año ya estoy compitiendo en torneos internos. La progresión está muy bien planteada.",
+    "modalidad": "Grupo adultos",
+    "tiempo": "1 año en escuela",
+    "estrellas": 5
+  },
+  {
+    "id": 2,
+    "nombre": "Carolina Vega",
+    "edad": 29,
+    "iniciales": "CV",
+    "color": "#e8d44d",
+    "texto": "Las clases en pareja con mi marido cambiaron por completo nuestra coordinación. Pasamos de discutir a movernos como un solo bloque.",
+    "modalidad": "Parejas",
+    "tiempo": "8 meses",
+    "estrellas": 5
+  },
+  {
+    "id": 3,
+    "nombre": "Familia Hernández",
+    "edad": 0,
+    "iniciales": "FH",
+    "color": "#7c83ff",
+    "texto": "Nuestros dos hijos pasaron de tenerle pánico a la pala a competir en su grupo de edad. Pablo es excepcional con los peques.",
+    "modalidad": "Infantil",
+    "tiempo": "2 años",
+    "estrellas": 5
+  },
+  {
+    "id": 4,
+    "nombre": "Andrea Suárez",
+    "edad": 41,
+    "iniciales": "AS",
+    "color": "#ff8a5b",
+    "texto": "Después de una operación de hombro pensaba que no podría volver. El plan de vuelta con Marta fue clave: progresivo y sin dolor.",
+    "modalidad": "Individual",
+    "tiempo": "6 meses",
+    "estrellas": 5
+  }
+]

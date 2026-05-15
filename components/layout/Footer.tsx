@@ -3,6 +3,10 @@ import { MapPin, Phone, Mail } from "lucide-react"
 import { Logo } from "@/components/brand/Logo"
 import { ClubClock } from "@/components/footer/ClubClock"
 import { NewsletterSnippet } from "@/components/footer/NewsletterSnippet"
+import { FEPSeal } from "@/components/footer/FEPSeal"
+import { LangSelector } from "@/components/footer/LangSelector"
+import { HighContrastToggle } from "@/components/layout/HighContrastToggle"
+import { MiniMap } from "@/components/footer/MiniMap"
 
 export default function Footer() {
   return (
@@ -93,9 +97,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Newsletter */}
-          <div className="lg:pt-1">
+          {/* Column 3: Newsletter + mini-map */}
+          <div className="lg:pt-1 space-y-5">
             <NewsletterSnippet />
+            <MiniMap />
           </div>
 
           {/* Column 4: App Download */}
@@ -140,20 +145,31 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Seal + lang bar (above legal) */}
+      <div className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <FEPSeal />
+          <div className="flex items-center gap-3">
+            <HighContrastToggle />
+            <LangSelector />
+          </div>
+        </div>
+      </div>
+
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[#f5f5f0]/55 text-xs">
+          <p className="text-[#f5f5f0]/65 text-xs">
             © {new Date().getFullYear()} Pádel Castillo de Agüimes. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-4">
-            <Link href="#" className="text-[#f5f5f0]/55 hover:text-[#f5f5f0]/60 text-xs transition-colors">
+            <Link href="/legal/privacidad" className="text-[#f5f5f0]/65 hover:text-[#f5f5f0] text-xs transition-colors">
               Política de Privacidad
             </Link>
-            <Link href="#" className="text-[#f5f5f0]/55 hover:text-[#f5f5f0]/60 text-xs transition-colors">
+            <Link href="/legal/aviso-legal" className="text-[#f5f5f0]/65 hover:text-[#f5f5f0] text-xs transition-colors">
               Aviso Legal
             </Link>
-            <Link href="#" className="text-[#f5f5f0]/55 hover:text-[#f5f5f0]/60 text-xs transition-colors">
+            <Link href="/legal/cookies" className="text-[#f5f5f0]/65 hover:text-[#f5f5f0] text-xs transition-colors">
               Cookies
             </Link>
           </div>

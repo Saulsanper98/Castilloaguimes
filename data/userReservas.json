@@ -1,0 +1,72 @@
+[
+  {
+    "id": "res_001",
+    "date": "2026-05-22",
+    "time": "19:30",
+    "duration": 90,
+    "courtId": 4,
+    "courtName": "Pista 4",
+    "courtType": "panoramica",
+    "players": [
+      { "initials": "SS", "name": "Saúl S.", "color": "#3a7d44" },
+      { "initials": "MG", "name": "Marcos G.", "color": "#7c83ff" },
+      { "initials": "AR", "name": "Ana R.", "color": "#e8d44d" },
+      { "initials": "JL", "name": "Juanjo L.", "color": "#ff8a5b" }
+    ],
+    "priceCents": 2600,
+    "status": "upcoming",
+    "reminder": true
+  },
+  {
+    "id": "res_002",
+    "date": "2026-05-25",
+    "time": "11:00",
+    "duration": 60,
+    "courtId": 9,
+    "courtName": "Pista 9",
+    "courtType": "central",
+    "players": [
+      { "initials": "SS", "name": "Saúl S.", "color": "#3a7d44" },
+      { "initials": "CP", "name": "Carmen P.", "color": "#e8d44d" }
+    ],
+    "priceCents": 1100,
+    "status": "upcoming",
+    "reminder": true
+  },
+  {
+    "id": "res_003",
+    "date": "2026-05-12",
+    "time": "18:30",
+    "duration": 90,
+    "courtId": 2,
+    "courtName": "Pista 2",
+    "courtType": "panoramica",
+    "players": [
+      { "initials": "SS", "name": "Saúl S.", "color": "#3a7d44" },
+      { "initials": "MG", "name": "Marcos G.", "color": "#7c83ff" },
+      { "initials": "AR", "name": "Ana R.", "color": "#e8d44d" },
+      { "initials": "JL", "name": "Juanjo L.", "color": "#ff8a5b" }
+    ],
+    "priceCents": 2600,
+    "status": "past",
+    "reminder": false
+  },
+  {
+    "id": "res_004",
+    "date": "2026-05-02",
+    "time": "20:00",
+    "duration": 90,
+    "courtId": 11,
+    "courtName": "Pista 11",
+    "courtType": "central",
+    "players": [
+      { "initials": "SS", "name": "Saúl S.", "color": "#3a7d44" },
+      { "initials": "CP", "name": "Carmen P.", "color": "#e8d44d" },
+      { "initials": "AR", "name": "Ana R.", "color": "#7c83ff" },
+      { "initials": "MG", "name": "Marcos G.", "color": "#ff8a5b" }
+    ],
+    "priceCents": 2600,
+    "status": "cancelled",
+    "reminder": false
+  }
+]

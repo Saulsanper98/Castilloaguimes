@@ -2,6 +2,11 @@ import type { Metadata } from "next"
 import { GraduationCap, User, Users, Baby, Trophy } from "lucide-react"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
+import { CoachesGrid } from "@/components/escuela/CoachesGrid"
+import { Testimonials } from "@/components/escuela/Testimonials"
+import { ProgressCalculator } from "@/components/escuela/ProgressCalculator"
+import { WeeklySchedule } from "@/components/escuela/WeeklySchedule"
+import { SchoolFAQ } from "@/components/escuela/SchoolFAQ"
 
 export const metadata: Metadata = {
   title: "Escuela de Pádel",
@@ -225,37 +230,50 @@ export default function EscuelaPage() {
           </div>
         </section>
 
+        {/* Coaches */}
+        <section>
+          <div className="text-center mb-10">
+            <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">El equipo</span>
+            <h2
+              className="text-[#f5f5f0] font-display font-black tracking-tight"
+              style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "-0.02em" }}
+            >
+              NUESTROS <span className="text-[#3a7d44]">ENTRENADORES</span>
+            </h2>
+          </div>
+          <CoachesGrid />
+        </section>
+
+        {/* Weekly schedule */}
+        <section>
+          <div className="text-center mb-8">
+            <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">Horarios</span>
+            <h2
+              className="text-[#f5f5f0] font-display font-black tracking-tight"
+              style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "-0.02em" }}
+            >
+              CUADRO <span className="text-[#3a7d44]">SEMANAL</span>
+            </h2>
+          </div>
+          <WeeklySchedule />
+        </section>
+
+        {/* Progress calculator */}
+        <section>
+          <ProgressCalculator />
+        </section>
+
+        {/* Testimonials */}
+        <section>
+          <Testimonials />
+        </section>
+
+        {/* FAQ */}
         <section className="max-w-3xl mx-auto">
           <h2 className="text-[#f5f5f0] font-display font-black text-2xl tracking-tight text-center mb-8">
-            Dudas frecuentes
+            Preguntas frecuentes
           </h2>
-          <div className="space-y-3">
-            {[
-              {
-                q: "¿Mi hijo necesita pala propia?",
-                a: "Para la clase de prueba y las primeras sesiones el club puede facilitar material. Para continuar recomendamos una pala adecuada a su edad; en recepción y tienda os asesoran.",
-              },
-              {
-                q: "¿Las clases de empresa o bonificables?",
-                a: "Muchas empresas bonifican actividad deportiva. Solicita factura y justificante en recepción y consulta con tu departamento de RR.HH.",
-              },
-              {
-                q: "¿Qué nivel necesito para grupo adulto?",
-                a: "Hay grupos desde iniciación. Hacemos una evaluación breve la primera semana para ubicarte en el grupo adecuado.",
-              },
-            ].map((item) => (
-              <details
-                key={item.q}
-                className="group bg-[#111111] border border-white/10 rounded-[var(--radius-card)] px-5 py-4"
-              >
-                <summary className="cursor-pointer text-[#f5f5f0] font-semibold text-sm list-none flex items-center justify-between gap-2">
-                  {item.q}
-                  <span className="text-[#f5f5f0]/40 text-lg group-open:rotate-45 transition-transform">+</span>
-                </summary>
-                <p className="text-[#f5f5f0]/60 text-sm mt-3 leading-relaxed border-t border-white/5 pt-3">{item.a}</p>
-              </details>
-            ))}
-          </div>
+          <SchoolFAQ />
         </section>
 
         {/* CTA */}

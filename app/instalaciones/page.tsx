@@ -1,21 +1,16 @@
 import type { Metadata } from "next"
-import Link from "next/link"
-import { Wind, Droplets, Coffee, ShoppingBag, Dumbbell, Wifi, Car, Shield, Box } from "lucide-react"
+import { Wind, Droplets, Coffee, ShoppingBag, Dumbbell, Wifi, Car, Shield } from "lucide-react"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
+import { GalleryClient } from "@/components/instalaciones/GalleryClient"
+import { VenuePlan } from "@/components/instalaciones/VenuePlan"
+import { VirtualTourCTA } from "@/components/instalaciones/VirtualTourCTA"
+import { BeforeAfter } from "@/components/instalaciones/BeforeAfter"
+import { DroneHero } from "@/components/instalaciones/DroneHero"
 
 export const metadata: Metadata = {
   title: "Instalaciones",
   description: "Conoce las instalaciones de Pádel Castillo de Agüimes: 14 pistas cubiertas, vestuarios, cafetería y tienda de material.",
 }
-
-const galleryItems = [
-  { label: "Pistas Panorámicas", gradient: "from-[#3a7d44]/40 to-[#0d2e16]", cols: 2 },
-  { label: "Pistas Centrales", gradient: "from-blue-700/30 to-blue-950", cols: 1 },
-  { label: "Cafetería & Terraza", gradient: "from-amber-600/30 to-amber-950", cols: 1 },
-  { label: "Tienda de Material", gradient: "from-purple-700/30 to-purple-950", cols: 1 },
-  { label: "Zona de Calentamiento", gradient: "from-red-700/30 to-red-950", cols: 1 },
-  { label: "Vestuarios Premium", gradient: "from-teal-700/30 to-teal-950", cols: 2 },
-]
 
 const features = [
   {
@@ -89,46 +84,42 @@ export default function InstalacionesPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
-        {/* Gallery */}
+        {/* Drone hero */}
+        <DroneHero />
+
+        {/* Lightbox gallery */}
         <section>
-          <div className="grid grid-cols-1 sm:grid-cols-3 auto-rows-[200px] gap-4">
-            {galleryItems.map((item) => (
-              <div
-                key={item.label}
-                className={`relative rounded-2xl overflow-hidden bg-gradient-to-br ${item.gradient} ${
-                  item.cols === 2 ? "sm:col-span-2" : "sm:col-span-1"
-                }`}
-              >
-                <div className="absolute inset-0 flex items-end p-5">
-                  <span className="text-white font-bold text-sm bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-lg">
-                    {item.label}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+          <GalleryClient />
         </section>
 
-        {/* Tour virtual */}
-        <section className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-6">
-          <div className="w-14 h-14 rounded-xl bg-[#3a7d44]/15 border border-[#3a7d44]/30 flex items-center justify-center shrink-0">
-            <Box size={26} className="text-[#3a7d44]" aria-hidden />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#e8d44d] mb-1">Próximamente</p>
-            <h2 className="text-[#f5f5f0] font-display font-black text-xl sm:text-2xl tracking-tight mb-2">
-              Tour 360 y Matterport
+        {/* Interactive plan */}
+        <section>
+          <div className="text-center mb-8">
+            <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">Plano interactivo</span>
+            <h2 className="text-[#f5f5f0] font-display font-black tracking-tight" style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)" }}>
+              CONOCE EL <span className="text-[#3a7d44]">RECINTO</span>
             </h2>
-            <p className="text-[#f5f5f0]/55 text-sm leading-relaxed max-w-2xl">
-              Estamos preparando un recorrido inmersivo por vestuarios, pistas y zonas comunes para que puedas conocer el club antes de pisar la pista.
+          </div>
+          <VenuePlan />
+        </section>
+
+        {/* Before / After */}
+        <section>
+          <div className="text-center mb-8">
+            <span className="text-[#e8d44d] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">Reforma</span>
+            <h2 className="text-[#f5f5f0] font-display font-black tracking-tight" style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)" }}>
+              CÓMO HEMOS <span className="text-[#3a7d44]">EVOLUCIONADO</span>
+            </h2>
+            <p className="text-[#f5f5f0]/55 text-sm mt-2 max-w-xl mx-auto">
+              Arrastra el separador para ver el antes y el después de la renovación de las pistas panorámicas.
             </p>
           </div>
-          <Link
-            href="/contacto"
-            className="shrink-0 inline-flex items-center justify-center bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors"
-          >
-            Avísame
-          </Link>
+          <BeforeAfter />
+        </section>
+
+        {/* Virtual tour CTA */}
+        <section>
+          <VirtualTourCTA />
         </section>
 
         {/* Amenities quick bar */}

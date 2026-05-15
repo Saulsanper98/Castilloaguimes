@@ -1,0 +1,26 @@
+[
+  {
+    "id": "s_current",
+    "device": "MacBook Pro · Safari",
+    "location": "Las Palmas, ES",
+    "ip": "85.84.···.42",
+    "current": true,
+    "lastActive": "ahora"
+  },
+  {
+    "id": "s_phone",
+    "device": "iPhone 15 · App oficial",
+    "location": "Agüimes, ES",
+    "ip": "85.84.···.118",
+    "current": false,
+    "lastActive": "hace 2 horas"
+  },
+  {
+    "id": "s_ipad",
+    "device": "iPad · Safari",
+    "location": "Las Palmas, ES",
+    "ip": "85.84.···.42",
+    "current": false,
+    "lastActive": "hace 3 días"
+  }
+]

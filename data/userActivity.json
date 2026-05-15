@@ -1,0 +1,44 @@
+[
+  {
+    "id": "a1",
+    "type": "loyalty",
+    "title": "Has ganado 25 puntos",
+    "detail": "Inscripción en el Americano de Primavera",
+    "date": "2026-05-15T18:20:00.000Z"
+  },
+  {
+    "id": "a2",
+    "type": "booking",
+    "title": "Reserva confirmada",
+    "detail": "Pista 4 · 22 may, 19:30",
+    "date": "2026-05-14T10:11:00.000Z"
+  },
+  {
+    "id": "a3",
+    "type": "match",
+    "title": "Te has apuntado a un partido abierto",
+    "detail": "Intermedio · 16 may, 11:00 · Pista 3",
+    "date": "2026-05-12T09:05:00.000Z"
+  },
+  {
+    "id": "a4",
+    "type": "wallet",
+    "title": "Recarga wallet",
+    "detail": "+25 € · Tarjeta •••• 4821",
+    "date": "2026-05-08T18:42:00.000Z"
+  },
+  {
+    "id": "a5",
+    "type": "review",
+    "title": "Has publicado una reseña",
+    "detail": "5 estrellas — Cafetería y terraza",
+    "date": "2026-05-04T20:35:00.000Z"
+  },
+  {
+    "id": "a6",
+    "type": "elo",
+    "title": "Tu ELO ha subido",
+    "detail": "1472 → 1485 (+13)",
+    "date": "2026-05-01T22:10:00.000Z"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "javier-santos",
+    "nombre": "Javier Santos",
+    "rol": "Director técnico",
+    "anos": 14,
+    "nivel": "RFEP Nivel III · Ex top-100 nacional",
+    "bio": "Director técnico desde 2019. Especialista en biomecánica del golpe y preparación de jugadores de competición autonómica.",
+    "color": "#3a7d44",
+    "especialidades": ["Competición", "Biomecánica", "Preparación física"],
+    "rating": 4.9,
+    "alumnos": 84
+  },
+  {
+    "slug": "laura-mendoza",
+    "nombre": "Laura Mendoza",
+    "rol": "Entrenadora senior",
+    "anos": 9,
+    "nivel": "RFEP Nivel II · Especialista femenino",
+    "bio": "Coordina el equipo femenino del club y dirige las clínicas de juego en pareja. Enfoque didáctico claro y muy progresivo.",
+    "color": "#e8d44d",
+    "especialidades": ["Juego en pareja", "Iniciación adultos", "Femenino"],
+    "rating": 4.8,
+    "alumnos": 112
+  },
+  {
+    "slug": "pablo-quesada",
+    "nombre": "Pablo Quesada",
+    "rol": "Entrenador infantil",
+    "anos": 7,
+    "nivel": "RFEP Nivel II · Certificación menores",
+    "bio": "Responsable de la escuela infantil. Metodología lúdica, mucho movimiento y trabajo en valores con grupos por edades.",
+    "color": "#7c83ff",
+    "especialidades": ["Infantil 6–14", "Iniciación", "Coordinación"],
+    "rating": 5.0,
+    "alumnos": 96
+  },
+  {
+    "slug": "marta-ojeda",
+    "nombre": "Marta Ojeda",
+    "rol": "Entrenadora & fisio",
+    "anos": 11,
+    "nivel": "RFEP Nivel II · Fisioterapeuta colegiada",
+    "bio": "Combina entrenamiento técnico con prevención de lesiones. Imprescindible para jugadores que retoman tras parón.",
+    "color": "#ff8a5b",
+    "especialidades": ["Vuelta de lesión", "Movilidad", "Senior"],
+    "rating": 4.9,
+    "alumnos": 64
+  }
+]
