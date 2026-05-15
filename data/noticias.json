@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "slug": "torneo-verano-2026",
+    "titulo": "Gran Torneo de Verano 2026: Inscripciones Abiertas",
+    "resumen": "El mayor evento del año en Castillo de Agüimes ya tiene fecha. Más de 200 jugadores esperados en esta edición especial.",
+    "contenido": "El Pádel Castillo de Agüimes se prepara para celebrar su Gran Torneo de Verano 2026, el evento deportivo más importante del club y uno de los más esperados en el panorama del pádel canario. Las inscripciones ya están abiertas y las plazas se están llenando a un ritmo récord.\n\nEste año el torneo contará con categorías para todos los niveles, desde iniciación hasta avanzado, garantizando que tanto los jugadores más noveles como los más experimentados puedan participar y disfrutar de una competición equilibrada. Los premios incluyen material deportivo, bonos de pistas y trofeos para los finalistas.\n\nEl torneo se celebrará durante tres fines de semana consecutivos en julio, aprovechando las 14 pistas cubiertas del complejo. La organización ha preparado también actividades paralelas: clínicas técnicas, exhibiciones de jugadores profesionales y zona de animación para los acompañantes.",
+    "fecha": "2026-05-10",
+    "imagen": "/images/noticia-1.jpg",
+    "categoria": "Torneos"
+  },
+  {
+    "id": 2,
+    "slug": "nueva-temporada-escuela-infantil",
+    "titulo": "Nueva Temporada de la Escuela Infantil: Plazas Limitadas",
+    "resumen": "La escuela de pádel para niños y jóvenes abre su temporada de verano con nuevos grupos y horarios ampliados.",
+    "contenido": "La Escuela Infantil de Pádel del Castillo de Agüimes da inicio a su temporada de verano con una oferta renovada y ampliada. Este año se incorporan nuevos grupos organizados por edades y niveles, permitiendo una progresión más ordenada y efectiva para los pequeños jugadores.\n\nLos grupos se dividen en tres categorías: Benjamín (6-8 años), Alevín (9-11 años) y Infantil (12-14 años). Cada grupo contará con un entrenador titulado que adaptará los ejercicios y la metodología a las características de cada edad, priorizando siempre el disfrute y el desarrollo motor.\n\nLas clases se impartirán de lunes a viernes en horario de mañana y tarde, con la posibilidad de elegir entre sesiones de 60 o 90 minutos. Los padres interesados pueden solicitar una clase de prueba gratuita antes de formalizar la inscripción. Las plazas son limitadas y se asignan por orden de inscripción.",
+    "fecha": "2026-05-05",
+    "imagen": "/images/noticia-2.jpg",
+    "categoria": "Escuela"
+  },
+  {
+    "id": 3,
+    "slug": "renovacion-pistas-panoramicas",
+    "titulo": "Renovación Completa de las Pistas Panorámicas",
+    "resumen": "Inversión de 150.000€ en la renovación del césped artificial y el sistema de iluminación LED de las pistas panorámicas.",
+    "contenido": "El Complejo de Pádel Castillo de Agüimes ha completado la renovación integral de sus cuatro pistas panorámicas, una inversión de 150.000 euros que mejora notablemente la calidad de juego y la experiencia de los usuarios. Las obras se han llevado a cabo durante las últimas semanas en horario nocturno para no interrumpir la actividad del club.\n\nEl nuevo césped artificial de última generación ofrece mayor adherencia, durabilidad y un rebote más predecible del balón, acercándose a las condiciones de juego de los circuitos profesionales. Además, el sistema de riego incorporado mantiene las condiciones óptimas de humedad durante todo el año, especialmente importante en el clima canario.\n\nLa renovación del sistema de iluminación ha sido uno de los puntos más valorados por los socios. Los nuevos focos LED de alta potencia eliminan las zonas de sombra y reducen el consumo energético en un 40%, un paso importante en el compromiso del club con la sostenibilidad medioambiental.",
+    "fecha": "2026-04-28",
+    "imagen": "/images/noticia-3.jpg",
+    "categoria": "Instalaciones"
+  },
+  {
+    "id": 4,
+    "slug": "liga-interna-primavera",
+    "titulo": "Resultados de la Liga Interna de Primavera",
+    "resumen": "La pareja formada por García-Martínez se corona campeona de la Liga Interna de Primavera en una final apasionante.",
+    "contenido": "La Liga Interna de Primavera del Pádel Castillo de Agüimes ha llegado a su fin con una final de alto nivel que mantuvo en vilo a todos los espectadores. La pareja formada por Alejandro García y Carlos Martínez se proclamó campeona tras imponerse por 7-5, 4-6 y 6-3 en una batalla épica que duró más de dos horas y media.\n\nA lo largo de las seis semanas de competición, más de 80 parejas han disputado sus encuentros en las instalaciones del club, con resultados que han reflejado el alto nivel medio del pádel en la comarca de Agüimes. El formato de liguilla por grupos más eliminatoria directa garantizó que todos los participantes disputaran un mínimo de cuatro partidos.\n\nDesde la organización se destacó la gran deportividad mostrada por todos los participantes y el ambiente festivo que se vivió especialmente durante los fines de semana de eliminatoria. La próxima Liga Interna de Verano comenzará a mediados de julio, con inscripciones que se abrirán a principios de mes.",
+    "fecha": "2026-04-20",
+    "imagen": "/images/noticia-4.jpg",
+    "categoria": "Torneos"
+  },
+  {
+    "id": 5,
+    "slug": "nueva-cafeteria-terraza",
+    "titulo": "Apertura de la Nueva Cafetería con Terraza Exterior",
+    "resumen": "El club estrena su renovada zona de cafetería con terraza al aire libre, carta ampliada y horarios extendidos.",
+    "contenido": "El Pádel Castillo de Agüimes inaugura su nueva cafetería con terraza exterior, un espacio renovado y ampliado que completa la oferta de servicios del club. La nueva instalación dispone de 80 plazas en interior y otras 40 en la terraza exterior, con vistas a las pistas de juego.\n\nLa carta ha sido diseñada pensando en las necesidades de los deportistas: desayunos energéticos, platos ligeros, ensaladas, bocadillos y una selección de bebidas isotónicas y zumos naturales. También se mantiene la oferta de menú del día entre semana, muy valorada por los usuarios habituales que utilizan el club a la hora del almuerzo.\n\nLa cafetería abrirá de lunes a viernes desde las 7:30 hasta las 22:30, y los fines de semana y festivos de 8:00 a 21:00. Se puede realizar reserva de mesas para grupos a través del teléfono del club o directamente en recepción.",
+    "fecha": "2026-04-12",
+    "imagen": "/images/noticia-5.jpg",
+    "categoria": "Instalaciones"
+  },
+  {
+    "id": 6,
+    "slug": "clases-tecnicas-verano",
+    "titulo": "Programa de Clínicas Técnicas de Verano",
+    "resumen": "La escuela lanza un ambicioso programa de clínicas técnicas especializadas impartidas por entrenadores de nivel nacional.",
+    "contenido": "La escuela de pádel del Castillo de Agüimes presenta su programa de clínicas técnicas de verano, una serie de talleres especializados diseñados para mejorar aspectos concretos del juego en sesiones intensivas de 3 horas. Los talleres serán impartidos por entrenadores con experiencia en el circuito profesional nacional.\n\nEl programa incluye clínicas dedicadas al voleo, la bandeja, el lob, el servicio y la estrategia de juego. Cada sesión tiene un máximo de 8 participantes para garantizar una atención personalizada y maximizar el número de repeticiones de calidad. Los alumnos recibirán también material de vídeo con análisis de su técnica.\n\nLas inscripciones se pueden realizar desde la aplicación del club o en recepción. Los socios del club tienen un 20% de descuento sobre el precio general. El programa arranca el primer fin de semana de julio y se extenderá hasta finales de agosto.",
+    "fecha": "2026-04-05",
+    "imagen": "/images/noticia-6.jpg",
+    "categoria": "Escuela"
+  },
+  {
+    "id": 7,
+    "slug": "nuevo-sistema-reservas-online",
+    "titulo": "Nuevo Sistema de Reservas Online con App Propia",
+    "resumen": "El club lanza su aplicación móvil propia para la gestión de reservas, partidos abiertos y comunicación con los socios.",
+    "contenido": "El Pádel Castillo de Agüimes da un paso adelante en la digitalización de sus servicios con el lanzamiento de su aplicación móvil propia, disponible para iOS y Android. La app permite gestionar reservas de pistas en tiempo real, inscribirse en partidos abiertos y recibir notificaciones sobre torneos y novedades del club.\n\nEl nuevo sistema de reservas online reemplaza al anterior, ofreciendo una interfaz más intuitiva y nuevas funcionalidades. Los usuarios pueden ver la disponibilidad en tiempo real de las 14 pistas, reservar con solo tres clics y pagar directamente desde la app mediante tarjeta o domiciliación bancaria. También es posible cancelar con hasta 4 horas de antelación sin coste.\n\nUna de las funcionalidades más demandadas por los socios era la de los partidos abiertos: ahora es posible crear un partido, establecer el nivel requerido y gestionar las inscripciones de los demás jugadores directamente desde el teléfono. El club también ha habilitado un chat interno para facilitar la comunicación entre jugadores.",
+    "fecha": "2026-03-28",
+    "imagen": "/images/noticia-7.jpg",
+    "categoria": "Club"
+  },
+  {
+    "id": 8,
+    "slug": "campeonato-autonomico-gran-canaria",
+    "titulo": "Castillo de Agüimes Sede del Campeonato Autonómico",
+    "resumen": "El club ha sido elegido como sede oficial del Campeonato Autonómico de Pádel de Canarias para las categorías senior.",
+    "contenido": "El Pádel Castillo de Agüimes ha sido designado sede oficial del Campeonato Autonómico de Pádel de Canarias en las categorías senior masculino y femenino. El evento, que contará con la participación de más de 300 deportistas de todas las islas del archipiélago, se celebrará a finales de septiembre.\n\nLa elección del complejo de Agüimes como sede se debe a la calidad de sus instalaciones, con 14 pistas cubiertas que permiten el desarrollo simultáneo de múltiples partidos independientemente de las condiciones meteorológicas. La Federación Canaria de Pádel destacó también la facilidad de acceso desde el aeropuerto de Gran Canaria y la disponibilidad de alojamiento en los municipios cercanos.\n\nEl club ya ha comenzado los preparativos del evento, que incluyen la instalación de gradas adicionales, el refuerzo del servicio de cafetería y la habilitación de una zona de calentamiento y fisioterapia. Se espera que el campeonato genere un importante impacto económico en el municipio de Agüimes durante los días de competición.",
+    "fecha": "2026-03-15",
+    "imagen": "/images/noticia-8.jpg",
+    "categoria": "Torneos"
+  }
+]

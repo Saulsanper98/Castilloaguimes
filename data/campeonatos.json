@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "nombre": "Gran Torneo de Verano 2026",
+    "fecha": "2026-07-05",
+    "tipo": "Open",
+    "plazas": 64,
+    "plazasOcupadas": 38,
+    "precio": 40,
+    "descripcion": "El mayor evento del año. Categorías masculino, femenino y mixto para todos los niveles. Premios en material deportivo y bonos de pistas.",
+    "estado": "Inscripción abierta",
+    "imagen": "/images/campeonato-1.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "Americano de Primavera",
+    "fecha": "2026-05-30",
+    "tipo": "Americano",
+    "plazas": 32,
+    "plazasOcupadas": 32,
+    "precio": 20,
+    "descripcion": "Formato americano donde cada jugador rota de pareja. Ideal para conocer a otros jugadores del club. Incluye cena de clausura.",
+    "estado": "Completo",
+    "imagen": "/images/campeonato-2.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "Liga Interna Verano 2026",
+    "fecha": "2026-07-13",
+    "tipo": "Liga",
+    "plazas": 48,
+    "plazasOcupadas": 24,
+    "precio": 30,
+    "descripcion": "Liga interna por equipos con formato de liguilla más eliminatoria. Seis semanas de competición intensa en las instalaciones del club.",
+    "estado": "Inscripción abierta",
+    "imagen": "/images/campeonato-3.jpg"
+  },
+  {
+    "id": 4,
+    "nombre": "Open Navidad 2025",
+    "fecha": "2025-12-20",
+    "tipo": "Open",
+    "plazas": 48,
+    "plazasOcupadas": 48,
+    "precio": 35,
+    "descripcion": "El tradicional torneo navideño del club con más de diez años de historia. Gran participación y ambiente festivo inigualable.",
+    "estado": "Finalizado",
+    "imagen": "/images/campeonato-4.jpg"
+  },
+  {
+    "id": 5,
+    "nombre": "Campeonato Autonómico Canarias",
+    "fecha": "2026-09-20",
+    "tipo": "Open",
+    "plazas": 128,
+    "plazasOcupadas": 52,
+    "precio": 50,
+    "descripcion": "Sede oficial del Campeonato Autonómico de Pádel de Canarias. Categorías senior masculino y femenino. Participación de jugadores de todas las islas.",
+    "estado": "Inscripción abierta",
+    "imagen": "/images/campeonato-5.jpg"
+  },
+  {
+    "id": 6,
+    "nombre": "Liga Interna Primavera 2026",
+    "fecha": "2026-03-15",
+    "tipo": "Liga",
+    "plazas": 40,
+    "plazasOcupadas": 40,
+    "precio": 25,
+    "descripcion": "La liga de primavera concluyó con García-Martínez como campeones. Una competición de altísimo nivel con más de 80 jugadores participantes.",
+    "estado": "Finalizado",
+    "imagen": "/images/campeonato-6.jpg"
+  }
+]

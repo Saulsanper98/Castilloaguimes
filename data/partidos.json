@@ -1,0 +1,134 @@
+[
+  {
+    "id": 1,
+    "fecha": "2026-05-16",
+    "hora": "09:00",
+    "pista": "Pista 1",
+    "nivel": "Iniciación",
+    "plazasTotal": 4,
+    "plazasOcupadas": 2,
+    "precio": 5,
+    "descripcion": "Partido amistoso para jugadores que están empezando. Buen ambiente y sin presión competitiva."
+  },
+  {
+    "id": 2,
+    "fecha": "2026-05-16",
+    "hora": "11:00",
+    "pista": "Pista 3",
+    "nivel": "Intermedio",
+    "plazasTotal": 4,
+    "plazasOcupadas": 3,
+    "precio": 6,
+    "descripcion": "Partido de nivel medio. Buscamos cuarto jugador para completar el grupo. Ritmo dinámico y buena energía."
+  },
+  {
+    "id": 3,
+    "fecha": "2026-05-16",
+    "hora": "18:00",
+    "pista": "Pista 7",
+    "nivel": "Avanzado",
+    "plazasTotal": 4,
+    "plazasOcupadas": 1,
+    "precio": 7,
+    "descripcion": "Partido competitivo para jugadores de nivel alto. Se buscan jugadores con experiencia en torneos."
+  },
+  {
+    "id": 4,
+    "fecha": "2026-05-17",
+    "hora": "10:00",
+    "pista": "Pista 2",
+    "nivel": "Iniciación",
+    "plazasTotal": 4,
+    "plazasOcupadas": 0,
+    "precio": 5,
+    "descripcion": "Primer partido de la semana. Ideal para principiantes que quieren practicar en un ambiente relajado."
+  },
+  {
+    "id": 5,
+    "fecha": "2026-05-17",
+    "hora": "12:30",
+    "pista": "Pista 5",
+    "nivel": "Intermedio",
+    "plazasTotal": 4,
+    "plazasOcupadas": 2,
+    "precio": 6,
+    "descripcion": "Partido de mediodía. Nivel medio-alto. Buscamos dos jugadores más para completar el cuarteto."
+  },
+  {
+    "id": 6,
+    "fecha": "2026-05-18",
+    "hora": "09:30",
+    "pista": "Pista 9",
+    "nivel": "Avanzado",
+    "plazasTotal": 4,
+    "plazasOcupadas": 3,
+    "precio": 7,
+    "descripcion": "Partido matutino de alto nivel. Solo queda una plaza. Jugadores con manejo de bandeja y lob."
+  },
+  {
+    "id": 7,
+    "fecha": "2026-05-20",
+    "hora": "20:00",
+    "pista": "Pista 11",
+    "nivel": "Iniciación",
+    "plazasTotal": 4,
+    "plazasOcupadas": 1,
+    "precio": 5,
+    "descripcion": "Partido nocturno para iniciados. Perfecto para quienes trabajan durante el día. Ambiente muy amigable."
+  },
+  {
+    "id": 8,
+    "fecha": "2026-05-21",
+    "hora": "18:30",
+    "pista": "Pista 4",
+    "nivel": "Intermedio",
+    "plazasTotal": 4,
+    "plazasOcupadas": 2,
+    "precio": 6,
+    "descripcion": "Partido de tarde. Nivel intermedio consolidado. Buscamos dos jugadores con experiencia mínima de un año."
+  },
+  {
+    "id": 9,
+    "fecha": "2026-05-23",
+    "hora": "11:00",
+    "pista": "Pista 6",
+    "nivel": "Avanzado",
+    "plazasTotal": 4,
+    "plazasOcupadas": 0,
+    "precio": 7,
+    "descripcion": "Partido de sábado para jugadores avanzados. Buscamos cuatro jugadores de alto nivel para un partido intenso."
+  },
+  {
+    "id": 10,
+    "fecha": "2026-05-28",
+    "hora": "10:00",
+    "pista": "Pista 8",
+    "nivel": "Iniciación",
+    "plazasTotal": 4,
+    "plazasOcupadas": 3,
+    "precio": 5,
+    "descripcion": "Partido para principiantes. Solo queda una plaza. Entrenador disponible para dar algunos consejos al final."
+  },
+  {
+    "id": 11,
+    "fecha": "2026-06-04",
+    "hora": "19:00",
+    "pista": "Pista 12",
+    "nivel": "Intermedio",
+    "plazasTotal": 4,
+    "plazasOcupadas": 1,
+    "precio": 6,
+    "descripcion": "Partido de junio. Nivel medio. Buscamos tres jugadores más para completar el grupo de una tarde perfecta."
+  },
+  {
+    "id": 12,
+    "fecha": "2026-06-06",
+    "hora": "09:00",
+    "pista": "Pista 14",
+    "nivel": "Avanzado",
+    "plazasTotal": 4,
+    "plazasOcupadas": 2,
+    "precio": 7,
+    "descripcion": "Partido matutino de alto nivel en la pista premium. Experiencia en liga o torneos recomendada."
+  }
+]
