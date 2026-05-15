@@ -23,36 +23,41 @@ function LogoMark({ className }: { className?: string }) {
       aria-hidden="true"
       role="img"
     >
-      {/* Outer rounded square (court-shape) */}
-      <rect x="2" y="2" width="60" height="60" rx="14" fill="#3a7d44" />
-      {/* Inner court lines */}
-      <rect
-        x="10"
-        y="10"
-        width="44"
-        height="44"
-        rx="6"
-        fill="none"
-        stroke="#0a0a0a"
-        strokeOpacity="0.5"
-        strokeWidth="1"
-      />
-      {/* Horizontal mid line */}
-      <line x1="10" y1="32" x2="54" y2="32" stroke="#0a0a0a" strokeOpacity="0.35" strokeWidth="1" />
-      {/* "Castillo" tower silhouette */}
-      <path
-        d="M20 42 V26 H24 V22 H28 V26 H32 V22 H36 V26 H40 V22 H44 V26 H48 V42 Z"
-        fill="#f5f5f0"
-      />
-      {/* Padel ball */}
-      <circle cx="48" cy="18" r="5" fill="#e8d44d" stroke="#0a0a0a" strokeOpacity="0.2" strokeWidth="0.5" />
-      <path
-        d="M44 16 Q48 18 52 16"
-        stroke="#0a0a0a"
-        strokeOpacity="0.25"
-        strokeWidth="0.6"
-        fill="none"
-      />
+      {/* Shield gold trim */}
+      <path d="M6 3 L58 3 L58 36 Q58 52 32 61 Q6 52 6 36 Z" fill="#e8b923" />
+      {/* Shield body (red) */}
+      <path d="M9 6 L55 6 L55 35 Q55 50 32 58 Q9 50 9 35 Z" fill="#c41e3a" />
+
+      {/* Heraldic checkered pattern (top) */}
+      <rect x="9" y="6" width="11.5" height="7" fill="#e8b923" />
+      <rect x="32" y="6" width="11.5" height="7" fill="#e8b923" />
+      <rect x="20.5" y="13" width="11.5" height="7" fill="#e8b923" />
+      <rect x="43.5" y="13" width="11.5" height="7" fill="#e8b923" />
+
+      {/* Castle silhouette */}
+      <g fill="#f5f5f0">
+        <rect x="17" y="25" width="3" height="5" />
+        <rect x="22" y="25" width="3" height="5" />
+        <rect x="27" y="25" width="3" height="5" />
+        <rect x="32" y="25" width="3" height="5" />
+        <rect x="37" y="25" width="3" height="5" />
+        <rect x="42" y="25" width="3" height="5" />
+        <rect x="17" y="30" width="28" height="16" />
+        <rect x="28" y="20" width="8" height="14" />
+        <rect x="28" y="18" width="2.5" height="3" />
+        <rect x="32" y="18" width="2.5" height="3" />
+      </g>
+
+      {/* Castle details in red */}
+      <g fill="#c41e3a">
+        <path d="M29.5 38 L34.5 38 L34.5 46 L29.5 46 Z" />
+        <rect x="20.5" y="34" width="2.5" height="3" />
+        <rect x="39" y="34" width="2.5" height="3" />
+        <rect x="30.5" y="24" width="3" height="3" />
+      </g>
+
+      {/* Gate gold arch */}
+      <path d="M29.5 38 L34.5 38 L34.5 39.5 L29.5 39.5 Z" fill="#e8b923" />
     </svg>
   )
 }
