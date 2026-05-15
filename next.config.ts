@@ -8,9 +8,14 @@ const repoName = "Castilloaguimes";
 
 const useGitHubPagesBase = isProd && !isVercel;
 
+/**
+ * `output: "export"` genera solo `out/` y NO deja el manifiesto que el preset Next de Vercel
+ * espera en `.next/` → error "routes-manifest" al desplegar.
+ * En Vercel usamos build estándar (SSG donde aplique); en GitHub Pages seguimos con export estático.
+ */
 const nextConfig: NextConfig = {
-  output: "export",
-  images: { unoptimized: true },
+  ...(isVercel ? {} : { output: "export" as const }),
+  images: { unoptimized: !isVercel },
   trailingSlash: true,
   basePath: useGitHubPagesBase ? `/${repoName}` : "",
   assetPrefix: useGitHubPagesBase ? `/${repoName}/` : "",
