@@ -2,8 +2,9 @@
 
 import { useRef } from "react"
 import Link from "next/link"
-import { motion, useInView } from "framer-motion"
+import { motion, useInView, useReducedMotion } from "framer-motion"
 import { Calendar, Users, GraduationCap, Trophy, Dumbbell, ArrowRight } from "lucide-react"
+import { SectionEyebrow } from "@/components/brand/SectionEyebrow"
 
 const services = [
   {
@@ -50,7 +51,7 @@ const containerVariants = {
   },
 }
 
-const cardVariants = {
+const cardVariantsBase = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 }
@@ -58,17 +59,21 @@ const cardVariants = {
 export default function ServicesGrid() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const reduceMotion = useReducedMotion()
+  const cardVariants = reduceMotion
+    ? { hidden: { opacity: 1, y: 0 }, visible: { opacity: 1, y: 0, transition: { duration: 0 } } }
+    : cardVariantsBase
 
   return (
     <section className="py-20 lg:py-28 bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-14">
-          <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">
-            Servicios
-          </span>
+          <div className="flex justify-center mb-3">
+            <SectionEyebrow>Servicios</SectionEyebrow>
+          </div>
           <h2
-            className="text-[#f5f5f0] font-black tracking-tight leading-none"
+            className="text-[#f5f5f0] font-display font-black tracking-tight leading-none"
             style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
           >
             ¿QUÉ PUEDES
@@ -109,7 +114,7 @@ export default function ServicesGrid() {
                       {service.description}
                     </p>
                     <span className="flex items-center gap-1.5 text-[#3a7d44] text-sm font-semibold">
-                      Descubrir
+                      Entrar
                       <ArrowRight
                         size={14}
                         className="group-hover:translate-x-1 transition-transform"

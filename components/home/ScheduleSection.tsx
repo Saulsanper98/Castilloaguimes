@@ -79,7 +79,7 @@ export default function ScheduleSection() {
             Horarios
           </span>
           <h2
-            className="text-[#f5f5f0] font-black tracking-tight"
+            className="text-[#f5f5f0] font-display font-black tracking-tight"
             style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
           >
             ABIERTOS
@@ -106,7 +106,7 @@ export default function ScheduleSection() {
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
           className="space-y-4"
         >
-          {schedules.map((s, i) => (
+          {schedules.map((s) => (
             <motion.div
               key={s.days}
               variants={{

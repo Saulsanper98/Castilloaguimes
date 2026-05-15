@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
-import { Wind, Droplets, Coffee, ShoppingBag, Dumbbell, Wifi, Car, Shield } from "lucide-react"
+import Link from "next/link"
+import { Wind, Droplets, Coffee, ShoppingBag, Dumbbell, Wifi, Car, Shield, Box } from "lucide-react"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 
 export const metadata: Metadata = {
   title: "Instalaciones",
@@ -68,11 +70,14 @@ export default function InstalacionesPage() {
       {/* Hero */}
       <div className="pt-20 bg-[#111111] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="mb-6">
+            <Breadcrumbs />
+          </div>
           <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">
             El complejo
           </span>
           <h1
-            className="text-[#f5f5f0] font-black tracking-tight"
+            className="text-[#f5f5f0] font-display font-black tracking-tight"
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", letterSpacing: "-0.02em" }}
           >
             INSTALACIONES
@@ -104,6 +109,28 @@ export default function InstalacionesPage() {
           </div>
         </section>
 
+        {/* Tour virtual */}
+        <section className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-6">
+          <div className="w-14 h-14 rounded-xl bg-[#3a7d44]/15 border border-[#3a7d44]/30 flex items-center justify-center shrink-0">
+            <Box size={26} className="text-[#3a7d44]" aria-hidden />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#e8d44d] mb-1">Próximamente</p>
+            <h2 className="text-[#f5f5f0] font-display font-black text-xl sm:text-2xl tracking-tight mb-2">
+              Tour 360 y Matterport
+            </h2>
+            <p className="text-[#f5f5f0]/55 text-sm leading-relaxed max-w-2xl">
+              Estamos preparando un recorrido inmersivo por vestuarios, pistas y zonas comunes para que puedas conocer el club antes de pisar la pista.
+            </p>
+          </div>
+          <Link
+            href="/contacto"
+            className="shrink-0 inline-flex items-center justify-center bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors"
+          >
+            Avísame
+          </Link>
+        </section>
+
         {/* Amenities quick bar */}
         <section>
           <div className="bg-[#111111] border border-white/10 rounded-2xl p-6">
@@ -126,7 +153,7 @@ export default function InstalacionesPage() {
         {/* Feature sections */}
         <section className="space-y-8">
           <h2
-            className="text-[#f5f5f0] font-black tracking-tight text-center"
+            className="text-[#f5f5f0] font-display font-black tracking-tight text-center"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "-0.02em" }}
           >
             TODO LO QUE <span className="text-[#3a7d44]">NECESITAS</span>
@@ -168,7 +195,7 @@ export default function InstalacionesPage() {
 
         {/* Location */}
         <section className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8">
-          <h3 className="text-[#f5f5f0] font-black text-xl mb-4">Cómo llegar</h3>
+          <h3 className="text-[#f5f5f0] font-display font-black text-2xl mb-4">Cómo llegar</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <p className="text-[#f5f5f0]/60 text-sm leading-relaxed mb-3">

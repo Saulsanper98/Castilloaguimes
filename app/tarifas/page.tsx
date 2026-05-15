@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
+import { TarifasExtras } from "./TarifasExtras"
 
 export const metadata: Metadata = {
   title: "Tarifas",
@@ -43,7 +45,7 @@ const adultosMensuales = [
   { personas: "1 persona", precio: "120 €/mes" },
   { personas: "2 personas", precio: "60 €/mes · persona" },
   { personas: "3 personas", precio: "50 €/mes · persona" },
-  { personas: "4 personas", precio: "40 €/mes · persona" },
+  { personas: "4 personas", precio: "40 €/mes · persona", popular: true },
 ]
 
 const ninosMensuales = [
@@ -66,11 +68,14 @@ export default function TarifasPage() {
       {/* Hero */}
       <div className="pt-20 bg-[#111111] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="mb-6">
+            <Breadcrumbs />
+          </div>
           <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-4 block">
             Precios
           </span>
           <h1
-            className="text-[#f5f5f0] font-black tracking-tight mb-3"
+            className="text-[#f5f5f0] font-display font-black tracking-tight mb-3"
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", letterSpacing: "-0.02em" }}
           >
             TARIFAS
@@ -87,12 +92,12 @@ export default function TarifasPage() {
         <section>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1 h-8 bg-[#3a7d44] rounded-full" />
-            <h2 className="text-[#f5f5f0] font-black text-2xl tracking-tight">Reserva de Pistas</h2>
+            <h2 className="text-[#f5f5f0] font-display font-black text-3xl tracking-tight">Reserva de Pistas</h2>
           </div>
 
           <div className="bg-[#111111] border border-white/10 rounded-2xl overflow-hidden mb-4">
             <div className="px-6 py-3 border-b border-white/10 bg-white/[0.02]">
-              <p className="text-[#f5f5f0]/40 text-xs font-medium tracking-widest uppercase">Pista completa (4 jugadores) · 1h 30 min</p>
+              <p className="text-[#f5f5f0]/60 text-xs font-medium tracking-widest uppercase">Pista completa (4 jugadores) · 1h 30 min</p>
             </div>
             {pistaTarifas.map((t, i) => (
               <div
@@ -101,7 +106,7 @@ export default function TarifasPage() {
               >
                 <div>
                   <span className="text-[#f5f5f0]/80 text-sm">{t.tipo}</span>
-                  <span className="text-[#f5f5f0]/30 text-xs ml-2">{t.nota}</span>
+                  <span className="text-[#f5f5f0]/55 text-xs ml-2">{t.nota}</span>
                 </div>
                 <span className="text-[#3a7d44] font-bold text-sm tabular-nums">{t.precio}</span>
               </div>
@@ -110,7 +115,7 @@ export default function TarifasPage() {
 
           <div className="bg-[#111111] border border-white/10 rounded-2xl overflow-hidden">
             <div className="px-6 py-3 border-b border-white/10 bg-white/[0.02]">
-              <p className="text-[#f5f5f0]/40 text-xs font-medium tracking-widest uppercase">Pista individual · Todos los días (apertura–cierre)</p>
+              <p className="text-[#f5f5f0]/60 text-xs font-medium tracking-widest uppercase">Pista individual · Todos los días (apertura–cierre)</p>
             </div>
             {pistaIndividualTarifas.map((t, i) => (
               <div
@@ -128,7 +133,7 @@ export default function TarifasPage() {
         <section>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1 h-8 bg-[#e8d44d] rounded-full" />
-            <h2 className="text-[#f5f5f0] font-black text-2xl tracking-tight">Escuela de Pádel</h2>
+            <h2 className="text-[#f5f5f0] font-display font-black text-3xl tracking-tight">Escuela de Pádel</h2>
           </div>
 
           {/* Bonos de clases */}
@@ -152,9 +157,16 @@ export default function TarifasPage() {
             {adultosMensuales.map((t, i) => (
               <div
                 key={t.personas}
-                className={`flex items-center justify-between px-6 py-4 ${i !== adultosMensuales.length - 1 ? "border-b border-white/10" : ""} ${i % 2 !== 0 ? "bg-white/[0.02]" : ""}`}
+                className={`relative flex items-center justify-between px-6 py-4 ${i !== adultosMensuales.length - 1 ? "border-b border-white/10" : ""} ${i % 2 !== 0 ? "bg-white/[0.02]" : ""}`}
               >
-                <span className="text-[#f5f5f0]/80 text-sm">{t.personas}</span>
+                <span className="text-[#f5f5f0]/80 text-sm flex items-center gap-2 flex-wrap">
+                  {t.personas}
+                  {"popular" in t && t.popular && (
+                    <span className="text-[9px] font-black uppercase tracking-widest bg-[#e8d44d]/15 text-[#e8d44d] border border-[#e8d44d]/25 px-2 py-0.5 rounded-full">
+                      Más popular
+                    </span>
+                  )}
+                </span>
                 <span className="text-[#3a7d44] font-bold text-sm tabular-nums">{t.precio}</span>
               </div>
             ))}
@@ -179,7 +191,7 @@ export default function TarifasPage() {
         <section>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1 h-8 bg-[#3a7d44] rounded-full" />
-            <h2 className="text-[#f5f5f0] font-black text-2xl tracking-tight">Bonos</h2>
+            <h2 className="text-[#f5f5f0] font-display font-black text-3xl tracking-tight">Bonos</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {bonos.map((b) => (
@@ -192,7 +204,7 @@ export default function TarifasPage() {
                   <span className="inline-block text-[10px] text-[#e8d44d] font-bold tracking-widest uppercase bg-[#e8d44d]/10 border border-[#e8d44d]/20 px-2.5 py-1 rounded-full mb-4">
                     {b.badge}
                   </span>
-                  <h3 className="text-[#f5f5f0] font-black text-xl mb-2">{b.nombre}</h3>
+                  <h3 className="text-[#f5f5f0] font-display font-black text-xl mb-2">{b.nombre}</h3>
                   <p className="text-[#f5f5f0]/50 text-sm leading-relaxed mb-5">{b.descripcion}</p>
                   <div className="text-[#3a7d44] font-black text-4xl">{b.precio}</div>
                 </div>
@@ -202,27 +214,7 @@ export default function TarifasPage() {
         </section>
 
         {/* CTA */}
-        <div className="bg-[#111111] border border-white/10 rounded-2xl p-10 text-center">
-          <p className="text-[#f5f5f0]/40 text-xs font-bold tracking-widest uppercase mb-3">¿Necesitas ayuda?</p>
-          <h3 className="text-[#f5f5f0] font-black text-2xl mb-3">Consulta sin compromiso</h3>
-          <p className="text-[#f5f5f0]/50 text-sm mb-7 max-w-md mx-auto">
-            ¿Tienes dudas sobre qué bono elegir o cómo funciona la escuela? Nuestro equipo te asesora.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="/contacto"
-              className="inline-block bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-8 py-3 rounded-xl text-sm transition-colors"
-            >
-              Contactar
-            </a>
-            <a
-              href="tel:928753650"
-              className="inline-block border border-white/20 hover:border-white/40 text-[#f5f5f0] font-bold px-8 py-3 rounded-xl text-sm transition-colors"
-            >
-              928 753 650
-            </a>
-          </div>
-        </div>
+        <TarifasExtras />
       </div>
     </div>
   )

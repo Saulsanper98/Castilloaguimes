@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { GraduationCap, User, Users, Baby, Trophy } from "lucide-react"
 import Link from "next/link"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 
 export const metadata: Metadata = {
   title: "Escuela de Pádel",
@@ -13,8 +14,9 @@ const modalidades = [
     title: "Individual",
     description:
       "La opción más efectiva para mejorar rápido. Tu entrenador se dedica exclusivamente a ti, detecta tus puntos débiles y diseña un plan de entrenamiento personalizado.",
-    precio: "35€ / hora",
-    incluye: ["Análisis técnico inicial", "Plan de mejora personalizado", "Material de práctica incluido", "Grabación y análisis de vídeo"],
+    precio: "120 €",
+    precioNota: "Bono de 6 clases",
+    incluye: ["Análisis técnico inicial", "Plan de mejora personalizado", "1 alumno por clase", "Seguimiento detallado"],
     color: "from-[#3a7d44]/20",
   },
   {
@@ -22,28 +24,38 @@ const modalidades = [
     title: "Parejas",
     description:
       "Comparte la clase con un compañero. Ideal para parejas de pádel que quieren evolucionar juntos y trabajar la coordinación y táctica en equipo.",
-    precio: "25€ / persona / hora",
-    incluye: ["Táctica de pareja", "Posicionamiento en pista", "Trabajo de movimiento conjunto", "Análisis de partido grabado"],
+    precio: "150 €",
+    precioNota: "Bono de 6 clases · 2 alumnos",
+    incluye: ["Táctica de pareja", "Posicionamiento en pista", "Trabajo de movimiento conjunto", "75 €/persona en el bono"],
     color: "from-blue-500/10",
   },
   {
     icon: GraduationCap,
-    title: "Grupos Adultos",
+    title: "Grupos de 3",
     description:
-      "Clases en grupo de 3 a 4 personas para adultos de todos los niveles. La opción más económica con una progresión estructurada y ambiente social.",
-    precio: "18€ / persona / hora",
-    incluye: ["Grupos por nivel", "Hasta 4 alumnos por grupo", "Metodología progresiva", "Acceso a torneos internos"],
+      "Clases en grupo reducido para 3 alumnos. La opción más económica del bono trimestral con progresión estructurada y ambiente social.",
+    precio: "180 €",
+    precioNota: "Bono de 6 clases · 3 alumnos",
+    incluye: ["Grupos por nivel", "3 alumnos por clase", "Metodología progresiva", "60 €/persona en el bono"],
     color: "from-purple-500/10",
   },
   {
     icon: Baby,
     title: "Infantil",
     description:
-      "Programa diseñado para niños y jóvenes de 6 a 16 años. Metodología lúdica que combina el aprendizaje técnico con el desarrollo físico y los valores del deporte.",
-    precio: "15€ / persona / hora",
+      "Programa diseñado para niños y jóvenes. Metodología lúdica que combina el aprendizaje técnico con el desarrollo físico y los valores del deporte.",
+    precio: "30 €/mes",
+    precioNota: "1 día/semana · 50 €/mes con 2 días",
     incluye: ["Grupos por edad y nivel", "Metodología lúdica", "Valores deportivos", "Torneos internos trimestrales"],
     color: "from-orange-500/10",
   },
+]
+
+const adultosMensuales = [
+  { personas: "1 persona", precio: "120 €/mes" },
+  { personas: "2 personas", precio: "60 €/persona" },
+  { personas: "3 personas", precio: "50 €/persona" },
+  { personas: "4 personas", precio: "40 €/persona", destacado: true },
 ]
 
 const levelProgression = [
@@ -59,11 +71,14 @@ export default function EscuelaPage() {
       {/* Hero */}
       <div className="pt-20 bg-[#111111] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="mb-6">
+            <Breadcrumbs />
+          </div>
           <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">
             Aprende y mejora
           </span>
           <h1
-            className="text-[#f5f5f0] font-black tracking-tight"
+            className="text-[#f5f5f0] font-display font-black tracking-tight"
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", letterSpacing: "-0.02em" }}
           >
             ESCUELA DE <span className="text-[#3a7d44]">PÁDEL</span>
@@ -79,7 +94,7 @@ export default function EscuelaPage() {
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div>
             <h2
-              className="text-[#f5f5f0] font-black tracking-tight mb-4"
+              className="text-[#f5f5f0] font-display font-black tracking-tight mb-4"
               style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "-0.02em" }}
             >
               ENTRENADORES
@@ -112,7 +127,7 @@ export default function EscuelaPage() {
         <section>
           <div className="text-center mb-10">
             <h2
-              className="text-[#f5f5f0] font-black tracking-tight"
+              className="text-[#f5f5f0] font-display font-black tracking-tight"
               style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "-0.02em" }}
             >
               MODALIDADES <span className="text-[#3a7d44]">DE CLASE</span>
@@ -141,8 +156,9 @@ export default function EscuelaPage() {
                         </li>
                       ))}
                     </ul>
-                    <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                      <span className="text-[#3a7d44] font-black text-lg">{m.precio}</span>
+                    <div className="flex items-end justify-between border-t border-white/10 pt-4 gap-3">
+                      <div className="text-[#f5f5f0]/60 text-[10px] uppercase tracking-wider">{m.precioNota}</div>
+                      <span className="text-[#3a7d44] font-black text-2xl leading-none">{m.precio}</span>
                     </div>
                   </div>
                 </div>
@@ -151,11 +167,42 @@ export default function EscuelaPage() {
           </div>
         </section>
 
+        {/* Mensual adultos */}
+        <section>
+          <div className="text-center mb-8">
+            <h2
+              className="text-[#f5f5f0] font-display font-black tracking-tight"
+              style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "-0.02em" }}
+            >
+              CUOTAS <span className="text-[#3a7d44]">MENSUALES</span>
+            </h2>
+            <p className="text-[#f5f5f0]/50 text-sm mt-2">
+              Adultos · 1 día/semana. Cuanto más sois, más barato sale.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
+            {adultosMensuales.map((t) => (
+              <div
+                key={t.personas}
+                className={`relative rounded-2xl p-5 text-center border ${t.destacado ? "border-[#3a7d44]/60 bg-[#3a7d44]/10" : "border-white/10 bg-[#111111]"}`}
+              >
+                {t.destacado && (
+                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-black uppercase tracking-widest bg-[#e8d44d] text-[#0a0a0a] px-2 py-0.5 rounded-full">
+                    Popular
+                  </span>
+                )}
+                <div className="text-[#f5f5f0]/50 text-[10px] uppercase tracking-widest mb-2">{t.personas}</div>
+                <div className="text-[#3a7d44] font-black text-2xl">{t.precio}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Level progression */}
         <section>
           <div className="text-center mb-8">
             <h2
-              className="text-[#f5f5f0] font-black tracking-tight"
+              className="text-[#f5f5f0] font-display font-black tracking-tight"
               style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", letterSpacing: "-0.02em" }}
             >
               PROGRESIÓN <span className="text-[#3a7d44]">DE NIVELES</span>
@@ -170,11 +217,44 @@ export default function EscuelaPage() {
                     {i + 1}
                   </div>
                   <h3 className="text-[#f5f5f0] font-bold text-sm mb-1">{l.level}</h3>
-                  <p className="text-[#f5f5f0]/40 text-xs leading-snug mb-2">{l.description}</p>
+                  <p className="text-[#f5f5f0]/60 text-xs leading-snug mb-2">{l.description}</p>
                   <span className="text-[#3a7d44] text-xs font-semibold">{l.sessions}</span>
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="max-w-3xl mx-auto">
+          <h2 className="text-[#f5f5f0] font-display font-black text-2xl tracking-tight text-center mb-8">
+            Dudas frecuentes
+          </h2>
+          <div className="space-y-3">
+            {[
+              {
+                q: "¿Mi hijo necesita pala propia?",
+                a: "Para la clase de prueba y las primeras sesiones el club puede facilitar material. Para continuar recomendamos una pala adecuada a su edad; en recepción y tienda os asesoran.",
+              },
+              {
+                q: "¿Las clases de empresa o bonificables?",
+                a: "Muchas empresas bonifican actividad deportiva. Solicita factura y justificante en recepción y consulta con tu departamento de RR.HH.",
+              },
+              {
+                q: "¿Qué nivel necesito para grupo adulto?",
+                a: "Hay grupos desde iniciación. Hacemos una evaluación breve la primera semana para ubicarte en el grupo adecuado.",
+              },
+            ].map((item) => (
+              <details
+                key={item.q}
+                className="group bg-[#111111] border border-white/10 rounded-[var(--radius-card)] px-5 py-4"
+              >
+                <summary className="cursor-pointer text-[#f5f5f0] font-semibold text-sm list-none flex items-center justify-between gap-2">
+                  {item.q}
+                  <span className="text-[#f5f5f0]/40 text-lg group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="text-[#f5f5f0]/60 text-sm mt-3 leading-relaxed border-t border-white/5 pt-3">{item.a}</p>
+              </details>
+            ))}
           </div>
         </section>
 

@@ -1,12 +1,20 @@
 "use client"
 
-import { useRef } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
 import { ArrowRight, ChevronDown } from "lucide-react"
+import { useRef } from "react"
+import { SectionEyebrow } from "@/components/brand/SectionEyebrow"
+import { LiveStatusChip } from "@/components/home/LiveStatusChip"
+import { BouncingBall } from "@/components/home/BouncingBall"
 
 export default function HeroSection() {
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
+  const { scrollY } = useScroll()
+  const bgY = useTransform(scrollY, [0, 600], reduceMotion ? [0, 0] : [0, 120])
+  const contentY = useTransform(scrollY, [0, 600], reduceMotion ? [0, 0] : [0, -40])
+  const fadeOut = useTransform(scrollY, [0, 400], reduceMotion ? [1, 1] : [1, 0.5])
 
   const handleScroll = () => {
     const next = document.getElementById("stats-bar")
@@ -15,47 +23,61 @@ export default function HeroSection() {
 
   return (
     <section
-      ref={scrollRef}
+      ref={ref}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0a]"
     >
-      {/* Court texture overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: `repeating-linear-gradient(
-            -45deg,
-            #3a7d44 0px,
-            #3a7d44 1px,
-            transparent 1px,
-            transparent 24px
-          )`,
-        }}
-      />
-
-      {/* Green radial glow */}
-      <div className="absolute inset-0 bg-radial-[ellipse_at_center] from-[#3a7d44]/20 via-transparent to-transparent" />
+      {/* Parallax background layer */}
+      <motion.div style={{ y: bgY }} className="absolute inset-0" aria-hidden="true">
+        {/* Court texture overlay */}
+        <div className="absolute inset-0 bg-court-lines opacity-70" />
+        {/* Green radial glow */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(58,125,68,0.22) 0%, rgba(58,125,68,0.06) 40%, transparent 70%)",
+          }}
+        />
+        {/* Decorative court silhouette */}
+        <svg
+          className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[140vw] max-w-none opacity-[0.045]"
+          viewBox="0 0 1200 600"
+          aria-hidden="true"
+        >
+          <rect x="100" y="50" width="1000" height="500" rx="20" fill="none" stroke="#3a7d44" strokeWidth="3" />
+          <line x1="100" y1="300" x2="1100" y2="300" stroke="#3a7d44" strokeWidth="2" />
+          <line x1="600" y1="50" x2="600" y2="550" stroke="#3a7d44" strokeWidth="2" strokeDasharray="6,6" />
+        </svg>
+        {/* Bouncing decorative ball */}
+        <BouncingBall />
+      </motion.div>
 
       {/* Dark overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/60 via-transparent to-[#0a0a0a]/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/40 via-transparent to-[#0a0a0a]/85" aria-hidden="true" />
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto">
+      <motion.div
+        style={{ y: contentY, opacity: fadeOut }}
+        className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto py-24"
+      >
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.6, delay: 0.1 }}
+          className="flex items-center justify-center gap-3 mb-6 flex-wrap"
         >
-          <span className="inline-block text-[#3a7d44] text-xs sm:text-sm font-bold tracking-[0.4em] uppercase mb-6 border border-[#3a7d44]/40 px-4 py-1.5 rounded-full">
-            Agüimes · Gran Canaria · Canarias
-          </span>
+          <SectionEyebrow className="text-[10px] sm:text-xs border border-[#3a7d44]/30 rounded-full px-4 py-2 bg-[#3a7d44]/5">
+            Agüimes · Gran Canaria
+          </SectionEyebrow>
+          <LiveStatusChip />
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 40 }}
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-[#f5f5f0] font-black tracking-tight leading-none mb-6"
-          style={{ fontSize: "clamp(3rem, 9vw, 7.5rem)", letterSpacing: "-0.02em" }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.7, delay: 0.2 }}
+          className="text-[#f5f5f0] font-display font-black tracking-tight leading-[0.9] mb-6"
+          style={{ fontSize: "clamp(3rem, 9.5vw, 8rem)", letterSpacing: "-0.03em" }}
         >
           14 PISTAS.
           <br />
@@ -63,51 +85,51 @@ export default function HeroSection() {
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 30 }}
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.35 }}
-          className="text-[#f5f5f0]/60 text-lg sm:text-xl lg:text-2xl font-light mb-10 max-w-2xl mx-auto"
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.6, delay: 0.35 }}
+          className="text-[#f5f5f0]/70 text-lg sm:text-xl lg:text-2xl font-light mb-10 max-w-2xl mx-auto"
         >
           El mayor complejo indoor de pádel de Canarias
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.5, delay: 0.5 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <Link
             href="/reservas"
-            className="flex items-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-8 py-4 rounded-xl text-base transition-all duration-200 shadow-lg shadow-[#3a7d44]/30 group"
+            className="flex items-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-8 py-4 rounded-xl text-base transition-all duration-200 shadow-lg shadow-[#3a7d44]/30 group min-h-[48px]"
           >
-            Reservar Pista
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            Reservar pista
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
           <Link
             href="/partidos-abiertos"
-            className="flex items-center gap-2 border-2 border-white/30 hover:border-white/60 text-[#f5f5f0] font-bold px-8 py-4 rounded-xl text-base transition-all duration-200 hover:bg-white/5"
+            className="flex items-center gap-2 border-2 border-white/30 hover:border-white/60 text-[#f5f5f0] font-bold px-8 py-4 rounded-xl text-base transition-all duration-200 hover:bg-white/5 min-h-[48px]"
           >
-            Ver Partidos Abiertos
+            Echa la firma — Partidos abiertos
           </Link>
         </motion.div>
-      </div>
+      </motion.div>
 
-      {/* Scroll indicator — positioned relative to the section */}
+      {/* Scroll indicator */}
       <motion.button
-        initial={{ opacity: 0 }}
+        initial={{ opacity: reduceMotion ? 1 : 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
+        transition={reduceMotion ? { duration: 0 } : { delay: 1.2 }}
         onClick={handleScroll}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#f5f5f0]/30 hover:text-[#f5f5f0]/60 transition-colors z-20"
-        aria-label="Scroll down"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#f5f5f0]/55 hover:text-[#f5f5f0]/80 transition-colors z-20 min-h-[44px] min-w-[44px] justify-center"
+        aria-label="Bajar al siguiente apartado"
       >
         <span className="text-[10px] tracking-widest uppercase">Descubre</span>
         <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          animate={reduceMotion ? { y: 0 } : { y: [0, 6, 0] }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ChevronDown size={20} />
+          <ChevronDown size={20} aria-hidden="true" />
         </motion.div>
       </motion.button>
     </section>

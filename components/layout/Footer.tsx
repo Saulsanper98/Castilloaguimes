@@ -1,19 +1,17 @@
 import Link from "next/link"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { MapPin, Phone, Mail } from "lucide-react"
+import { Logo } from "@/components/brand/Logo"
+import { ClubClock } from "@/components/footer/ClubClock"
+import { NewsletterSnippet } from "@/components/footer/NewsletterSnippet"
 
 export default function Footer() {
   return (
     <footer className="bg-[#111111] border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Column 1: Logo + Info */}
           <div>
-            <Link href="/" className="flex flex-col leading-none mb-6 inline-block">
-              <span className="text-[#3a7d44] font-black text-2xl tracking-widest">CASTILLO</span>
-              <span className="text-[#f5f5f0]/50 text-[10px] tracking-[0.3em] uppercase font-medium -mt-0.5">
-                AGÜIMES
-              </span>
-            </Link>
+            <Logo className="mb-6" />
             <p className="text-[#f5f5f0]/50 text-sm leading-relaxed mb-6">
               El mayor complejo indoor de pádel de Canarias, con 14 pistas cubiertas y servicios de primera clase.
             </p>
@@ -34,11 +32,10 @@ export default function Footer() {
                   recepcioncdca@gmail.com
                 </a>
               </li>
-              <li className="flex items-start gap-2.5">
-                <Clock size={14} className="text-[#3a7d44] mt-0.5 flex-shrink-0" />
-                <span>L-V: 08:00–23:00 · S: 08:00–20:00 · Dom/Fest: 09:00–20:00</span>
-              </li>
             </ul>
+            <div className="mb-6">
+              <ClubClock />
+            </div>
             {/* Social */}
             <div className="flex items-center gap-3">
               <a
@@ -96,7 +93,12 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: App Download */}
+          {/* Column 3: Newsletter */}
+          <div className="lg:pt-1">
+            <NewsletterSnippet />
+          </div>
+
+          {/* Column 4: App Download */}
           <div>
             <h3 className="text-[#f5f5f0] font-bold text-sm uppercase tracking-widest mb-6">
               Descarga Nuestra App
@@ -115,7 +117,7 @@ export default function Footer() {
                   </svg>
                 </div>
                 <div>
-                  <div className="text-[#f5f5f0]/40 text-[10px] uppercase tracking-wide">Disponible en</div>
+                  <div className="text-[#f5f5f0]/60 text-[10px] uppercase tracking-wide">Disponible en</div>
                   <div className="text-[#f5f5f0] text-sm font-semibold">App Store</div>
                 </div>
               </a>
@@ -129,7 +131,7 @@ export default function Footer() {
                   </svg>
                 </div>
                 <div>
-                  <div className="text-[#f5f5f0]/40 text-[10px] uppercase tracking-wide">Disponible en</div>
+                  <div className="text-[#f5f5f0]/60 text-[10px] uppercase tracking-wide">Disponible en</div>
                   <div className="text-[#f5f5f0] text-sm font-semibold">Google Play</div>
                 </div>
               </a>
@@ -141,17 +143,17 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[#f5f5f0]/30 text-xs">
+          <p className="text-[#f5f5f0]/55 text-xs">
             © {new Date().getFullYear()} Pádel Castillo de Agüimes. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-4">
-            <Link href="#" className="text-[#f5f5f0]/30 hover:text-[#f5f5f0]/60 text-xs transition-colors">
+            <Link href="#" className="text-[#f5f5f0]/55 hover:text-[#f5f5f0]/60 text-xs transition-colors">
               Política de Privacidad
             </Link>
-            <Link href="#" className="text-[#f5f5f0]/30 hover:text-[#f5f5f0]/60 text-xs transition-colors">
+            <Link href="#" className="text-[#f5f5f0]/55 hover:text-[#f5f5f0]/60 text-xs transition-colors">
               Aviso Legal
             </Link>
-            <Link href="#" className="text-[#f5f5f0]/30 hover:text-[#f5f5f0]/60 text-xs transition-colors">
+            <Link href="#" className="text-[#f5f5f0]/55 hover:text-[#f5f5f0]/60 text-xs transition-colors">
               Cookies
             </Link>
           </div>

@@ -2,9 +2,11 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, Calendar, Tag } from "lucide-react"
-import { format } from "date-fns"
+import { format, formatRelative, isValid } from "date-fns"
 import { es } from "date-fns/locale"
 import noticiasData from "@/data/noticias.json"
+import { NoticiaShare } from "@/components/noticias/NoticiaShare"
+import { SITE_URL } from "@/lib/site"
 import { Noticia } from "@/types"
 
 const noticias = noticiasData as Noticia[]
@@ -53,6 +55,11 @@ export default async function NoticiaPage({ params }: Props) {
   const idx = noticias.findIndex((n) => n.slug === slug)
   const related = noticias.filter((n) => n.slug !== slug).slice(0, 2)
   const paragraphs = noticia.contenido.split("\n\n")
+  const pubDate = new Date(noticia.fecha)
+  const fechaRelativa = isValid(pubDate) ? formatRelative(pubDate, new Date(), { locale: es }) : null
+  const words = noticia.contenido.split(/\s+/).filter(Boolean).length
+  const minLectura = Math.max(1, Math.round(words / 200))
+  const canonicalUrl = `${SITE_URL.replace(/\/$/, "")}/noticias/${noticia.slug}`
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -73,7 +80,7 @@ export default async function NoticiaPage({ params }: Props) {
             </span>
           </div>
           <h1
-            className="text-[#f5f5f0] font-black leading-tight"
+            className="text-[#f5f5f0] font-display font-black leading-tight"
             style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", letterSpacing: "-0.02em" }}
           >
             {noticia.titulo}
@@ -87,14 +94,20 @@ export default async function NoticiaPage({ params }: Props) {
           {/* Article body */}
           <div className="lg:col-span-2">
             {/* Meta */}
-            <div className="flex items-center gap-5 text-[#f5f5f0]/40 text-sm mb-8 pb-6 border-b border-white/10">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[#f5f5f0]/60 text-sm mb-6 pb-6 border-b border-white/10">
               <span className="flex items-center gap-1.5">
                 <Calendar size={13} />
-                {format(new Date(noticia.fecha), "d 'de' MMMM 'de' yyyy", { locale: es })}
+                {isValid(pubDate)
+                  ? format(pubDate, "d 'de' MMMM 'de' yyyy", { locale: es })
+                  : noticia.fecha}
               </span>
               <span className="flex items-center gap-1.5">
                 <Tag size={13} />
                 {noticia.categoria}
+              </span>
+              <span className="text-[#f5f5f0]/45 text-xs">
+                {minLectura} min lectura
+                {fechaRelativa ? ` · ${fechaRelativa}` : ""}
               </span>
             </div>
 
@@ -102,15 +115,17 @@ export default async function NoticiaPage({ params }: Props) {
             <div className="space-y-5">
               {paragraphs.map((para, i) => (
                 <p
-                  key={i}
-                  className={`text-[#f5f5f0]/70 leading-relaxed ${
-                    i === 0 ? "text-lg font-medium text-[#f5f5f0]/80" : "text-base"
+                  key={`${noticia.slug}-p${i}`}
+                  className={`text-[#f5f5f0]/75 leading-relaxed ${
+                    i === 0 ? "text-lg font-medium text-[#f5f5f0]/90" : "text-base"
                   }`}
                 >
                   {para}
                 </p>
               ))}
             </div>
+
+            <NoticiaShare url={canonicalUrl} title={noticia.titulo} />
 
             {/* Tags */}
             <div className="mt-10 pt-6 border-t border-white/10">
@@ -143,7 +158,7 @@ export default async function NoticiaPage({ params }: Props) {
                   <h4 className="text-[#f5f5f0] font-bold text-xs leading-snug group-hover:text-white transition-colors line-clamp-2">
                     {r.titulo}
                   </h4>
-                  <div className="text-[#f5f5f0]/30 text-[10px] mt-1.5">
+                  <div className="text-[#f5f5f0]/55 text-[10px] mt-1.5">
                     {format(new Date(r.fecha), "d MMM yyyy", { locale: es })}
                   </div>
                 </div>
@@ -153,7 +168,7 @@ export default async function NoticiaPage({ params }: Props) {
             {/* CTA box */}
             <div className="bg-[#111111] border border-[#3a7d44]/30 rounded-2xl p-5">
               <h4 className="text-[#f5f5f0] font-bold text-sm mb-2">¿Quieres reservar una pista?</h4>
-              <p className="text-[#f5f5f0]/40 text-xs mb-3 leading-relaxed">
+              <p className="text-[#f5f5f0]/60 text-xs mb-3 leading-relaxed">
                 Reserva online en segundos. 14 pistas disponibles.
               </p>
               <Link

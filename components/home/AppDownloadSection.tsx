@@ -1,5 +1,3 @@
-import Link from "next/link"
-
 export default function AppDownloadSection() {
   return (
     <section className="py-20 lg:py-28 bg-[#111111] border-t border-white/10">
@@ -11,7 +9,7 @@ export default function AppDownloadSection() {
               App Oficial
             </span>
             <h2
-              className="text-[#f5f5f0] font-black tracking-tight mb-5"
+              className="text-[#f5f5f0] font-display font-black tracking-tight mb-5"
               style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
             >
               RESERVA EN

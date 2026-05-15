@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://padelcastillodeaguimes.com/sitemap.xml
+Host: padelcastillodeaguimes.com

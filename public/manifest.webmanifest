@@ -1,0 +1,26 @@
+{
+  "name": "Pádel Castillo de Agüimes",
+  "short_name": "Castillo Pádel",
+  "description": "El mayor complejo indoor de pádel de Canarias. 14 pistas cubiertas, reservas online y escuela de pádel.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "lang": "es",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "lifestyle"]
+}

@@ -24,7 +24,9 @@ const placeholderGradients = [
 export default function NewsSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const featured = noticias.slice(0, 3)
+  const featured = [...noticias]
+    .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+    .slice(0, 3)
 
   return (
     <section className="py-20 lg:py-28 bg-[#0a0a0a]">
@@ -35,7 +37,7 @@ export default function NewsSection() {
               Últimas Noticias
             </span>
             <h2
-              className="text-[#f5f5f0] font-black tracking-tight"
+              className="text-[#f5f5f0] font-display font-black tracking-tight"
               style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
             >
               NOVEDADES
@@ -86,7 +88,7 @@ export default function NewsSection() {
 
                 {/* Content */}
                 <div className="flex flex-col flex-1 p-6">
-                  <div className="flex items-center gap-2 text-[#f5f5f0]/40 text-xs mb-3">
+                  <div className="flex items-center gap-2 text-[#f5f5f0]/60 text-xs mb-3">
                     <Calendar size={12} />
                     <time>
                       {format(new Date(noticia.fecha), "d MMM yyyy", { locale: es })}
