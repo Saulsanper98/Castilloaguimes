@@ -237,6 +237,7 @@ interface LoginScreenProps {
 }
 
 function LoginScreen({ onSuccess }: LoginScreenProps) {
+  const demo = getDemoCredentials()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPwd, setShowPwd] = useState(false)
@@ -258,7 +259,6 @@ function LoginScreen({ onSuccess }: LoginScreenProps) {
   }
 
   function autoFill() {
-    const demo = getDemoCredentials()
     setEmail(demo.email)
     setPassword(demo.password)
     setError(null)
@@ -341,8 +341,8 @@ function LoginScreen({ onSuccess }: LoginScreenProps) {
         <div className="mt-6 pt-5 border-t border-white/10">
           <p className="text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/45 mb-2">Cuenta demo</p>
           <p className="text-[11px] text-[#f5f5f0]/55 mb-3 leading-relaxed">
-            Email: <code className="bg-white/5 px-1 rounded text-[#f5f5f0]">saulsanper98@gmail.com</code><br />
-            Pwd: <code className="bg-white/5 px-1 rounded text-[#f5f5f0]">FoxKay1998!</code>
+            Email: <code className="bg-white/5 px-1 rounded text-[#f5f5f0]">{demo.email}</code><br />
+            Pwd: <code className="bg-white/5 px-1 rounded text-[#f5f5f0]">{demo.password}</code>
           </p>
           <button
             type="button"

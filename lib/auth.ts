@@ -2,8 +2,8 @@
  * Auth mock con un único usuario de prueba.
  *
  * Credenciales válidas:
- *   email:    saulsanper98@gmail.com
- *   password: FoxKay1998!
+ *   email:    test@test.com
+ *   password: Test!
  */
 import type { PlayerProfile } from "./player"
 
@@ -15,12 +15,12 @@ interface MockUser {
 
 const USERS: MockUser[] = [
   {
-    email: "saulsanper98@gmail.com",
-    password: "FoxKay1998!",
+    email: "test@test.com",
+    password: "Test!",
     profile: {
       name: "Saúl Sánchez Pérez",
       initials: "SS",
-      email: "saulsanper98@gmail.com",
+      email: "test@test.com",
       phone: "+34 612 345 678",
       birthDate: "1998-04-12",
       gender: "M",
