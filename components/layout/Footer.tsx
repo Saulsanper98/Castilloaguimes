@@ -6,6 +6,7 @@ import { NewsletterSnippet } from "@/components/footer/NewsletterSnippet"
 import { FEPSeal } from "@/components/footer/FEPSeal"
 import { LangSelector } from "@/components/footer/LangSelector"
 import { HighContrastToggle } from "@/components/layout/HighContrastToggle"
+import { AppStoreLink } from "@/components/brand/AppStoreLink"
 import { MiniMap } from "@/components/footer/MiniMap"
 
 export default function Footer() {
@@ -112,34 +113,34 @@ export default function Footer() {
               Reserva pistas, apúntate a partidos abiertos y gestiona todo desde tu móvil con nuestra app oficial.
             </p>
             <div className="flex flex-col gap-3">
-              <a
-                href="#"
-                className="flex items-center gap-3 border border-white/20 hover:border-white/40 rounded-xl px-4 py-3 transition-all group"
+              <AppStoreLink
+                store="appstore"
+                className="flex w-full items-center gap-3 border border-white/20 hover:border-white/40 rounded-xl px-4 py-3 transition-all group"
               >
-                <div className="text-[#f5f5f0]/70 group-hover:text-[#f5f5f0]">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                <span className="text-[#f5f5f0]/70 group-hover:text-[#f5f5f0]">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
                   </svg>
-                </div>
-                <div>
-                  <div className="text-[#f5f5f0]/60 text-[10px] uppercase tracking-wide">Disponible en</div>
-                  <div className="text-[#f5f5f0] text-sm font-semibold">App Store</div>
-                </div>
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-3 border border-white/20 hover:border-white/40 rounded-xl px-4 py-3 transition-all group"
+                </span>
+                <span className="text-left">
+                  <span className="block text-[#f5f5f0]/60 text-[10px] uppercase tracking-wide">Próximamente en</span>
+                  <span className="block text-[#f5f5f0] text-sm font-semibold">App Store</span>
+                </span>
+              </AppStoreLink>
+              <AppStoreLink
+                store="playstore"
+                className="flex w-full items-center gap-3 border border-white/20 hover:border-white/40 rounded-xl px-4 py-3 transition-all group"
               >
-                <div className="text-[#f5f5f0]/70 group-hover:text-[#f5f5f0]">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3.18 23.76c.3.17.64.22.99.13l12.12-6.99-2.81-2.81-10.3 9.67zm-1.9-20.4C1.1 3.7 1 4.08 1 4.5v15c0 .42.1.8.28 1.14L13.5 8.5 1.28 3.36zM20.49 10.1l-2.78-1.6-3.14 3.14 3.14 3.14 2.81-1.62c.8-.46.8-1.6-.03-2.06zM4.17.24L16.29 7.23 13.48 10.04 3.18.37c.3-.17.68-.2.99-.13z"/>
+                <span className="text-[#f5f5f0]/70 group-hover:text-[#f5f5f0]">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M3.18 23.76c.3.17.64.22.99.13l12.12-6.99-2.81-2.81-10.3 9.67zm-1.9-20.4C1.1 3.7 1 4.08 1 4.5v15c0 .42.1.8.28 1.14L13.5 8.5 1.28 3.36zM20.49 10.1l-2.78-1.6-3.14 3.14 3.14 3.14 2.81-1.62c.8-.46.8-1.6-.03-2.06zM4.17.24L16.29 7.23 13.48 10.04 3.18.37c.3-.17.68-.2.99-.13z" />
                   </svg>
-                </div>
-                <div>
-                  <div className="text-[#f5f5f0]/60 text-[10px] uppercase tracking-wide">Disponible en</div>
-                  <div className="text-[#f5f5f0] text-sm font-semibold">Google Play</div>
-                </div>
-              </a>
+                </span>
+                <span className="text-left">
+                  <span className="block text-[#f5f5f0]/60 text-[10px] uppercase tracking-wide">Próximamente en</span>
+                  <span className="block text-[#f5f5f0] text-sm font-semibold">Google Play</span>
+                </span>
+              </AppStoreLink>
             </div>
           </div>
         </div>

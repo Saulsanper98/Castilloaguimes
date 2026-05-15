@@ -177,7 +177,11 @@ export function InscriptionModal({ campeonato, onClose }: Props) {
                       className="accent-[#3a7d44] w-4 h-4 mt-0.5"
                     />
                     <span>
-                      Acepto el <a href="#" className="text-[#3a7d44] underline">reglamento del torneo</a> y la política de privacidad. El pago se realiza en recepción al confirmar.
+                      Acepto el reglamento del torneo y la{" "}
+                      <a href="/legal/privacidad" className="text-[#3a7d44] underline" target="_blank" rel="noopener noreferrer">
+                        política de privacidad
+                      </a>
+                      . El pago se realiza en recepción al confirmar.
                     </span>
                   </label>
                   <div className="bg-[#3a7d44]/10 border border-[#3a7d44]/30 rounded-xl p-3 flex items-start gap-2 text-xs">

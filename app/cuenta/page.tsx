@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import CuentaClient from "./CuentaClient"
 
 export const metadata: Metadata = {
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <CuentaClient />
+  return (
+    <Suspense fallback={null}>
+      <CuentaClient />
+    </Suspense>
+  )
 }

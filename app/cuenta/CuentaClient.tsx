@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import {
   LayoutDashboard,
   Calendar,
@@ -55,7 +56,22 @@ type TabId =
   | "preferencias"
   | "seguridad"
 
+const VALID_TABS: TabId[] = [
+  "dashboard",
+  "reservas",
+  "partidos",
+  "wallet",
+  "loyalty",
+  "guardados",
+  "tienda",
+  "reseñas",
+  "perfil",
+  "preferencias",
+  "seguridad",
+]
+
 export default function CuentaClient() {
+  const searchParams = useSearchParams()
   const [tab, setTab] = useState<TabId>("dashboard")
   const [authed, setAuthed] = useState(false)
   const [profile, setProfile] = useState<PlayerProfile | null>(null)
@@ -66,9 +82,12 @@ export default function CuentaClient() {
       const p = loadProfile()
       setProfile(p)
       setAuthed(p.name !== "Invitado")
+      // Initial tab from query string (?tab=wallet etc.)
+      const t = searchParams.get("tab") as TabId | null
+      if (t && VALID_TABS.includes(t)) setTab(t)
     })
     return () => cancelAnimationFrame(id)
-  }, [])
+  }, [searchParams])
 
   function patch(patchObj: Partial<PlayerProfile>) {
     const next = patchProfile(patchObj)
@@ -298,7 +317,19 @@ function LoginScreen({ onSuccess }: LoginScreenProps) {
               <label htmlFor="login-password" className="text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/55">
                 Contraseña
               </label>
-              <a href="#" className="text-[10px] text-[#3a7d44] hover:text-[#4a9d54]">¿Olvidaste tu contraseña?</a>
+              <button
+                type="button"
+                onClick={() =>
+                  toast("Recuperación de contraseña", {
+                    description:
+                      "Aún no disponible online. Pasa por recepción o llama al 928 753 650 y te ayudamos al momento.",
+                    duration: 6000,
+                  })
+                }
+                className="text-[10px] text-[#3a7d44] hover:text-[#4a9d54]"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
             </div>
             <div className="relative">
               <input

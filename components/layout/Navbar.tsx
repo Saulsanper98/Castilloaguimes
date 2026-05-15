@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Menu, X, Search, Calendar, Receipt, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/brand/Logo"
+import { UserMenu } from "@/components/layout/UserMenu"
 
 const navLinks = [
   { label: "Inicio", href: "/" },
@@ -160,18 +161,7 @@ export default function Navbar() {
             >
               <Search className="h-[1.125rem] w-[1.125rem]" strokeWidth={1.75} aria-hidden />
             </button>
-            <Link
-              href="/cuenta"
-              className="text-[#f5f5f0] border border-white/30 hover:border-white/60 text-[13px] font-semibold px-3 py-1.5 rounded-lg transition-all hover:bg-white/5 whitespace-nowrap"
-            >
-              Registrarse
-            </Link>
-            <Link
-              href="/cuenta"
-              className="bg-[#e8d44d] hover:bg-[#f0dc55] text-[#0a0a0a] text-[13px] font-bold px-3 py-1.5 rounded-lg transition-all whitespace-nowrap"
-            >
-              Acceder
-            </Link>
+            <UserMenu variant="desktop" />
           </div>
 
           <div className="lg:hidden flex items-center gap-1">
@@ -242,20 +232,7 @@ export default function Navbar() {
                 )
               })}
               <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-                <Link
-                  href="/cuenta"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex-1 text-center text-[#f5f5f0] border border-white/30 text-sm font-semibold py-2.5 rounded-lg transition-all hover:bg-white/5"
-                >
-                  Registrarse
-                </Link>
-                <Link
-                  href="/cuenta"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex-1 text-center bg-[#e8d44d] text-[#0a0a0a] text-sm font-bold py-2.5 rounded-lg transition-all hover:bg-[#f0dc55]"
-                >
-                  Acceder
-                </Link>
+                <UserMenu variant="mobile" onNavigate={() => setMobileOpen(false)} />
               </div>
             </div>
           </motion.div>
