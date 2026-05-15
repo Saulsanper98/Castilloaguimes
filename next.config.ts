@@ -1,14 +1,18 @@
 import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
+/** Vercel define VERCEL=1 en build y runtime; GitHub Pages no. */
+const isVercel = process.env.VERCEL === "1";
 const repoName = "padel-castillo";
+
+const useGitHubPagesBase = isProd && !isVercel;
 
 const nextConfig: NextConfig = {
   output: "export",
   images: { unoptimized: true },
   trailingSlash: true,
-  basePath: isProd ? `/${repoName}` : "",
-  assetPrefix: isProd ? `/${repoName}/` : "",
+  basePath: useGitHubPagesBase ? `/${repoName}` : "",
+  assetPrefix: useGitHubPagesBase ? `/${repoName}/` : "",
 };
 
 export default nextConfig;
