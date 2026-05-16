@@ -12,6 +12,9 @@ import { RouteLoader } from "@/components/effects/RouteLoader"
 import { EasterEgg } from "@/components/effects/EasterEgg"
 import { CookieBanner } from "@/components/layout/CookieBanner"
 import { PageTransition } from "@/components/layout/PageTransition"
+import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat"
+import { SplashScreen } from "@/components/layout/SplashScreen"
+import { PWAPrompt } from "@/components/layout/PWAPrompt"
 import { SITE_URL } from "@/lib/site"
 
 const inter = Inter({
@@ -89,10 +92,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`dark ${inter.variable} ${barlow.variable}`}>
+    <html lang="es" suppressHydrationWarning className={`dark ${inter.variable} ${barlow.variable}`}>
       <head>
         <link rel="preconnect" href="https://www.google.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://maps.google.com" crossOrigin="anonymous" />
+        {/* No-flash theme bootstrap (runs before first paint). Solo clases: color-scheme viene de globals.css (:root / html.light). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('pcdc-theme')||'dark';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);var r=document.documentElement;r.classList.toggle('dark',d);r.classList.toggle('light',!d)}catch(e){}})();`,
+          }}
+        />
       </head>
       <body className="bg-[#0a0a0a] text-[#f5f5f0] font-sans antialiased">
         <LocalBusinessJsonLd />
@@ -108,6 +117,9 @@ export default function RootLayout({
         <RouteLoader />
         <EasterEgg />
         <CookieBanner />
+        <WhatsAppFloat />
+        <PWAPrompt />
+        <SplashScreen />
         <Toaster
           theme="dark"
           position="top-center"

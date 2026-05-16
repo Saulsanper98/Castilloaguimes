@@ -2,13 +2,11 @@
 
 import { Sun, Sunset, Moon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { slotEndLabel, type BookingDuration } from "@/lib/booking"
-import { getSlotMockStatus } from "@/lib/slotMock"
+import { getSlotAggregatedMockStatus, slotEndLabel, type BookingDuration } from "@/lib/booking"
 
 interface Props {
   slots: string[]
   selectedSlot: string | null
-  selectedCourtId: number
   dateKey: string
   duration: BookingDuration
   /** Filtro principal de franja del día */
@@ -39,7 +37,6 @@ const BUCKETS = [
 export function SlotGrid({
   slots,
   selectedSlot,
-  selectedCourtId,
   dateKey,
   duration,
   daypart,
@@ -65,7 +62,7 @@ export function SlotGrid({
             </div>
             <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 max-h-[260px] overflow-y-auto pr-1 no-scrollbar">
               {bucketSlots.map((slot) => {
-                const status = getSlotMockStatus(dateKey, slot, selectedCourtId)
+                const status = getSlotAggregatedMockStatus(dateKey, slot)
                 const isSelected = selectedSlot === slot
                 const isFull = status === "full"
                 const isFew = status === "few"

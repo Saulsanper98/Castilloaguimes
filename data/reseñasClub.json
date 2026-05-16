@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "author": "Lourdes M.",
+    "initials": "LM",
+    "color": "#3a7d44",
+    "stars": 5,
+    "date": "2026-04-12",
+    "text": "Las mejores pistas de la isla. Las panorámicas son una pasada para grabar partidos.",
+    "highlight": "Mejores pistas de la isla",
+    "source": "Google"
+  },
+  {
+    "id": 2,
+    "author": "Daniel R.",
+    "initials": "DR",
+    "color": "#e8d44d",
+    "stars": 5,
+    "date": "2026-03-30",
+    "text": "La cafetería es buenísima y siempre encuentras pista incluso entre semana. La app me ahorra mucho tiempo.",
+    "highlight": "Siempre encuentras pista",
+    "source": "Google"
+  },
+  {
+    "id": 3,
+    "author": "Familia García",
+    "initials": "FG",
+    "color": "#7c83ff",
+    "stars": 5,
+    "date": "2026-02-15",
+    "text": "Nuestros hijos llevan dos años en la escuela. Pablo es excepcional, los niños adoran las clases.",
+    "highlight": "Adoran las clases",
+    "source": "Google"
+  },
+  {
+    "id": 4,
+    "author": "Iván S.",
+    "initials": "IS",
+    "color": "#ff8a5b",
+    "stars": 5,
+    "date": "2026-01-05",
+    "text": "Club muy bien organizado, instalaciones de primera y trato cercano. Recomendable al 100 %.",
+    "highlight": "Instalaciones de primera",
+    "source": "Facebook"
+  }
+]

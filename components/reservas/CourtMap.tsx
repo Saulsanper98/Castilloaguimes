@@ -12,10 +12,12 @@ interface Props {
   typeFilter: CourtType | "all"
   dateKey?: string
   slot?: string | null
+  /** Si se pasa, solo se muestran estas pistas (p. ej. libres en la franja elegida). */
+  allowedCourtIds?: number[] | null
   onLegendTypeSelect?: (t: CourtType) => void
 }
 
-export function CourtMap({ selectedCourtId, onSelect, typeFilter, dateKey, slot, onLegendTypeSelect }: Props) {
+export function CourtMap({ selectedCourtId, onSelect, typeFilter, dateKey, slot, allowedCourtIds, onLegendTypeSelect }: Props) {
   const [scale, setScale] = useState(1)
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -23,12 +25,36 @@ export function CourtMap({ selectedCourtId, onSelect, typeFilter, dateKey, slot,
     setScale((s) => Math.min(1.75, Math.max(0.85, Math.round((s + delta) * 100) / 100)))
   }, [])
 
+  const courtsToShow = COURTS.filter((court) => {
+    if (allowedCourtIds != null) {
+      if (allowedCourtIds.length === 0) return false
+      if (!allowedCourtIds.includes(court.id)) return false
+    }
+    if (typeFilter !== "all" && court.type !== typeFilter) return false
+    return true
+  })
+
+  const noneFreeAtSlot = allowedCourtIds != null && allowedCourtIds.length === 0
+  const emptyList = courtsToShow.length === 0
+
+  const emptyMessage = noneFreeAtSlot
+    ? "No hay pistas libres a esta hora. Elige otra franja."
+    : emptyList
+      ? "Ninguna pista de este tipo está libre a esta hora. Prueba «Todas» u otro tipo."
+      : null
+
   return (
     <div className="space-y-3">
+      {emptyMessage && (
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100/95">
+          {emptyMessage}
+        </p>
+      )}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#f5f5f0]/45">
           Plano del recinto · toca una pista
         </p>
+        {courtsToShow.length > 0 && (
         <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-[#1a1a1a] p-0.5">
           <button
             type="button"
@@ -48,8 +74,10 @@ export function CourtMap({ selectedCourtId, onSelect, typeFilter, dateKey, slot,
             <Plus size={14} aria-hidden />
           </button>
         </div>
+        )}
       </div>
 
+      {courtsToShow.length > 0 ? (
       <div
         ref={scrollRef}
         className="relative w-full overflow-auto rounded-2xl border border-white/10 bg-[#0d0d0d] [-webkit-overflow-scrolling:touch]"
@@ -69,19 +97,20 @@ export function CourtMap({ selectedCourtId, onSelect, typeFilter, dateKey, slot,
           </svg>
 
           <div className="pointer-events-none absolute left-4 right-4 top-3 flex items-center justify-between text-[10px] uppercase tracking-widest text-[#f5f5f0]/45">
-            <span>14 pistas · 6.000 m²</span>
+            <span>
+              {courtsToShow.length === COURTS.length ? "14 pistas · 6.000 m²" : `${courtsToShow.length} pista(s) a esta hora`}
+            </span>
             <span className="hidden sm:inline text-[#f5f5f0]/35">LED · techo retráctil</span>
           </div>
 
           <div className="absolute inset-0 p-8">
-            {COURTS.map((court) => {
+            {courtsToShow.map((court) => {
               const isSelected = court.id === selectedCourtId
-              const isFiltered = typeFilter !== "all" && court.type !== typeFilter
               const status =
                 dateKey && slot ? getCourtSlotAvailability(court.id, dateKey, slot) : ("free" as const)
               const isFull = status === "full"
               const isFew = status === "few"
-              const disabled = isFiltered || isFull
+              const disabled = isFull
               const color = COURT_TYPE_COLOR[court.type]
               const title = `${court.name} — ${COURT_TYPE_LABEL[court.type]}${isFull ? " · Completa" : isFew ? " · Pocas plazas" : " · Disponible"}`
 
@@ -96,8 +125,7 @@ export function CourtMap({ selectedCourtId, onSelect, typeFilter, dateKey, slot,
                   aria-pressed={isSelected}
                   className={cn(
                     "absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-200 group",
-                    isFiltered && "cursor-not-allowed opacity-15",
-                    isFull && !isFiltered && "cursor-not-allowed opacity-25",
+                    isFull && "cursor-not-allowed opacity-25",
                     !disabled && "cursor-pointer"
                   )}
                   style={{ left: `${court.x}%`, top: `${court.y}%` }}
@@ -151,32 +179,32 @@ export function CourtMap({ selectedCourtId, onSelect, typeFilter, dateKey, slot,
           </div>
         </div>
       </div>
+      ) : null}
 
       <ul className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3" aria-label="Listado de pistas">
-        {COURTS.map((court) => {
+        {courtsToShow.map((court) => {
           const st = dateKey && slot ? getCourtSlotAvailability(court.id, dateKey, slot) : "free"
-          const filtered = typeFilter !== "all" && court.type !== typeFilter
           const active = court.id === selectedCourtId
           return (
             <li key={court.id}>
               <button
                 type="button"
-                disabled={filtered || st === "full"}
+                disabled={st === "full"}
                 onClick={() => onSelect(court)}
                 className={cn(
                   "flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2 text-left text-xs transition-colors",
                   active
                     ? "border-[#3a7d44] bg-[#3a7d44]/15 text-[#f5f5f0]"
                     : "border-white/10 bg-[#1a1a1a] text-[#f5f5f0]/75 hover:border-white/25",
-                  (filtered || st === "full") && "cursor-not-allowed opacity-40"
+                  st === "full" && "cursor-not-allowed opacity-40"
                 )}
               >
                 <span className="font-bold">{court.name}</span>
                 <span className="shrink-0 text-[10px] text-[#f5f5f0]/50">{COURT_TYPE_LABEL[court.type]}</span>
-                {st === "few" && !filtered && (
+                {st === "few" && (
                   <span className="shrink-0 text-[10px] font-bold text-[#e8d44d]">Pocas</span>
                 )}
-                {st === "full" && !filtered && (
+                {st === "full" && (
                   <span className="shrink-0 text-[10px] font-bold text-red-400/90">Llena</span>
                 )}
               </button>

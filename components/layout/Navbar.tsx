@@ -8,16 +8,19 @@ import { Menu, X, Search, Calendar, Receipt, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/brand/Logo"
 import { UserMenu } from "@/components/layout/UserMenu"
+import { NotificationBell } from "@/components/layout/NotificationBell"
 
 const navLinks = [
   { label: "Inicio", href: "/" },
   { label: "Reservas", href: "/reservas", mega: true as const },
+  { label: "Disponibilidad", href: "/disponibilidad" },
   { label: "Partidos", href: "/partidos-abiertos" },
   { label: "Escuela", href: "/escuela" },
   { label: "Campeonatos", href: "/campeonatos" },
   { label: "Instalaciones", href: "/instalaciones" },
   { label: "Noticias", href: "/noticias" },
   { label: "Tarifas", href: "/tarifas" },
+  { label: "FAQ", href: "/faq" },
   { label: "Contacto", href: "/contacto" },
 ] as const
 
@@ -161,6 +164,7 @@ export default function Navbar() {
             >
               <Search className="h-[1.125rem] w-[1.125rem]" strokeWidth={1.75} aria-hidden />
             </button>
+            <NotificationBell />
             <UserMenu variant="desktop" />
           </div>
 
@@ -178,6 +182,7 @@ export default function Navbar() {
             >
               <Search className="h-5 w-5" strokeWidth={1.75} aria-hidden />
             </button>
+            <NotificationBell />
             <button
               type="button"
               className="text-[#f5f5f0] p-2"

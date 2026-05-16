@@ -1,7 +1,7 @@
 "use client"
 
 import * as Dialog from "@radix-ui/react-dialog"
-import { Check, Clock, CreditCard, Info, MapPin, MessageCircle, Share2, X, Link2, Building2 } from "lucide-react"
+import { Check, ChevronDown, Clock, CreditCard, Info, MapPin, MessageCircle, Share2, X, Link2, Building2 } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { toast } from "sonner"
@@ -70,10 +70,18 @@ export function ReservasSummaryAside({
   const policyDate = getCancellationPolicyUpdatedLabel()
 
   return (
-    <aside aria-label="Resumen de reserva" className="space-y-5">
-      <div className="rounded-2xl border border-white/10 bg-[#111111] p-6 lg:sticky lg:top-24">
+    <aside
+      aria-label="Resumen de reserva"
+      className="lg:sticky lg:top-[4.75rem] lg:z-20 lg:max-h-[calc(100dvh-5.25rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1"
+    >
+      <div className="rounded-2xl border border-white/10 bg-[#111111] p-6">
         <div className="mb-4 flex items-start justify-between gap-2">
-          <h3 className="font-bold text-[#f5f5f0]">Resumen</h3>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="rounded border border-[#e8d44d]/40 bg-[#e8d44d]/10 px-2 py-0.5 text-[9px] font-black tracking-[0.2em] text-[#e8d44d]">
+              CONFIRMAR
+            </span>
+            <h3 className="font-bold text-[#f5f5f0]">Resumen</h3>
+          </div>
           <span className="rounded-full border border-[#3a7d44]/30 bg-[#3a7d44]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#3a7d44]">
             IVA incluido
           </span>
@@ -97,12 +105,18 @@ export function ReservasSummaryAside({
               {total !== null ? formatEuro(total) : "—"}
             </span>
           </div>
-          <p className="text-[10px] leading-relaxed text-[#f5f5f0]/45">Pista completa (4 jugadores). Precio orientativo hasta confirmación en recepción o app.</p>
+          <p className="text-[10px] leading-relaxed text-[#f5f5f0]/45">
+            Pista completa (4 jugadores). Precio orientativo hasta confirmación en recepción o app.
+          </p>
         </div>
 
         <div className="mb-3 flex flex-wrap gap-2">
-          <span className="rounded-md border border-white/10 bg-[#1a1a1a] px-2 py-1 text-[9px] font-semibold text-[#f5f5f0]/55">Pago seguro</span>
-          <span className="rounded-md border border-white/10 bg-[#1a1a1a] px-2 py-1 text-[9px] font-semibold text-[#f5f5f0]/55">Sin comisiones web</span>
+          <span className="rounded-md border border-white/10 bg-[#1a1a1a] px-2 py-1 text-[9px] font-semibold text-[#f5f5f0]/55">
+            Pago seguro
+          </span>
+          <span className="rounded-md border border-white/10 bg-[#1a1a1a] px-2 py-1 text-[9px] font-semibold text-[#f5f5f0]/55">
+            Sin comisiones web
+          </span>
         </div>
 
         {graceActive && selectedSlot && graceRemain > 0 && (
@@ -113,7 +127,13 @@ export function ReservasSummaryAside({
                 Bloqueo: {String(minutesRemain).padStart(2, "0")}:{String(secondsRemain).padStart(2, "0")}
               </span>
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-black/30" role="progressbar" aria-valuenow={graceRemain} aria-valuemin={0} aria-valuemax={300}>
+            <div
+              className="h-1.5 overflow-hidden rounded-full bg-black/30"
+              role="progressbar"
+              aria-valuenow={graceRemain}
+              aria-valuemin={0}
+              aria-valuemax={300}
+            >
               <div className="h-full rounded-full bg-[#e8d44d] transition-[width] duration-1000 ease-linear" style={{ width: `${progressPct}%` }} />
             </div>
           </div>
@@ -143,7 +163,6 @@ export function ReservasSummaryAside({
           )}
         </button>
 
-        {/* Reservar y pagar en recepción */}
         <button
           type="button"
           disabled={!selectedDate || !selectedSlot || bookingLoading}
@@ -159,7 +178,7 @@ export function ReservasSummaryAside({
           <Building2 size={14} aria-hidden />
           Reservar y pagar en recepción
         </button>
-        <p className="mt-1.5 text-[10px] text-[#f5f5f0]/45 text-center">
+        <p className="mt-1.5 text-center text-[10px] text-[#f5f5f0]/45">
           Pago al llegar al club. La pista queda bloqueada a tu nombre.
         </p>
 
@@ -208,14 +227,17 @@ export function ReservasSummaryAside({
           </button>
         </div>
 
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-4">
           <p className="flex items-center gap-1.5 text-xs text-[#f5f5f0]/55">
             <Info size={11} aria-hidden />
             Cancelación gratuita hasta 4 h antes.
           </p>
           <Dialog.Root>
             <Dialog.Trigger asChild>
-              <button type="button" className="text-left text-xs font-semibold text-[#3a7d44] underline underline-offset-2 hover:text-[#4a9d54]">
+              <button
+                type="button"
+                className="text-left text-xs font-semibold text-[#3a7d44] underline underline-offset-2 hover:text-[#4a9d54]"
+              >
                 Condiciones de cancelación
               </button>
             </Dialog.Trigger>
@@ -224,13 +246,18 @@ export function ReservasSummaryAside({
               <Dialog.Content className="fixed left-1/2 top-1/2 z-[301] w-[min(100vw-2rem,28rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[#111111] p-6 shadow-2xl focus:outline-none">
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <Dialog.Title className="font-display text-lg font-black text-[#f5f5f0]">Política de cancelación</Dialog.Title>
-                  <Dialog.Close type="button" className="rounded-lg p-1 text-[#f5f5f0]/55 hover:bg-white/10 hover:text-[#f5f5f0]" aria-label="Cerrar">
+                  <Dialog.Close
+                    type="button"
+                    className="rounded-lg p-1 text-[#f5f5f0]/55 hover:bg-white/10 hover:text-[#f5f5f0]"
+                    aria-label="Cerrar"
+                  >
                     <X size={18} aria-hidden />
                   </Dialog.Close>
                 </div>
                 <Dialog.Description className="space-y-3 text-sm leading-relaxed text-[#f5f5f0]/65">
                   <p>
-                    Cancelación gratuita hasta <strong className="text-[#f5f5f0]">4 horas antes</strong> del inicio. Fuera de plazo se factura el importe íntegro.
+                    Cancelación gratuita hasta <strong className="text-[#f5f5f0]">4 horas antes</strong> del inicio. Fuera de
+                    plazo se factura el importe íntegro.
                   </p>
                   <p>Cambio de hora o pista sin coste con 4 h de margen y disponibilidad (confirmación recepción).</p>
                   <p className="text-xs text-[#f5f5f0]/50">Torneos y eventos especiales pueden tener condiciones distintas.</p>
@@ -245,44 +272,61 @@ export function ReservasSummaryAside({
             </Dialog.Portal>
           </Dialog.Root>
         </div>
-      </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#111111] p-5">
-        <h4 className="mb-4 flex items-center gap-2 text-sm font-bold text-[#f5f5f0]">
-          <CreditCard size={14} className="text-[#3a7d44]" aria-hidden />
-          Tarifas
-        </h4>
-        <div className="space-y-2 text-xs">
-          {[
-            { label: "Pista completa (4 jug.) · 1h30", price: "6,50 €/pers." },
-            { label: "Pista completa (4 jug.) · 2h", price: "8,00 €/pers." },
-            { label: "Pista individual · 1h", price: "5,50 €/pers." },
-            { label: "Pista individual · 1h30", price: "6,50 €/pers." },
-            { label: "Bono 50×10 (16:00–23:00)", price: "50 €" },
-          ].map((t) => (
-            <div key={t.label} className="flex justify-between gap-2 text-[#f5f5f0]/65">
-              <span>{t.label}</span>
-              <span className="shrink-0 font-semibold text-[#f5f5f0]">{t.price}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+        <details className="group/tar mt-5 border-t border-white/10 pt-4">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 py-1 text-sm font-bold text-[#f5f5f0] [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-2">
+              <CreditCard size={14} className="text-[#3a7d44]" aria-hidden />
+              Tarifas de referencia
+            </span>
+            <ChevronDown
+              size={16}
+              className="shrink-0 text-[#f5f5f0]/45 transition-transform duration-200 group-open/tar:rotate-180"
+              aria-hidden
+            />
+          </summary>
+          <div className="mt-3 space-y-2 border-t border-white/5 pt-3 text-xs">
+            {[
+              { label: "Pista completa (4 jug.) · 1h30", price: "6,50 €/pers." },
+              { label: "Pista completa (4 jug.) · 2h", price: "8,00 €/pers." },
+              { label: "Pista individual · 1h", price: "5,50 €/pers." },
+              { label: "Pista individual · 1h30", price: "6,50 €/pers." },
+              { label: "Bono 50×10 (16:00–23:00)", price: "50 €" },
+            ].map((t) => (
+              <div key={t.label} className="flex justify-between gap-2 text-[#f5f5f0]/65">
+                <span>{t.label}</span>
+                <span className="shrink-0 font-semibold text-[#f5f5f0]">{t.price}</span>
+              </div>
+            ))}
+          </div>
+        </details>
 
-      <div className="rounded-2xl border border-white/10 bg-[#111111] p-5">
-        <h4 className="mb-2 flex items-center gap-2 text-sm font-bold text-[#f5f5f0]">
-          <MapPin size={14} className="text-[#3a7d44]" aria-hidden />
-          Ubicación
-        </h4>
-        <p className="text-xs leading-relaxed text-[#f5f5f0]/65">
-          C/ Pino nº10, P.I. Arinaga
-          <br />
-          Agüimes, Las Palmas
-          <br />
-          Tel:{" "}
-          <a href="tel:+34928753650" className="font-semibold text-[#3a7d44] hover:underline">
-            928 753 650
-          </a>
-        </p>
+        <details className="group/ubi mt-3 border-t border-white/10 pt-4">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 py-1 text-sm font-bold text-[#f5f5f0] [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-2">
+              <MapPin size={14} className="text-[#3a7d44]" aria-hidden />
+              Ubicación y contacto
+            </span>
+            <ChevronDown
+              size={16}
+              className="shrink-0 text-[#f5f5f0]/45 transition-transform duration-200 group-open/ubi:rotate-180"
+              aria-hidden
+            />
+          </summary>
+          <div className="mt-3 border-t border-white/5 pt-3 text-xs leading-relaxed text-[#f5f5f0]/65">
+            <p>
+              C/ Pino nº10, P.I. Arinaga
+              <br />
+              Agüimes, Las Palmas
+            </p>
+            <p className="mt-2">
+              Tel:{" "}
+              <a href="tel:+34928753650" className="font-semibold text-[#3a7d44] hover:underline">
+                928 753 650
+              </a>
+            </p>
+          </div>
+        </details>
       </div>
     </aside>
   )

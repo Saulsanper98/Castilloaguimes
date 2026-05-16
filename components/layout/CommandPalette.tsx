@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import type { LucideIcon } from "lucide-react"
-import { Search, X, Calendar, Users, GraduationCap, Trophy, MapPin, Newspaper, Phone, Receipt, Home } from "lucide-react"
+import { Search, X, Calendar, Users, GraduationCap, Trophy, MapPin, Newspaper, Phone, Receipt, Home, Activity, HelpCircle } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
 import noticias from "@/data/noticias.json"
 
@@ -19,6 +19,14 @@ type Item = {
 const STATIC_ITEMS: Item[] = [
   { id: "home", label: "Inicio", href: "/", icon: Home, keywords: ["home", "principal"] },
   { id: "reservas", label: "Reservar pista", href: "/reservas", icon: Calendar, keywords: ["pista", "calendario", "horarios", "book"] },
+  {
+    id: "disponibilidad",
+    label: "Disponibilidad en directo",
+    href: "/disponibilidad",
+    icon: Activity,
+    keywords: ["heatmap", "huecos", "libre", "pistas", "sin login"],
+  },
+  { id: "faq", label: "Preguntas frecuentes", href: "/faq", icon: HelpCircle, keywords: ["socio", "precio", "llegar", "clase", "cancelar"] },
   { id: "partidos", label: "Partidos abiertos", href: "/partidos-abiertos", icon: Users, keywords: ["match", "jugar", "open", "americano"] },
   { id: "escuela", label: "Escuela de pádel", href: "/escuela", icon: GraduationCap, keywords: ["clases", "entrenador", "aprender", "monitor"] },
   { id: "campeonatos", label: "Campeonatos y torneos", href: "/campeonatos", icon: Trophy, keywords: ["liga", "open", "torneo", "inscripción"] },
@@ -32,6 +40,7 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [active, setActive] = useState(0)
+  const [recentIds, setRecentIds] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
@@ -47,12 +56,18 @@ export function CommandPalette() {
   const items = [...STATIC_ITEMS, ...newsItems]
 
   const q = query.trim().toLowerCase()
+  // Recent items (saved when user selects something)
+  const recents = recentIds
+    .map((id) => items.find((it) => it.id === id))
+    .filter(Boolean) as Item[]
   const filtered = q
     ? items.filter((it) => {
         const hay = [it.label, it.hint ?? "", ...(it.keywords ?? [])].join(" ").toLowerCase()
         return hay.includes(q)
       })
-    : items.slice(0, 9)
+    : recents.length > 0
+      ? [...recents, ...items.filter((it) => !recentIds.includes(it.id)).slice(0, Math.max(0, 6 - recents.length))]
+      : items.slice(0, 9)
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -79,7 +94,19 @@ export function CommandPalette() {
       setQuery("")
     }
     window.addEventListener("command-palette-open", onOpenFromNav)
-    return () => window.removeEventListener("command-palette-open", onOpenFromNav)
+    // Hydrate recents
+    const raf = requestAnimationFrame(() => {
+      try {
+        const raw = localStorage.getItem("pcdc-cmdk-recent")
+        if (raw) setRecentIds(JSON.parse(raw) as string[])
+      } catch {
+        /* ignore */
+      }
+    })
+    return () => {
+      window.removeEventListener("command-palette-open", onOpenFromNav)
+      cancelAnimationFrame(raf)
+    }
   }, [])
 
   function close() {
@@ -96,7 +123,20 @@ export function CommandPalette() {
     return () => clearTimeout(t)
   }, [open])
 
+  function pushRecent(id: string) {
+    try {
+      const raw = localStorage.getItem("pcdc-cmdk-recent")
+      const prev: string[] = raw ? JSON.parse(raw) : []
+      const next = [id, ...prev.filter((x) => x !== id)].slice(0, 3)
+      localStorage.setItem("pcdc-cmdk-recent", JSON.stringify(next))
+      setRecentIds(next)
+    } catch {
+      /* ignore */
+    }
+  }
+
   function select(item: Item) {
+    pushRecent(item.id)
     close()
     router.push(item.href)
   }
@@ -165,6 +205,11 @@ export function CommandPalette() {
             <ul className="max-h-[60vh] overflow-y-auto no-scrollbar py-2" role="listbox">
               {filtered.length === 0 && (
                 <li className="px-4 py-6 text-sm text-[#f5f5f0]/40 text-center">Sin resultados.</li>
+              )}
+              {!q && recents.length > 0 && (
+                <li className="px-4 pt-1 pb-1 text-[9px] uppercase tracking-widest font-bold text-[#f5f5f0]/40">
+                  Recientes
+                </li>
               )}
               {filtered.map((item, i) => {
                 const Icon = item.icon

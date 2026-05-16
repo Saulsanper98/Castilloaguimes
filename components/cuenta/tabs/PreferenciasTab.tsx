@@ -37,13 +37,14 @@ export function PreferenciasTab({ profile, onPatch }: Props) {
           />
           <Toggle
             label="Notificaciones push"
-            description="En la app oficial: recordatorios y plazas que se completan."
+            description="Disponible cuando la app oficial del club esté publicada. Mientras tanto, usa email o WhatsApp en recepción."
             checked={profile.notifPush}
-            onChange={(v) => update("notifPush", v)}
+            disabled
+            onChange={() => {}}
           />
           <Toggle
             label="WhatsApp"
-            description="Solo para incidencias importantes (cancelaciones de pista, cambios)."
+            description="Avisos por WhatsApp desde la web: en preparación. Indica tu preferencia y lo tendremos en cuenta al migrar a la app."
             checked={profile.notifWhatsapp}
             onChange={(v) => update("notifWhatsapp", v)}
           />

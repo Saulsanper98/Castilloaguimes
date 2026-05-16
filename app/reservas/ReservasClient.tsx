@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import Link from "next/link"
 import { ChevronLeft, ChevronRight, Star, Link2 } from "lucide-react"
 import {
   format,
@@ -25,14 +26,13 @@ import { COURTS, COURT_TYPE_LABEL, type CourtType } from "@/lib/courts"
 import { CourtMap } from "@/components/reservas/CourtMap"
 import { Confetti } from "@/components/effects/Confetti"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
-import { BookingStepper } from "@/components/reservas/BookingStepper"
 import { ReservasSummaryAside } from "@/components/reservas/ReservasSummaryAside"
 import { ReservasMobileDock } from "@/components/reservas/ReservasMobileDock"
 import { StepCard } from "@/components/reservas/StepCard"
-import { DaypartFilter, type Daypart } from "@/components/reservas/DaypartFilter"
+import type { Daypart } from "@/components/reservas/DaypartFilter"
 import { SlotGrid } from "@/components/reservas/SlotGrid"
 import { CourtHeatmap } from "@/components/reservas/CourtHeatmap"
-import { SmartSuggestions } from "@/components/reservas/SmartSuggestions"
+import { DaypartSelect } from "@/components/reservas/DaypartSelect"
 import { SocialProof } from "@/components/reservas/SocialProof"
 import { FloatingGraceTimer } from "@/components/reservas/FloatingGraceTimer"
 import { BookingSuccessModal } from "@/components/reservas/BookingSuccessModal"
@@ -48,6 +48,7 @@ import {
   CANARY_TIMEZONE_NOTE,
   formatEuro,
   getAllowedDurations,
+  getAvailableCourtIdsForSlot,
   getPistaTotalPrice,
   getSlotDescription,
   type BookingDuration,
@@ -105,7 +106,6 @@ export default function ReservasClient() {
   const [graceUntil, setGraceUntil] = useState<number | null>(null)
   const [graceRemain, setGraceRemain] = useState(0)
   const [confettiTick, setConfettiTick] = useState(0)
-  const [mapTouched, setMapTouched] = useState(false)
   const [bookingLoading, setBookingLoading] = useState(false)
   const [slotsLoading, setSlotsLoading] = useState(false)
   const [online, setOnline] = useState(true)
@@ -115,8 +115,10 @@ export default function ReservasClient() {
   const [slotView, setSlotView] = useState<"grid" | "heatmap">("grid")
   const [successOpen, setSuccessOpen] = useState(false)
   const [userName, setUserName] = useState<string | undefined>(undefined)
+  const [needsLoginToBook, setNeedsLoginToBook] = useState(true)
   const [walletCents, setWalletCents] = useState(0)
   const [waitlistSlot, setWaitlistSlot] = useState<string | null>(null)
+  const [courtStepTouched, setCourtStepTouched] = useState(false)
   const calRef = useRef<HTMLDivElement>(null)
 
   const monthStart = startOfMonth(currentMonth)
@@ -145,6 +147,20 @@ export default function ReservasClient() {
     if (!selectedDate || !selectedSlot || !recurring) return []
     return Array.from({ length: recurringWeeks }, (_, i) => addWeeks(selectedDate, i))
   }, [selectedDate, selectedSlot, recurring, recurringWeeks])
+
+  const bookingPhaseDate = useMemo<"pending" | "active" | "done">(() => (selectedDate ? "done" : "active"), [selectedDate])
+
+  const bookingPhaseTime = useMemo<"pending" | "active" | "done">(() => {
+    if (!selectedDate) return "pending"
+    if (selectedSlot) return "done"
+    return "active"
+  }, [selectedDate, selectedSlot])
+
+  const bookingPhaseCourt = useMemo<"pending" | "active" | "done">(() => {
+    if (!selectedSlot) return "pending"
+    if (courtStepTouched) return "done"
+    return "active"
+  }, [selectedSlot, courtStepTouched])
 
   useEffect(() => {
     function up() {
@@ -177,12 +193,32 @@ export default function ReservasClient() {
         }
         const profile = loadProfile()
         if (profile.name && profile.name !== "Invitado") setUserName(profile.name)
+        setNeedsLoginToBook(!profile.lastLoginAt || profile.name === "Invitado")
         setWalletCents(profile.walletCents || 0)
       } catch {
         /* ignore */
       }
     }, 0)
     return () => window.clearTimeout(t)
+  }, [])
+
+  useEffect(() => {
+    function refreshAuth() {
+      try {
+        const profile = loadProfile()
+        setNeedsLoginToBook(!profile.lastLoginAt || profile.name === "Invitado")
+        if (profile.name && profile.name !== "Invitado") setUserName(profile.name)
+        setWalletCents(profile.walletCents || 0)
+      } catch {
+        /* ignore */
+      }
+    }
+    window.addEventListener("focus", refreshAuth)
+    window.addEventListener("storage", refreshAuth)
+    return () => {
+      window.removeEventListener("focus", refreshAuth)
+      window.removeEventListener("storage", refreshAuth)
+    }
   }, [])
 
   useEffect(() => {
@@ -200,10 +236,12 @@ export default function ReservasClient() {
       if (franja && TIME_SLOTS.includes(franja)) setSelectedSlot(franja)
       if (pista) {
         const n = parseInt(pista, 10)
-        if (n >= 1 && n <= 14) setSelectedCourtId(n)
+        if (n >= 1 && n <= 14) {
+          setSelectedCourtId(n)
+          setCourtStepTouched(true)
+        }
       }
       if (dur === "60" || dur === "90" || dur === "120") setDuration(parseInt(dur, 10) as BookingDuration)
-      if (fecha && franja) setMapTouched(true)
     })
   }, [searchParams, today])
 
@@ -232,7 +270,21 @@ export default function ReservasClient() {
       window.clearTimeout(boot)
       window.clearTimeout(done)
     }
-  }, [selectedDate, duration, selectedCourtId])
+  }, [selectedDate, duration])
+
+  const availableAtSlot = useMemo(() => {
+    if (!dateKey || !selectedSlot) return null
+    return getAvailableCourtIdsForSlot(dateKey, selectedSlot)
+  }, [dateKey, selectedSlot])
+
+  useEffect(() => {
+    if (!dateKey || !selectedSlot) return
+    const ids = getAvailableCourtIdsForSlot(dateKey, selectedSlot)
+    if (ids.length === 0) return
+    queueMicrotask(() => {
+      setSelectedCourtId((prev) => (ids.includes(prev) ? prev : ids[0]!))
+    })
+  }, [dateKey, selectedSlot])
 
   useEffect(() => {
     if (!selectedDate) return
@@ -244,16 +296,18 @@ export default function ReservasClient() {
   function clearSlotSelection() {
     setSelectedSlot(null)
     setGraceUntil(null)
+    setCourtStepTouched(false)
   }
 
   function pickSlot(slot: string) {
+    setCourtStepTouched(false)
     setSelectedSlot(slot)
     queueMicrotask(() => setGraceUntil(Date.now() + 5 * 60 * 1000))
   }
 
   function selectCourt(id: number, slot: string | null) {
     setSelectedCourtId(id)
-    setMapTouched(true)
+    setCourtStepTouched(true)
     if (slot) queueMicrotask(() => setGraceUntil(Date.now() + 5 * 60 * 1000))
   }
 
@@ -266,6 +320,7 @@ export default function ReservasClient() {
         window.clearInterval(id)
         setSelectedSlot(null)
         setGraceUntil(null)
+        setCourtStepTouched(false)
         toast.message("Tiempo de bloqueo agotado", { description: "Vuelve a elegir la franja." })
       }
     }, 1000)
@@ -298,8 +353,8 @@ export default function ReservasClient() {
     setSelectedSlot(lastHint.franja)
     setSelectedCourtId(lastHint.pista)
     setDuration(lastHint.duracion)
-    setMapTouched(true)
     setCurrentMonth(startOfMonth(startOfDay(d)))
+    setCourtStepTouched(true)
     toast.success("Datos cargados", { description: "Revisa la franja y confirma." })
   }
 
@@ -315,8 +370,22 @@ export default function ReservasClient() {
     }
   }
 
+  function bookingLoginRedirect() {
+    const q = searchParams.toString()
+    const redirect = `${pathname}${q ? `?${q}` : ""}`
+    router.push(`/cuenta?redirect=${encodeURIComponent(redirect)}`)
+  }
+
   async function handleBook() {
     if (!selectedDate || !selectedSlot) return
+    const p = loadProfile()
+    if (!p.lastLoginAt || p.name === "Invitado") {
+      toast.message("Inicia sesión para reservar", {
+        description: "Puedes explorar huecos libremente. Al entrar volverás a esta selección.",
+      })
+      bookingLoginRedirect()
+      return
+    }
     setBookingLoading(true)
     persistLast()
     await new Promise((r) => window.setTimeout(r, 450))
@@ -327,6 +396,14 @@ export default function ReservasClient() {
 
   async function handleBookAtClub() {
     if (!selectedDate || !selectedSlot) return
+    const p = loadProfile()
+    if (!p.lastLoginAt || p.name === "Invitado") {
+      toast.message("Inicia sesión para reservar", {
+        description: "Necesitamos tus datos para bloquear la pista a tu nombre.",
+      })
+      bookingLoginRedirect()
+      return
+    }
     setBookingLoading(true)
     persistLast()
     await new Promise((r) => window.setTimeout(r, 450))
@@ -428,6 +505,20 @@ export default function ReservasClient() {
               <InfoTooltip text={CANARY_TIMEZONE_NOTE} />
             </p>
           </div>
+          {needsLoginToBook && (
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-[#3a7d44]/35 bg-[#3a7d44]/10 px-4 py-3 text-sm text-[#f5f5f0]/90">
+              <p className="leading-snug">
+                <span className="font-bold text-[#f5f5f0]">Vista pública:</span> explora calendario y mapa de calor sin cuenta.
+                Para <span className="text-[#e8d44d] font-bold">confirmar</span> la reserva necesitas iniciar sesión.
+              </p>
+              <Link
+                href={`/cuenta?redirect=${encodeURIComponent(`${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`)}`}
+                className="shrink-0 inline-flex items-center justify-center rounded-lg bg-[#e8d44d] px-4 py-2.5 text-xs font-black text-[#0a0a0a] hover:bg-[#f0dc55] transition-colors"
+              >
+                Iniciar sesión
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -453,19 +544,6 @@ export default function ReservasClient() {
           </button>
         </div>
 
-        <BookingStepper
-          hasDate={!!selectedDate}
-          hasSlot={!!selectedSlot}
-          mapTouched={mapTouched}
-          onJumpToStep={(s) => {
-            if (s === 1) {
-              clearSlotSelection()
-              setMapTouched(false)
-            }
-            if (s === 2) setMapTouched(false)
-          }}
-        />
-
         {!selectedDate && (
           <div className="mb-8 rounded-2xl border border-dashed border-white/15 bg-[#111111]/60 px-5 py-8 text-center">
             <p className="text-sm font-semibold text-[#f5f5f0]">Empieza por el calendario</p>
@@ -473,31 +551,43 @@ export default function ReservasClient() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-start">
           <div className="space-y-8 lg:col-span-2">
-            <StepCard step={1} eyebrow="Fecha" title="¿Cuándo quieres jugar?" hint="Toca un día. Los domingos solo turno de 1h 30.">
-              <div className="mb-3 flex flex-wrap gap-2">
-                {[
-                  { label: "Hoy", get: () => today },
-                  { label: "Mañana", get: () => addDays(today, 1) },
-                  { label: "Próx. sábado", get: () => nextSaturday(today) },
-                  { label: "Próx. domingo", get: () => addDays(nextSaturday(today), 1) },
-                ].map((quick) => (
-                  <button
-                    key={quick.label}
-                    type="button"
-                    className="rounded-lg border border-white/10 bg-[#1a1a1a] px-3 py-1.5 text-xs font-bold text-[#f5f5f0]/80 hover:border-[#3a7d44]/50 hover:text-[#f5f5f0] transition-colors"
-                    onClick={() => {
-                      const d = quick.get()
-                      setSelectedDate(d)
-                      setCurrentMonth(startOfMonth(d))
-                      clearSlotSelection()
-                    }}
-                  >
-                    {quick.label}
-                  </button>
-                ))}
-              </div>
+            <StepCard
+              step={1}
+              eyebrow="Fecha"
+              title="¿Cuándo quieres jugar?"
+              hint="Toca un día. Los domingos solo turno de 1h 30."
+              stickyBookingHeader
+              phaseStatus={bookingPhaseDate}
+            >
+              <details className="mb-2 rounded-xl border border-[#252525] bg-[#111111]/80 sm:mb-3 [&_summary::-webkit-details-marker]:hidden">
+                <summary className="cursor-pointer list-none px-3 py-2.5 text-xs font-bold text-[#f5f5f0]/75 hover:text-[#f5f5f0]">
+                  Ir rápido a una fecha…
+                </summary>
+                <div className="flex flex-wrap gap-2 border-t border-white/5 px-3 py-3">
+                  {[
+                    { label: "Hoy", get: () => today },
+                    { label: "Mañana", get: () => addDays(today, 1) },
+                    { label: "Próx. sábado", get: () => nextSaturday(today) },
+                    { label: "Próx. domingo", get: () => addDays(nextSaturday(today), 1) },
+                  ].map((quick) => (
+                    <button
+                      key={quick.label}
+                      type="button"
+                      className="rounded-lg border border-white/10 bg-[#1a1a1a] px-3 py-1.5 text-xs font-bold text-[#f5f5f0]/80 hover:border-[#3a7d44]/50 hover:text-[#f5f5f0] transition-colors"
+                      onClick={() => {
+                        const d = quick.get()
+                        setSelectedDate(d)
+                        setCurrentMonth(startOfMonth(d))
+                        clearSlotSelection()
+                      }}
+                    >
+                      {quick.label}
+                    </button>
+                  ))}
+                </div>
+              </details>
 
               <div
                 ref={calRef}
@@ -620,112 +710,105 @@ export default function ReservasClient() {
               </div>
             </StepCard>
 
-            {selectedDate && dateKey && (
-              <SmartSuggestions
-                dateKey={dateKey}
-                slots={TIME_SLOTS}
-                duration={duration}
-                habitualSlot={lastHint?.franja ?? null}
-                habitualCourtId={favoriteId ?? lastHint?.pista ?? null}
-                onApply={(s) => {
-                  setSelectedSlot(s.slot)
-                  setSelectedCourtId(s.courtId)
-                  setMapTouched(true)
-                  pickSlot(s.slot)
-                }}
-              />
-            )}
-
             {selectedDate && (
               <StepCard
                 step={2}
                 eyebrow={format(selectedDate, "EEEE d 'de' MMMM", { locale: es })}
-                title="¿A qué hora?"
-                hint="Elige la franja, después la hora exacta."
+                title="Elige hora de inicio"
+                hint="La cuadrícula muestra si queda hueco en alguna pista. Más abajo solo verás pistas libres para la hora elegida."
+                stickyBookingHeader
+                phaseStatus={bookingPhaseTime}
               >
-                {/* Daypart big buttons */}
-                <DaypartFilter value={daypart} onChange={setDaypart} />
+                <div className="rounded-2xl border border-[#3a7d44]/35 bg-gradient-to-br from-[#3a7d44]/12 to-[#111111] p-4 sm:p-5">
+                  <div className="mx-auto w-full max-w-lg">
+                    <p className="mb-3 text-center text-[11px] font-black uppercase tracking-[0.25em] text-[#e8d44d] sm:text-left">
+                      ¿Cuánto quieres jugar?
+                    </p>
+                    <div
+                      className="grid grid-cols-3 gap-2"
+                      role="radiogroup"
+                      aria-label="Duración de la reserva"
+                    >
+                      {([60, 90, 120] as BookingDuration[]).map((d) => {
+                        const allowed = allowedDurations.includes(d)
+                        return (
+                          <button
+                            key={d}
+                            type="button"
+                            role="radio"
+                            aria-checked={duration === d}
+                            disabled={!allowed}
+                            title={!allowed ? "No disponible este día" : undefined}
+                            onClick={() => allowed && setDuration(d)}
+                            className={cn(
+                              "min-h-[48px] rounded-xl border px-2 py-3 text-center text-sm font-black transition-all",
+                              duration === d && allowed && "border-[#3a7d44] bg-[#3a7d44] text-white shadow-lg shadow-[#3a7d44]/25",
+                              duration !== d && allowed && "border-white/15 bg-[#1a1a1a] text-[#f5f5f0]/85 hover:border-[#3a7d44]/50",
+                              !allowed && "cursor-not-allowed border-white/5 bg-[#1a1a1a]/50 text-[#f5f5f0]/25"
+                            )}
+                          >
+                            {d === 60 ? "1 h" : d === 90 ? "1 h 30" : "2 h"}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <p className="mt-2 text-center text-[11px] text-[#f5f5f0]/50 sm:text-left">
+                      Precio total según duración. Los domingos solo 1 h 30.
+                    </p>
+                  </div>
+                </div>
 
-                {/* View toggle: grid vs heatmap */}
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/45">
-                    Vista
+                <div className="mt-4 space-y-1.5">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f5f5f0]/45">
+                    Filtrar por franja
                   </p>
-                  <div
-                    className="inline-flex rounded-lg border border-white/10 bg-[#1a1a1a] p-0.5 text-[10px] font-bold"
-                    role="radiogroup"
-                    aria-label="Vista de horarios"
-                  >
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={slotView === "grid"}
-                      onClick={() => setSlotView("grid")}
-                      className={cn(
-                        "px-3 py-1.5 rounded-md transition-colors",
-                        slotView === "grid"
-                          ? "bg-[#3a7d44] text-white"
-                          : "text-[#f5f5f0]/65 hover:text-[#f5f5f0]"
-                      )}
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                    <DaypartSelect value={daypart} onChange={setDaypart} hideLabel />
+                    <div
+                      className="inline-flex h-[52px] w-full shrink-0 items-center justify-center rounded-lg border border-white/10 bg-[#1a1a1a] p-0.5 text-[10px] font-bold sm:w-auto sm:justify-start"
+                      role="radiogroup"
+                      aria-label="Vista de horarios"
                     >
-                      Por franja
-                    </button>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={slotView === "heatmap"}
-                      onClick={() => setSlotView("heatmap")}
-                      className={cn(
-                        "px-3 py-1.5 rounded-md transition-colors",
-                        slotView === "heatmap"
-                          ? "bg-[#3a7d44] text-white"
-                          : "text-[#f5f5f0]/65 hover:text-[#f5f5f0]"
-                      )}
-                    >
-                      Mapa de calor
-                    </button>
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={slotView === "grid"}
+                        onClick={() => setSlotView("grid")}
+                        className={cn(
+                          "flex h-[calc(52px-4px)] items-center rounded-md px-3 transition-colors",
+                          slotView === "grid"
+                            ? "bg-[#3a7d44] text-white"
+                            : "text-[#f5f5f0]/65 hover:text-[#f5f5f0]"
+                        )}
+                      >
+                        Lista
+                      </button>
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={slotView === "heatmap"}
+                        onClick={() => setSlotView("heatmap")}
+                        className={cn(
+                          "flex h-[calc(52px-4px)] items-center rounded-md px-3 transition-colors",
+                          slotView === "heatmap"
+                            ? "bg-[#3a7d44] text-white"
+                            : "text-[#f5f5f0]/65 hover:text-[#f5f5f0]"
+                        )}
+                      >
+                        Mapa de calor
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Duration toggle */}
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                  <div
-                    className="inline-flex rounded-xl border border-white/10 bg-[#1a1a1a] p-0.5 text-xs font-bold"
-                    role="radiogroup"
-                    aria-label="Duración de la reserva"
-                  >
-                    {([60, 90, 120] as BookingDuration[]).map((d) => {
-                      const allowed = allowedDurations.includes(d)
-                      return (
-                        <button
-                          key={d}
-                          type="button"
-                          role="radio"
-                          aria-checked={duration === d}
-                          disabled={!allowed}
-                          title={!allowed ? "No disponible este día" : undefined}
-                          onClick={() => allowed && setDuration(d)}
-                          className={cn(
-                            "rounded-lg px-3 py-1.5 transition-all",
-                            duration === d && "bg-[#3a7d44] text-white",
-                            duration !== d && allowed && "text-[#f5f5f0]/65 hover:text-[#f5f5f0]",
-                            !allowed && "cursor-not-allowed text-[#f5f5f0]/25"
-                          )}
-                        >
-                          {d === 60 ? "1 h" : d === 90 ? "1 h 30" : "2 h"}
-                        </button>
-                      )
-                    })}
-                  </div>
-                  <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-[#f5f5f0]/45">
-                    <span className="rounded border border-white/15 px-1.5 py-0.5 text-[#f5f5f0]/65">Libre</span>
-                    <span className="rounded border border-[#e8d44d]/35 px-1.5 py-0.5 text-[#e8d44d]">Pocas</span>
-                    <span className="rounded border border-red-500/35 px-1.5 py-0.5 text-red-400/90">Completo</span>
-                  </div>
+                <div className="mt-3 flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-[#f5f5f0]/45">
+                  <span className="rounded border border-white/15 px-1.5 py-0.5 text-[#f5f5f0]/65">Libre</span>
+                  <span className="rounded border border-[#e8d44d]/35 px-1.5 py-0.5 text-[#e8d44d]">Pocas</span>
+                  <span className="rounded border border-red-500/35 px-1.5 py-0.5 text-red-400/90">Completo</span>
+                  <span className="text-[#f5f5f0]/35 normal-case">· En alguna pista</span>
                 </div>
 
-                {/* Dense slot grid or heatmap */}
-                <div className={cn("relative mt-5 min-h-[160px]", slotsLoading && "opacity-40")}>
+                <div className={cn("relative mt-4 min-h-[160px]", slotsLoading && "opacity-40")}>
                   {slotsLoading && (
                     <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-[#0a0a0a]/40 backdrop-blur-[2px]">
                       <span className="h-8 w-8 animate-spin rounded-full border-2 border-[#3a7d44]/30 border-t-[#3a7d44]" aria-hidden />
@@ -735,7 +818,6 @@ export default function ReservasClient() {
                     <SlotGrid
                       slots={TIME_SLOTS}
                       selectedSlot={selectedSlot}
-                      selectedCourtId={selectedCourtId}
                       dateKey={dateKey ?? ""}
                       duration={duration}
                       daypart={daypart}
@@ -752,9 +834,9 @@ export default function ReservasClient() {
                       selectedSlot={selectedSlot}
                       selectedCourtId={selectedCourtId}
                       onPick={(courtId, slot) => {
-                        setSelectedCourtId(courtId)
-                        setMapTouched(true)
                         pickSlot(slot)
+                        setSelectedCourtId(courtId)
+                        queueMicrotask(() => setCourtStepTouched(true))
                       }}
                     />
                   )}
@@ -762,7 +844,9 @@ export default function ReservasClient() {
 
                 {selectedSlot && (
                   <p className="mt-4 text-xs text-[#f5f5f0]/55">
-                    {getSlotDescription(selectedDate, selectedSlot)} · Total <span className="text-[#3a7d44] font-bold">{price} €</span> / pista ({BOOKING_PLAYERS} jugadores, IVA incl.).
+                    {getSlotDescription(selectedDate, selectedSlot)} · Total{" "}
+                    <span className="text-[#3a7d44] font-bold">{price} €</span> / pista ({BOOKING_PLAYERS}{" "}
+                    jugadores, IVA incl.).
                   </p>
                 )}
 
@@ -774,29 +858,18 @@ export default function ReservasClient() {
               </StepCard>
             )}
 
-            {selectedDate && selectedSlot && price !== null && (
-              <PostBookExtras
-                slot={selectedSlot}
-                walletCents={walletCents}
-                totalEur={recurring ? price * recurringWeeks : price}
-              />
-            )}
-
             {selectedDate && selectedSlot && (
               <StepCard
                 step={3}
-                eyebrow="Pista (opcional)"
-                title={
-                  <span className="flex flex-wrap items-center gap-2">
-                    <span>Elige tu pista</span>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#f5f5f0]/55 rounded-full border border-white/10 px-2 py-0.5">
-                      Opcional · te asignamos una si no eliges
-                    </span>
-                  </span>
+                eyebrow="Pista"
+                title="Elige pista (opcional)"
+                hint={
+                  availableAtSlot && availableAtSlot.length > 0
+                    ? `${availableAtSlot.length} pista(s) con hueco a las ${selectedSlot}. Si no eliges, te asignamos una al confirmar.`
+                    : "Si no eliges, te asignamos una al confirmar."
                 }
-                hint={`Por defecto: ${selectedCourt.name} (${COURT_TYPE_LABEL[selectedCourt.type]})`}
-                collapsible
-                defaultOpen={false}
+                stickyBookingHeader
+                phaseStatus={bookingPhaseCourt}
               >
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2">
@@ -837,9 +910,18 @@ export default function ReservasClient() {
                   typeFilter={typeFilter}
                   dateKey={dateKey}
                   slot={selectedSlot}
+                  allowedCourtIds={availableAtSlot ?? undefined}
                   onLegendTypeSelect={(t) => setTypeFilter(t)}
                 />
               </StepCard>
+            )}
+
+            {selectedDate && selectedSlot && price !== null && (
+              <PostBookExtras
+                slot={selectedSlot}
+                walletCents={walletCents}
+                totalEur={recurring ? price * recurringWeeks : price}
+              />
             )}
 
             {selectedDate && selectedSlot && (
@@ -900,7 +982,7 @@ export default function ReservasClient() {
             )}
           </div>
 
-          <div className="hidden lg:block">
+          <div className="hidden lg:block lg:self-start">
             <ReservasSummaryAside
               selectedCourt={selectedCourt}
               selectedDate={selectedDate}

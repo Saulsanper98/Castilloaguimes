@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   Calendar,
@@ -72,6 +72,7 @@ const VALID_TABS: TabId[] = [
 
 export default function CuentaClient() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [tab, setTab] = useState<TabId>("dashboard")
   const [authed, setAuthed] = useState(false)
   const [profile, setProfile] = useState<PlayerProfile | null>(null)
@@ -99,6 +100,12 @@ export default function CuentaClient() {
     setProfile(next)
     setAuthed(true)
     setTab("dashboard")
+    const red = searchParams.get("redirect")
+    if (red && red.startsWith("/") && !red.startsWith("//")) {
+      toast.success("Sesión iniciada", { description: "Te llevamos de vuelta." })
+      router.replace(red)
+      return
+    }
   }
 
   function logout() {
@@ -169,6 +176,14 @@ export default function CuentaClient() {
       <div className="pt-4 bg-[#0d0d0d] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3">
           <Breadcrumbs />
+        </div>
+      </div>
+
+      <div className="border-b border-[#e8d44d]/25 bg-[#e8d44d]/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 text-center text-[11px] sm:text-xs text-[#f5f5f0]/85 leading-snug">
+          <strong className="text-[#e8d44d]">Zona de demostración</strong>
+          {" · "}
+          Wallet, reservas y notificaciones son datos de ejemplo hasta conectar la app oficial del club.
         </div>
       </div>
 

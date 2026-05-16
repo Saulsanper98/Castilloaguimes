@@ -6,10 +6,14 @@ import { NewsletterSnippet } from "@/components/footer/NewsletterSnippet"
 import { FEPSeal } from "@/components/footer/FEPSeal"
 import { LangSelector } from "@/components/footer/LangSelector"
 import { HighContrastToggle } from "@/components/layout/HighContrastToggle"
+import { ThemeToggle } from "@/components/layout/ThemeToggle"
 import { AppStoreLink } from "@/components/brand/AppStoreLink"
 import { MiniMap } from "@/components/footer/MiniMap"
+import { getFacebookUrl, getInstagramUrl } from "@/lib/socialUrls"
 
 export default function Footer() {
+  const fb = getFacebookUrl()
+  const ig = getInstagramUrl()
   return (
     <footer className="bg-[#111111] border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
@@ -41,25 +45,28 @@ export default function Footer() {
             <div className="mb-6">
               <ClubClock />
             </div>
-            {/* Social */}
+            {(fb || ig) && (
             <div className="flex items-center gap-3">
+              {fb && (
               <a
-                href="https://facebook.com"
+                href={fb}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-[#f5f5f0]/50 hover:text-[#f5f5f0] hover:border-white/40 transition-all"
-                aria-label="Facebook"
+                aria-label="Facebook del club"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
                 </svg>
               </a>
+              )}
+              {ig && (
               <a
-                href="https://instagram.com"
+                href={ig}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-[#f5f5f0]/50 hover:text-[#f5f5f0] hover:border-white/40 transition-all"
-                aria-label="Instagram"
+                aria-label="Instagram del club"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -67,7 +74,9 @@ export default function Footer() {
                   <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
                 </svg>
               </a>
+              )}
             </div>
+            )}
           </div>
 
           {/* Column 2: Quick Links */}
@@ -84,6 +93,7 @@ export default function Footer() {
                 { label: "Instalaciones", href: "/instalaciones" },
                 { label: "Noticias", href: "/noticias" },
                 { label: "Tarifas", href: "/tarifas" },
+                { label: "Preguntas frecuentes", href: "/faq" },
                 { label: "Contacto", href: "/contacto" },
               ].map((link) => (
                 <li key={link.href}>
@@ -151,6 +161,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <FEPSeal />
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <HighContrastToggle />
             <LangSelector />
           </div>

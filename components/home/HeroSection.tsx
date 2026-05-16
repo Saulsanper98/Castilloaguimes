@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
-import { ArrowRight, ChevronDown } from "lucide-react"
+import { ArrowRight, ChevronDown, MapPin, Activity, HelpCircle } from "lucide-react"
+import { GOOGLE_MAPS_DIRECTIONS_URL } from "@/lib/site"
 import { useRef } from "react"
 import { SectionEyebrow } from "@/components/brand/SectionEyebrow"
 import { LiveStatusChip } from "@/components/home/LiveStatusChip"
@@ -132,6 +133,37 @@ export default function HeroSection() {
             className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-white/25 hover:border-white/55 text-[#f5f5f0] font-bold px-7 sm:px-8 py-4 rounded-xl text-base transition-all duration-200 hover:bg-white/5 min-h-[52px]"
           >
             Partidos abiertos
+          </Link>
+        </motion.div>
+
+        <motion.div
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.45, delay: 0.62 }}
+          className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3"
+        >
+          <a
+            href={GOOGLE_MAPS_DIRECTIONS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#111111]/60 px-4 py-2.5 text-xs font-bold text-[#f5f5f0]/85 hover:border-[#3a7d44]/50 hover:text-[#f5f5f0] transition-colors backdrop-blur-sm"
+          >
+            <MapPin size={14} className="text-[#3a7d44] shrink-0" aria-hidden="true" />
+            <span aria-hidden="true">📍</span> Llegar al club
+          </a>
+          <Link
+            href="/disponibilidad"
+            className="hidden md:inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#111111]/60 px-4 py-2.5 text-xs font-bold text-[#f5f5f0]/85 hover:border-[#3a7d44]/50 hover:text-[#f5f5f0] transition-colors backdrop-blur-sm"
+          >
+            <Activity size={14} className="text-[#e8d44d] shrink-0" aria-hidden="true" />
+            Ver disponibilidad
+          </Link>
+          <Link
+            href="/faq"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#111111]/60 px-4 py-2.5 text-xs font-bold text-[#f5f5f0]/85 hover:border-[#3a7d44]/50 hover:text-[#f5f5f0] transition-colors backdrop-blur-sm"
+          >
+            <HelpCircle size={14} className="text-[#3a7d44] shrink-0" aria-hidden="true" />
+            FAQ
           </Link>
         </motion.div>
       </motion.div>

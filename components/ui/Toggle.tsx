@@ -6,14 +6,16 @@ interface Props {
   label: string
   description?: string
   id?: string
+  /** Desactiva el control (p. ej. funciones aún no conectadas al backend). */
+  disabled?: boolean
 }
 
-export function Toggle({ checked, onChange, label, description, id }: Props) {
+export function Toggle({ checked, onChange, label, description, id, disabled }: Props) {
   const inputId = id ?? `toggle-${label.toLowerCase().replace(/\s+/g, "-")}`
   return (
     <label
       htmlFor={inputId}
-      className="flex items-start justify-between gap-4 cursor-pointer py-3"
+      className={`flex items-start justify-between gap-4 py-3 ${disabled ? "cursor-not-allowed opacity-55" : "cursor-pointer"}`}
     >
       <span className="min-w-0 flex-1">
         <span className="block text-[#f5f5f0] font-semibold text-sm">{label}</span>
@@ -27,7 +29,8 @@ export function Toggle({ checked, onChange, label, description, id }: Props) {
           type="checkbox"
           className="sr-only peer"
           checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
+          disabled={disabled}
+          onChange={(e) => !disabled && onChange(e.target.checked)}
         />
         <span
           aria-hidden="true"

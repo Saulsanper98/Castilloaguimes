@@ -24,11 +24,17 @@ export function PlayerAvatars({ total, occupied }: Props) {
         return (
           <div
             key={i}
-            className={`relative group w-9 h-9 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-[#111111] transition-transform hover:scale-110 hover:z-10 ${
-              occ ? AVATAR_COLORS[i % AVATAR_COLORS.length] : "bg-white/10 border-dashed"
+            className={`relative group w-9 h-9 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-[#111111] transition-colors ${
+              occ
+                ? `${AVATAR_COLORS[i % AVATAR_COLORS.length]} cursor-default`
+                : "bg-white/10 border-dashed cursor-default"
             }`}
             aria-label={occ ? `Jugador: ${p.name}, nivel ${p.level}` : "Plaza libre"}
-            title={occ ? `${p.name} · ${p.level}` : "Plaza libre"}
+            title={
+              occ
+                ? `${p.name} · ${p.level} · Perfil público: próximamente`
+                : "Plaza libre"
+            }
           >
             {occ ? p.initials : <UserCircle size={14} className="text-white/35" aria-hidden="true" />}
             {/* Tooltip on hover (desktop) */}

@@ -34,7 +34,7 @@ export function MobileFAB() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="lg:hidden fixed bottom-5 right-5 z-40"
+          className="lg:hidden fixed bottom-[calc(1.25rem+var(--pcdc-floating-cookie-offset,0px))] right-5 z-40"
         >
           <Link
             href="/reservas"

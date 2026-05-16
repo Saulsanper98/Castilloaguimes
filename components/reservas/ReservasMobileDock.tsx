@@ -49,7 +49,7 @@ export function ReservasMobileDock({
   return (
     <>
       <div
-        className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t border-white/10 bg-[#111111]/95 p-3 shadow-2xl shadow-black/60 backdrop-blur lg:hidden"
+        className="fixed inset-x-0 z-30 flex items-center gap-3 border-t border-white/10 bg-[#111111]/95 p-3 shadow-2xl shadow-black/60 backdrop-blur lg:hidden bottom-[var(--pcdc-floating-cookie-offset,0px)]"
         style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
       >
         <div className="min-w-0 flex-1">
@@ -92,7 +92,12 @@ export function ReservasMobileDock({
           <Dialog.Overlay className="fixed inset-0 z-[350] bg-black/70 lg:hidden" />
           <Dialog.Content className="fixed inset-x-0 bottom-0 z-[351] max-h-[85vh] overflow-y-auto rounded-t-2xl border border-white/10 bg-[#111111] p-5 lg:hidden">
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" aria-hidden />
-            <Dialog.Title className="mb-2 font-bold text-[#f5f5f0]">Resumen de reserva</Dialog.Title>
+            <Dialog.Title className="mb-2 flex flex-wrap items-center gap-2 font-bold text-[#f5f5f0]">
+              <span className="rounded border border-[#e8d44d]/40 bg-[#e8d44d]/10 px-2 py-0.5 text-[9px] font-black tracking-[0.2em] text-[#e8d44d]">
+                CONFIRMAR
+              </span>
+              Resumen de reserva
+            </Dialog.Title>
             <Dialog.Description className="space-y-2 text-sm text-[#f5f5f0]/65">
               <p>
                 <strong className="text-[#f5f5f0]">{selectedCourt.name}</strong> · {format(selectedDate, "EEEE d MMMM", { locale: es })}

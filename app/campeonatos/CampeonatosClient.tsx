@@ -337,6 +337,9 @@ export default function CampeonatosClient() {
               Cuadro en vivo
             </h2>
           </div>
+          <p className="text-[#f5f5f0]/55 text-xs sm:text-sm mb-4 max-w-3xl leading-relaxed">
+            Ilustración de formato de torneo. Los cruces y horarios reales se publican en recepción y en la app del club cuando el torneo esté en curso.
+          </p>
           <BracketVisual />
         </section>
 

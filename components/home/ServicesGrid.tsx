@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import Link from "next/link"
 import { motion, useInView, useReducedMotion } from "framer-motion"
-import { Calendar, Users, GraduationCap, Trophy, Dumbbell, ArrowRight } from "lucide-react"
+import { Calendar, Users, GraduationCap, Trophy, Dumbbell, ArrowRight, Activity } from "lucide-react"
 import { SectionEyebrow } from "@/components/brand/SectionEyebrow"
 
 const services = [
@@ -13,6 +13,13 @@ const services = [
     description: "14 pistas cubiertas disponibles. Reserva online en segundos, paga de forma segura y juega cuando quieras.",
     href: "/reservas",
     color: "from-[#3a7d44]/20 to-transparent",
+  },
+  {
+    icon: Activity,
+    title: "Disponibilidad en directo",
+    description: "Consulta el mapa de calor de todas las pistas sin cuenta. Elige hueco y entra a reservar cuando quieras.",
+    href: "/disponibilidad",
+    color: "from-[#e8d44d]/12 to-transparent",
   },
   {
     icon: Users,

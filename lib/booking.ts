@@ -1,5 +1,6 @@
 import { addMinutes, format, getDay, parse } from "date-fns"
 import { es } from "date-fns/locale"
+import { COURTS } from "@/lib/courts"
 import type { SlotMockStatus } from "@/lib/slotMock"
 import { getSlotMockStatus } from "@/lib/slotMock"
 
@@ -57,6 +58,28 @@ export function getCourtSlotAvailability(
   slot: string
 ): SlotMockStatus {
   return getSlotMockStatus(dateKey, slot, courtId)
+}
+
+/** Pistas que no están completas en esa fecha y franja (libre o pocas plazas). */
+export function getAvailableCourtIdsForSlot(dateKey: string, slot: string): number[] {
+  return COURTS.filter((c) => getCourtSlotAvailability(c.id, dateKey, slot) !== "full").map((c) => c.id)
+}
+
+/**
+ * Estado del hueco mirando las 14 pistas: si alguna está libre → libre;
+ * si no, pero alguna con pocas plazas → pocas; si todas llenas → completo.
+ */
+export function getSlotAggregatedMockStatus(dateKey: string, slot: string): SlotMockStatus {
+  let anyFree = false
+  let anyFew = false
+  for (const c of COURTS) {
+    const st = getCourtSlotAvailability(c.id, dateKey, slot)
+    if (st === "free") anyFree = true
+    if (st === "few") anyFew = true
+  }
+  if (anyFree) return "free"
+  if (anyFew) return "few"
+  return "full"
 }
 
 const POLICY_UPDATED = "2026-05-01"

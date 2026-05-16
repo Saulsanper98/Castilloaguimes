@@ -1,4 +1,12 @@
 import { SITE_URL } from "@/lib/site"
+import { OFFICIAL_INSTAGRAM_URL, getFacebookUrl } from "@/lib/socialUrls"
+
+function sameAsProfiles(): string[] {
+  const urls = [OFFICIAL_INSTAGRAM_URL]
+  const fb = getFacebookUrl()
+  if (fb) urls.push(fb)
+  return urls
+}
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -30,7 +38,7 @@ const structuredData = {
     { "@type": "OpeningHoursSpecification", dayOfWeek: "Sunday", opens: "09:00", closes: "20:00" },
   ],
   priceRange: "€€",
-  sameAs: ["https://www.facebook.com", "https://www.instagram.com"],
+  sameAs: sameAsProfiles(),
 }
 
 export function LocalBusinessJsonLd() {

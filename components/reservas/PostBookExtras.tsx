@@ -23,11 +23,11 @@ export function PostBookExtras({ slot, walletCents, totalEur }: Props) {
   const missing = Math.max(0, totalEur - walletEur)
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2">
       {/* Cross-link partidos abiertos */}
       <Link
         href={`/partidos-abiertos?hora=${encodeURIComponent(slot)}`}
-        className="group rounded-xl border border-white/10 bg-[#111111] hover:border-[#3a7d44]/40 hover:bg-[#3a7d44]/5 p-4 transition-colors flex items-center gap-3"
+        className="group flex min-h-[112px] items-center gap-3 rounded-xl border border-white/10 bg-[#111111] p-4 transition-colors hover:border-[#3a7d44]/40 hover:bg-[#3a7d44]/5"
       >
         <span className="w-9 h-9 rounded-lg bg-[#3a7d44]/15 text-[#3a7d44] flex items-center justify-center shrink-0">
           <Users size={14} aria-hidden="true" />
@@ -52,7 +52,7 @@ export function PostBookExtras({ slot, walletCents, totalEur }: Props) {
 
       {/* Wallet status */}
       <div
-        className={`rounded-xl border p-4 flex items-center gap-3 ${
+        className={`flex min-h-[112px] items-center gap-3 rounded-xl border p-4 ${
           enough
             ? "border-[#3a7d44]/40 bg-[#3a7d44]/10"
             : "border-white/10 bg-[#111111]"

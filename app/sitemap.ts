@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     "/",
     "/reservas",
+    "/disponibilidad",
     "/partidos-abiertos",
     "/partidos-abiertos/crear",
     "/escuela",
@@ -20,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tarifas",
     "/contacto",
     "/cuenta",
+    "/faq",
     "/legal",
     "/legal/privacidad",
     "/legal/aviso-legal",

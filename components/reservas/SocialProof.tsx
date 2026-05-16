@@ -23,21 +23,25 @@ export function SocialProof() {
 
   useEffect(() => {
     if (reduce) return
+    let cancelled = false
     let i = 0
-    const start = window.setTimeout(() => {
+    let intervalId: number | null = null
+    const timeoutId = window.setTimeout(() => {
+      if (cancelled) return
       setActive(i % SAMPLE.length)
-      const cycle = window.setInterval(() => {
+      intervalId = window.setInterval(() => {
+        if (cancelled) return
         i++
         setActive(null)
-        window.setTimeout(() => setActive(i % SAMPLE.length), 800)
+        window.setTimeout(() => {
+          if (!cancelled) setActive(i % SAMPLE.length)
+        }, 800)
       }, 14_000)
-      // cleanup is handled below via return
-      ;(start as unknown as { _cycle?: number })._cycle = cycle
     }, 8_000)
     return () => {
-      window.clearTimeout(start)
-      const cycle = (start as unknown as { _cycle?: number })._cycle
-      if (cycle) window.clearInterval(cycle)
+      cancelled = true
+      window.clearTimeout(timeoutId)
+      if (intervalId !== null) window.clearInterval(intervalId)
       setActive(null)
     }
   }, [reduce])

@@ -6,6 +6,8 @@ import ServicesGrid from "@/components/home/ServicesGrid"
 import ScheduleSection from "@/components/home/ScheduleSection"
 import NewsSection from "@/components/home/NewsSection"
 import AppDownloadSection from "@/components/home/AppDownloadSection"
+import { SocialTestimonials } from "@/components/home/SocialTestimonials"
+import { FindUsBlock } from "@/components/home/FindUsBlock"
 
 export const metadata: Metadata = {
   title: "Inicio",
@@ -21,7 +23,9 @@ export default function HomePage() {
       <StatsBar />
       <ServicesGrid />
       <ScheduleSection />
+      <SocialTestimonials />
       <NewsSection />
+      <FindUsBlock />
       <AppDownloadSection />
     </>
   )
