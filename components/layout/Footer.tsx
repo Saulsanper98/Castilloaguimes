@@ -8,7 +8,6 @@ import { LangSelector } from "@/components/footer/LangSelector"
 import { HighContrastToggle } from "@/components/layout/HighContrastToggle"
 import { ThemeToggle } from "@/components/layout/ThemeToggle"
 import { AppStoreLink } from "@/components/brand/AppStoreLink"
-import { MiniMap } from "@/components/footer/MiniMap"
 import { getFacebookUrl, getInstagramUrl } from "@/lib/socialUrls"
 
 export default function Footer() {
@@ -17,7 +16,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#111111] border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
           {/* Column 1: Logo + Info */}
           <div>
             <Logo className="mb-6" />
@@ -108,21 +107,14 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Newsletter + mini-map */}
-          <div className="lg:pt-1 space-y-5">
+          {/* Column 3: Newsletter + App */}
+          <div className="lg:pt-1 space-y-8">
             <NewsletterSnippet />
-            <MiniMap />
-          </div>
-
-          {/* Column 4: App Download */}
-          <div>
-            <h3 className="text-[#f5f5f0] font-bold text-sm uppercase tracking-widest mb-6">
-              Descarga Nuestra App
-            </h3>
-            <p className="text-[#f5f5f0]/50 text-sm leading-relaxed mb-6">
-              Reserva pistas, apúntate a partidos abiertos y gestiona todo desde tu móvil con nuestra app oficial.
-            </p>
-            <div className="flex flex-col gap-3">
+            <div>
+              <h3 className="text-[#f5f5f0] font-bold text-sm uppercase tracking-widest mb-4">
+                Descarga la App
+              </h3>
+              <div className="flex flex-col gap-3">
               <AppStoreLink
                 store="appstore"
                 className="flex w-full items-center gap-3 border border-white/20 hover:border-white/40 rounded-xl px-4 py-3 transition-all group"
@@ -151,6 +143,7 @@ export default function Footer() {
                   <span className="block text-[#f5f5f0] text-sm font-semibold">Google Play</span>
                 </span>
               </AppStoreLink>
+            </div>
             </div>
           </div>
         </div>

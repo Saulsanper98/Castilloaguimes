@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { LegalDoc } from "@/components/legal/LegalDoc"
+import { CookieReopenButton } from "@/components/legal/CookieReopenButton"
 
 export const metadata: Metadata = {
   title: "Política de cookies",
@@ -44,9 +45,9 @@ export default function Page() {
       <h2>3. ¿Cómo gestionarlas?</h2>
       <p>
         Cuando entras por primera vez te mostramos un banner para que decidas. Puedes aceptarlas todas o
-        usar solo las esenciales. Tu decisión se guarda en este navegador y puedes cambiarla en cualquier
-        momento borrando los datos del sitio desde tu navegador.
+        usar solo las esenciales. Tu decisión se guarda en este navegador y puedes revisarla cuando quieras.
       </p>
+      <CookieReopenButton />
 
       <h2>4. Más información</h2>
       <p>

@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
-import { AlertTriangle, RefreshCw } from "lucide-react"
+import Link from "next/link"
+import { AlertTriangle, RefreshCw, Home } from "lucide-react"
 
 export default function Error({
   error,
@@ -26,13 +27,22 @@ export default function Error({
         <p className="text-[#f5f5f0]/50 text-sm mb-8 leading-relaxed">
           No hemos podido cargar esta sección. Inténtalo de nuevo o vuelve al inicio.
         </p>
-        <button
-          onClick={() => reset()}
-          className="inline-flex items-center justify-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-6 py-3 rounded-xl text-sm transition-all"
-        >
-          <RefreshCw size={16} aria-hidden="true" />
-          Reintentar
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={() => reset()}
+            className="inline-flex items-center justify-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-6 py-3 rounded-xl text-sm transition-all"
+          >
+            <RefreshCw size={16} aria-hidden="true" />
+            Reintentar
+          </button>
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center gap-2 border border-white/15 hover:border-white/30 text-[#f5f5f0]/85 font-bold px-6 py-3 rounded-xl text-sm transition-colors"
+          >
+            <Home size={16} aria-hidden="true" />
+            Volver al inicio
+          </Link>
+        </div>
         {error.digest && (
           <p className="mt-6 text-[10px] text-[#f5f5f0]/20 font-mono">Ref: {error.digest}</p>
         )}

@@ -68,7 +68,7 @@ export const DEFAULT_PROFILE: PlayerProfile = {
   eloHistory: [1390, 1410, 1428, 1440, 1462, 1450],
   hand: "diestra",
   position: "indistinto",
-  joinedAt: new Date().toISOString(),
+  joinedAt: "1970-01-01T00:00:00.000Z",
   memberCode: "PCDC-0000",
   walletCents: 0,
   loyaltyPoints: 0,

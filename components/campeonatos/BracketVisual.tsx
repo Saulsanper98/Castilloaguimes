@@ -55,11 +55,16 @@ function Row({ name, winner }: { name: string; winner?: boolean }) {
 export function BracketVisual() {
   return (
     <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-4 sm:p-6 overflow-x-auto">
-      <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#3a7d44] mb-1">
-        Cuadro en vivo — categoría A
-      </p>
+      <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
+        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#3a7d44]">
+          Cuadro de ejemplo — categoría A
+        </p>
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e8d44d]/30 bg-[#e8d44d]/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#e8d44d]">
+          Demo
+        </span>
+      </div>
       <p className="text-[#f5f5f0]/55 text-xs mb-6">
-        Final: Suárez / Ramos vs. Quesada / Mora · Domingo 20:00 — Pista central
+        Vista de ejemplo. El cuadro real se actualizará automáticamente durante cada torneo.
       </p>
       <div className="grid grid-cols-4 gap-3 min-w-[640px]">
         <div className="space-y-4">

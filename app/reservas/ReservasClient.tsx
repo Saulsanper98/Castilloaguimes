@@ -41,6 +41,7 @@ import { PostBookExtras } from "@/components/reservas/PostBookExtras"
 import { WaitlistCard } from "@/components/reservas/WaitlistCard"
 import { InfoTooltip } from "@/components/ui/InfoTooltip"
 import { loadProfile } from "@/lib/player"
+import { appendUserReserva, markSlotOccupied } from "@/lib/userActivity"
 import { getDayDemand, demandLevel } from "@/lib/demand"
 import {
   BOOKING_MONTHS_AHEAD,
@@ -114,6 +115,7 @@ export default function ReservasClient() {
   const [daypart, setDaypart] = useState<Daypart>("all")
   const [slotView, setSlotView] = useState<"grid" | "heatmap">("grid")
   const [successOpen, setSuccessOpen] = useState(false)
+  const [successPayMode, setSuccessPayMode] = useState<"online" | "club">("online")
   const [userName, setUserName] = useState<string | undefined>(undefined)
   const [needsLoginToBook, setNeedsLoginToBook] = useState(true)
   const [walletCents, setWalletCents] = useState(0)
@@ -376,6 +378,32 @@ export default function ReservasClient() {
     router.push(`/cuenta?redirect=${encodeURIComponent(redirect)}`)
   }
 
+  function persistReservation(payMode: "online" | "club") {
+    if (!selectedDate || !selectedSlot) return
+    const p = loadProfile()
+    const dateKey = format(selectedDate, "yyyy-MM-dd")
+    const initials = p.name
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((s) => s[0]?.toUpperCase() ?? "")
+      .join("") || "SS"
+    appendUserReserva({
+      date: dateKey,
+      time: selectedSlot,
+      duration,
+      courtId: selectedCourt.id,
+      courtName: selectedCourt.name,
+      courtType: selectedCourt.type,
+      players: [{ initials, name: p.name, color: p.avatarColor }],
+      priceCents: (price ?? 0) * 100,
+      status: "upcoming",
+      reminder: true,
+      payMode,
+    })
+    markSlotOccupied(dateKey, selectedSlot, selectedCourt.id)
+  }
+
   async function handleBook() {
     if (!selectedDate || !selectedSlot) return
     const p = loadProfile()
@@ -389,8 +417,10 @@ export default function ReservasClient() {
     setBookingLoading(true)
     persistLast()
     await new Promise((r) => window.setTimeout(r, 450))
+    persistReservation("online")
     setBookingLoading(false)
     setConfettiTick((c) => c + 1)
+    setSuccessPayMode("online")
     setSuccessOpen(true)
   }
 
@@ -407,20 +437,26 @@ export default function ReservasClient() {
     setBookingLoading(true)
     persistLast()
     await new Promise((r) => window.setTimeout(r, 450))
+    persistReservation("club")
     setBookingLoading(false)
     toast.success("Reserva pre-bloqueada", {
       description: "Pasa por recepción a confirmar y pagar. Tienes 24 h.",
       duration: 6000,
     })
     setConfettiTick((c) => c + 1)
+    setSuccessPayMode("club")
     setSuccessOpen(true)
   }
 
-  function handleCopyLink() {
+  async function handleCopyLink() {
     if (typeof window === "undefined") return
     const url = window.location.href
-    void navigator.clipboard?.writeText(url)
-    toast.success("Enlace copiado", { description: "Compártelo con tus compañeros." })
+    try {
+      await navigator.clipboard?.writeText(url)
+      toast.success("Enlace copiado", { description: "Compártelo con tus compañeros." })
+    } catch {
+      toast.error("No se pudo copiar el enlace", { description: "Copia la URL manualmente." })
+    }
   }
 
   function handleDownloadIcs() {
@@ -454,16 +490,24 @@ export default function ReservasClient() {
     toast.success("Añadido al calendario")
   }
 
-  function handleShare() {
+  async function handleShare() {
     if (!selectedDate || !selectedSlot || price === null) return
     const dateStr = format(selectedDate, "EEEE d MMM", { locale: es })
     const text = `¿Te apuntas a jugar pádel? ${selectedCourt.name} · ${dateStr} a las ${selectedSlot} · ${price} € total (${(price / BOOKING_PLAYERS).toFixed(2).replace(".", ",")} €/pers., IVA incl.)`
     const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> }
     if (nav.share) {
-      nav.share({ title: "Pádel Castillo de Agüimes", text }).catch(() => {})
-    } else {
-      void navigator.clipboard?.writeText(text)
+      try {
+        await nav.share({ title: "Pádel Castillo de Agüimes", text })
+      } catch {
+        /* user cancelled or share failed silently */
+      }
+      return
+    }
+    try {
+      await navigator.clipboard?.writeText(text)
       toast.success("Texto copiado", { description: "Pégalo en WhatsApp o Telegram." })
+    } catch {
+      toast.error("No se pudo copiar", { description: "Selecciona el texto manualmente." })
     }
   }
 
@@ -694,18 +738,10 @@ export default function ReservasClient() {
                     )
                   })}
                 </div>
-                {/* Demand legend */}
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-[10px] text-[#f5f5f0]/55">
-                  <span className="font-bold uppercase tracking-widest text-[#f5f5f0]/45">Demanda:</span>
-                  <span className="flex items-center gap-1">
-                    <span className="block w-3 h-1 rounded-full bg-[#3a7d44]" aria-hidden="true" /> Baja
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="block w-3 h-1 rounded-full bg-[#e8d44d]" aria-hidden="true" /> Media
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="block w-3 h-1 rounded-full bg-red-500" aria-hidden="true" /> Alta
-                  </span>
+                {/* Demand legend (compacto en tooltip) */}
+                <div className="mt-3 flex items-center gap-2 text-[10px] text-[#f5f5f0]/55">
+                  <span className="font-bold uppercase tracking-widest text-[#f5f5f0]/45">Demanda</span>
+                  <InfoTooltip text="La barra bajo cada día indica la demanda esperada — verde: baja, amarillo: media, rojo: alta." />
                 </div>
               </div>
             </StepCard>
@@ -713,7 +749,7 @@ export default function ReservasClient() {
             {selectedDate && (
               <StepCard
                 step={2}
-                eyebrow={format(selectedDate, "EEEE d 'de' MMMM", { locale: es })}
+                eyebrow="Hora"
                 title="Elige hora de inicio"
                 hint="La cuadrícula muestra si queda hueco en alguna pista. Más abajo solo verás pistas libres para la hora elegida."
                 stickyBookingHeader
@@ -854,6 +890,7 @@ export default function ReservasClient() {
                   visible={!!waitlistSlot}
                   slot={waitlistSlot ?? ""}
                   courtName={selectedCourt.name}
+                  dateKey={selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined}
                 />
               </StepCard>
             )}
@@ -1033,6 +1070,7 @@ export default function ReservasClient() {
         slot={selectedSlot}
         duration={duration}
         total={recurring && price != null ? price * recurringWeeks : price}
+        payMode={successPayMode}
         onShare={handleShare}
         onDownloadIcs={handleDownloadIcs}
       />

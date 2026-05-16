@@ -31,6 +31,15 @@ export function CookieBanner() {
     if (open) setCookieBannerInsetActive(true)
   }, [open])
 
+  useEffect(() => {
+    function onReopen() {
+      localStorage.removeItem(COOKIE_CONSENT_STORAGE_KEY)
+      setOpen(true)
+    }
+    window.addEventListener("pcdc:cookies-reopen", onReopen)
+    return () => window.removeEventListener("pcdc:cookies-reopen", onReopen)
+  }, [])
+
   function decide(c: Consent) {
     localStorage.setItem(COOKIE_CONSENT_STORAGE_KEY, c)
     setOpen(false)

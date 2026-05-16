@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight, Calendar, Clock, Lock, Users, Check } from "lucide-react"
 import { toast } from "sonner"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
+import { appendCreatedMatch } from "@/lib/userActivity"
 
 const HOURS = ["08:00", "09:30", "11:00", "12:30", "14:00", "15:30", "17:00", "18:30", "20:00", "21:30"]
 const LEVELS = ["Iniciación", "Intermedio", "Avanzado"] as const
@@ -28,8 +29,15 @@ export default function CrearPartidoClient() {
   }
 
   function submit() {
-    toast.success("Partido creado (demo)", {
-      description: "Cuando tengamos backend, aparecerá en Partidos abiertos.",
+    appendCreatedMatch({
+      date: fecha,
+      time: hora,
+      level: nivel,
+      visibility: visibilidad,
+      notes: notas,
+    })
+    toast.success("Partido creado", {
+      description: "Lo verás en tu listado de Partidos abiertos.",
     })
     router.push("/partidos-abiertos")
   }

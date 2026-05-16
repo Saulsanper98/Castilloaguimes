@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useEffect, useState, useMemo } from "react"
+import { loadInscriptions } from "@/lib/userActivity"
 import {
   Trophy,
   Calendar,
@@ -84,6 +85,16 @@ export default function CampeonatosClient() {
   const [estado, setEstado] = useState<EstadoFilter>("all")
   const [view, setView] = useState<ViewMode>("cards")
   const [modal, setModal] = useState<Campeonato | null>(null)
+  const [inscribedIds, setInscribedIds] = useState<Set<number>>(new Set())
+
+  const refreshInscribed = () => {
+    setInscribedIds(new Set(loadInscriptions().map((x) => x.tournamentId)))
+  }
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(refreshInscribed)
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   const upcoming = useMemo(
     () =>
@@ -264,11 +275,15 @@ export default function CampeonatosClient() {
                         </div>
                         <button
                           type="button"
-                          disabled={c.estado !== "Inscripción abierta"}
+                          disabled={c.estado !== "Inscripción abierta" || inscribedIds.has(c.id)}
                           onClick={() => setModal(c)}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${estadoStyle.btn}`}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                            inscribedIds.has(c.id)
+                              ? "bg-[#3a7d44]/20 text-[#3a7d44] border border-[#3a7d44]/50 cursor-default"
+                              : estadoStyle.btn
+                          }`}
                         >
-                          {estadoStyle.btnText}
+                          {inscribedIds.has(c.id) ? "Inscrito ✓" : estadoStyle.btnText}
                         </button>
                       </div>
                     </div>
@@ -314,11 +329,15 @@ export default function CampeonatosClient() {
                         <td className="px-4 py-3 text-right">
                           <button
                             type="button"
-                            disabled={c.estado !== "Inscripción abierta"}
+                            disabled={c.estado !== "Inscripción abierta" || inscribedIds.has(c.id)}
                             onClick={() => setModal(c)}
-                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors ${estadoStyle.btn}`}
+                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors ${
+                              inscribedIds.has(c.id)
+                                ? "bg-[#3a7d44]/20 text-[#3a7d44] border border-[#3a7d44]/50 cursor-default"
+                                : estadoStyle.btn
+                            }`}
                           >
-                            {estadoStyle.btnText}
+                            {inscribedIds.has(c.id) ? "Inscrito ✓" : estadoStyle.btnText}
                           </button>
                         </td>
                       </tr>
@@ -385,7 +404,13 @@ export default function CampeonatosClient() {
         )}
       </div>
 
-      <InscriptionModal campeonato={modal} onClose={() => setModal(null)} />
+      <InscriptionModal
+        campeonato={modal}
+        onClose={() => {
+          setModal(null)
+          refreshInscribed()
+        }}
+      />
     </div>
   )
 }

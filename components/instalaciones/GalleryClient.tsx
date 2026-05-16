@@ -7,7 +7,6 @@ const ITEMS = [
   { id: "panoramic", label: "Pistas Panorámicas", caption: "Las 4 pistas con cristal panorámico para grabaciones y finales.", gradient: "from-[#3a7d44]/50 to-[#0d2e16]", cols: 2 },
   { id: "central", label: "Pistas Centrales", caption: "8 pistas centrales con iluminación LED HD.", gradient: "from-blue-700/40 to-blue-950", cols: 1 },
   { id: "cafe", label: "Cafetería & Terraza", caption: "120 plazas, carta saludable, pantallas en directo.", gradient: "from-amber-600/40 to-amber-950", cols: 1 },
-  { id: "tienda", label: "Tienda de Material", caption: "Primeras marcas y servicio de encordado en 24h.", gradient: "from-purple-700/40 to-purple-950", cols: 1 },
   { id: "fisio", label: "Zona de Calentamiento", caption: "Material de movilidad, rodillos y servicio de fisio.", gradient: "from-red-700/40 to-red-950", cols: 1 },
   { id: "vest", label: "Vestuarios Premium", caption: "Agua caliente, taquillas individuales, toallas opcionales.", gradient: "from-teal-700/40 to-teal-950", cols: 2 },
 ]

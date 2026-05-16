@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
-import { Star, Send } from "lucide-react"
+import { useEffect, useState } from "react"
+import { Star, Send, Trash2 } from "lucide-react"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { toast } from "sonner"
 import { format, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
@@ -14,6 +15,8 @@ interface MyReview {
   date: string
   status: "published" | "pending"
 }
+
+const STORAGE_KEY = "pcdc-my-reviews-v1"
 
 const INITIAL_REVIEWS: MyReview[] = [
   {
@@ -34,14 +37,56 @@ const INITIAL_REVIEWS: MyReview[] = [
   },
 ]
 
-const TOPICS = ["Pistas centrales", "Pistas panorámicas", "Cafetería y terraza", "Vestuarios", "Tienda", "Escuela", "Torneos", "Atención"]
+const TOPICS = ["Pistas centrales", "Pistas panorámicas", "Cafetería y terraza", "Vestuarios", "Escuela", "Torneos", "Atención"]
+
+function loadReviews(): MyReview[] {
+  if (typeof window === "undefined") return INITIAL_REVIEWS
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return INITIAL_REVIEWS
+    const parsed = JSON.parse(raw) as MyReview[]
+    return Array.isArray(parsed) ? parsed : INITIAL_REVIEWS
+  } catch {
+    return INITIAL_REVIEWS
+  }
+}
+
+function persistReviews(list: MyReview[]): void {
+  if (typeof window === "undefined") return
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+  } catch {
+    /* quota or private mode */
+  }
+}
 
 export function ReseñasTab() {
-  const [reviews, setReviews] = useState<MyReview[]>(INITIAL_REVIEWS)
+  const [reviews, setReviewsRaw] = useState<MyReview[]>(INITIAL_REVIEWS)
+
+  function setReviews(next: MyReview[] | ((prev: MyReview[]) => MyReview[])) {
+    setReviewsRaw((prev) => {
+      const value = typeof next === "function" ? next(prev) : next
+      persistReviews(value)
+      return value
+    })
+  }
+
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setReviewsRaw(loadReviews()))
+    return () => cancelAnimationFrame(raf)
+  }, [])
   const [topic, setTopic] = useState(TOPICS[0])
   const [stars, setStars] = useState(5)
   const [text, setText] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+
+  function deleteReview(id: string) {
+    setReviews((prev) => prev.filter((r) => r.id !== id))
+    setConfirmDeleteId(null)
+    toast.success("Reseña eliminada")
+  }
 
   const avgStars =
     reviews.length === 0
@@ -194,15 +239,25 @@ export function ReseñasTab() {
                       ))}
                     </div>
                   </div>
-                  <span
-                    className={`text-[9px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full ${
-                      r.status === "published"
-                        ? "bg-[#3a7d44]/20 text-[#3a7d44] border border-[#3a7d44]/30"
-                        : "bg-[#e8d44d]/15 text-[#e8d44d] border border-[#e8d44d]/30"
-                    }`}
-                  >
-                    {r.status === "published" ? "Publicada" : "Pendiente"}
-                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span
+                      className={`text-[9px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full ${
+                        r.status === "published"
+                          ? "bg-[#3a7d44]/20 text-[#3a7d44] border border-[#3a7d44]/30"
+                          : "bg-[#e8d44d]/15 text-[#e8d44d] border border-[#e8d44d]/30"
+                      }`}
+                    >
+                      {r.status === "published" ? "Publicada" : "Pendiente"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmDeleteId(r.id)}
+                      aria-label="Eliminar reseña"
+                      className="text-[#f5f5f0]/45 hover:text-red-400 p-1"
+                    >
+                      <Trash2 size={13} aria-hidden="true" />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-[#f5f5f0]/80 text-sm leading-relaxed">{r.text}</p>
                 <p className="text-[#f5f5f0]/45 text-[11px] mt-2">
@@ -213,6 +268,17 @@ export function ReseñasTab() {
           </ul>
         )}
       </section>
+
+      <ConfirmDialog
+        open={confirmDeleteId !== null}
+        title="Eliminar reseña"
+        description="¿Seguro que quieres borrar esta reseña? No se puede deshacer."
+        confirmLabel="Eliminar"
+        cancelLabel="Mantener"
+        destructive
+        onConfirm={() => confirmDeleteId && deleteReview(confirmDeleteId)}
+        onCancel={() => setConfirmDeleteId(null)}
+      />
     </div>
   )
 }

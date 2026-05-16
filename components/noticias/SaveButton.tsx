@@ -17,6 +17,13 @@ export function SaveButton({ slug, compact = false }: { slug: string; compact?: 
 
   function toggle() {
     const profile = loadProfile()
+    if (profile.name === "Invitado") {
+      toast.message("Inicia sesión para guardar", {
+        description: "Tus guardados se sincronizan con tu cuenta de socio.",
+        action: { label: "Entrar", onClick: () => { window.location.href = "/cuenta" } },
+      })
+      return
+    }
     const isSaved = profile.savedNewsSlugs.includes(slug)
     const next = isSaved
       ? profile.savedNewsSlugs.filter((s) => s !== slug)

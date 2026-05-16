@@ -88,6 +88,54 @@ export default function TarifasPage() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
 
+        {/* ── PRECIO GENERAL (hero card) ── */}
+        <section className="relative overflow-hidden rounded-3xl border border-[#3a7d44]/40 bg-gradient-to-br from-[#3a7d44]/15 via-[#0f0f0f] to-[#0d0d0d] p-8 sm:p-10">
+          <div
+            aria-hidden="true"
+            className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl opacity-40"
+            style={{ background: "radial-gradient(circle, #3a7d44 0%, transparent 70%)" }}
+          />
+          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <p className="text-[#3a7d44] text-[11px] font-bold tracking-[0.35em] uppercase mb-3">
+                Precio general
+              </p>
+              <h2
+                className="text-[#f5f5f0] font-display font-black tracking-tight leading-none"
+                style={{ fontSize: "clamp(2.4rem, 5vw, 3.4rem)", letterSpacing: "-0.02em" }}
+              >
+                Desde <span className="text-[#3a7d44]">5,50 €</span>
+                <span className="block text-base font-medium text-[#f5f5f0]/65 tracking-normal mt-2">
+                  por jugador y hora · IVA incluido
+                </span>
+              </h2>
+              <p className="text-[#f5f5f0]/65 text-sm leading-relaxed mt-4 max-w-md">
+                Reserva online sin comisiones, paga al llegar o desde el wallet del club. Pista completa para 4 jugadores.
+              </p>
+            </div>
+            <ul className="grid grid-cols-3 gap-2 sm:gap-3">
+              {[
+                { dur: "60 min", price: "5,50 €" },
+                { dur: "90 min", price: "6,50 €" },
+                { dur: "120 min", price: "8,00 €" },
+              ].map((row) => (
+                <li
+                  key={row.dur}
+                  className="rounded-2xl border border-white/10 bg-[#111111]/70 px-3 py-4 text-center"
+                >
+                  <p className="text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/55">
+                    {row.dur}
+                  </p>
+                  <p className="text-[#3a7d44] font-display font-black text-xl sm:text-2xl tabular-nums mt-1">
+                    {row.price}
+                  </p>
+                  <p className="text-[9px] text-[#f5f5f0]/45">/ jugador</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* ── RESERVA DE PISTAS ── */}
         <section>
           <div className="flex items-center gap-3 mb-8">

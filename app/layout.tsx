@@ -3,7 +3,7 @@ import { Inter, Barlow_Condensed } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
-import { Toaster } from "sonner"
+import { ThemedToaster } from "@/components/layout/ThemedToaster"
 import { PromoBanner } from "@/components/layout/PromoBanner"
 import { MobileFAB } from "@/components/layout/MobileFAB"
 import { CommandPalette } from "@/components/layout/CommandPalette"
@@ -92,7 +92,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning className={`dark ${inter.variable} ${barlow.variable}`}>
+    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${barlow.variable}`}>
       <head>
         <link rel="preconnect" href="https://www.google.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://maps.google.com" crossOrigin="anonymous" />
@@ -120,21 +120,7 @@ export default function RootLayout({
         <WhatsAppFloat />
         <PWAPrompt />
         <SplashScreen />
-        <Toaster
-          theme="dark"
-          position="top-center"
-          richColors
-          closeButton
-          offset="80px"
-          mobileOffset={{ top: "70px" }}
-          toastOptions={{
-            style: {
-              background: "#1a1a1a",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "#f5f5f0",
-            },
-          }}
-        />
+        <ThemedToaster />
       </body>
     </html>
   )

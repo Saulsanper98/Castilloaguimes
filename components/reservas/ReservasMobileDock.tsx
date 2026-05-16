@@ -49,7 +49,7 @@ export function ReservasMobileDock({
   return (
     <>
       <div
-        className="fixed inset-x-0 z-30 flex items-center gap-3 border-t border-white/10 bg-[#111111]/95 p-3 shadow-2xl shadow-black/60 backdrop-blur lg:hidden bottom-[var(--pcdc-floating-cookie-offset,0px)]"
+        className="fixed inset-x-0 z-30 flex items-center gap-3 border-t border-white/10 bg-[#111111]/95 p-3 shadow-2xl shadow-black/60 backdrop-blur lg:hidden bottom-[var(--pcdc-floating-cookie-offset,0px)] transition-[bottom] duration-300 ease-out"
         style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
       >
         <div className="min-w-0 flex-1">

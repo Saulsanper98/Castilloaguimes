@@ -89,7 +89,7 @@ export function PWAPrompt() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 30, scale: 0.94 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed left-1/2 -translate-x-1/2 z-[80] w-[min(calc(100vw-1.5rem),420px)] bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px)+var(--pcdc-floating-cookie-offset,0px))] sm:bottom-[calc(1.5rem+var(--pcdc-floating-cookie-offset,0px))]"
+          className="fixed left-1/2 -translate-x-1/2 z-[80] w-[min(calc(100vw-1.5rem),420px)] bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px)+var(--pcdc-floating-cookie-offset,0px))] sm:bottom-[calc(1.5rem+var(--pcdc-floating-cookie-offset,0px))] transition-[bottom] duration-300 ease-out"
         >
           <div className="bg-[#0f0f0f]/95 backdrop-blur-md border border-[#3a7d44]/40 rounded-2xl shadow-2xl shadow-black/50 p-4 sm:p-5">
             <div className="flex items-center gap-3 mb-3">

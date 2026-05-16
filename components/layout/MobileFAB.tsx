@@ -9,10 +9,14 @@ import { AnimatePresence, motion } from "framer-motion"
 export function MobileFAB() {
   const pathname = usePathname()
   const [scrollPast, setScrollPast] = useState(false)
-  const onReservas = pathname === "/reservas"
+  const hidden =
+    pathname === "/reservas" ||
+    pathname?.startsWith("/reservas/") ||
+    pathname?.startsWith("/cuenta") ||
+    pathname?.startsWith("/disponibilidad")
 
   useEffect(() => {
-    if (onReservas) return
+    if (hidden) return
     function onScroll() {
       setScrollPast(window.scrollY > 400)
     }
@@ -22,9 +26,9 @@ export function MobileFAB() {
       cancelAnimationFrame(raf)
       window.removeEventListener("scroll", onScroll)
     }
-  }, [onReservas])
+  }, [hidden])
 
-  const visible = !onReservas && scrollPast
+  const visible = !hidden && scrollPast
 
   return (
     <AnimatePresence>
@@ -34,7 +38,7 @@ export function MobileFAB() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="lg:hidden fixed bottom-[calc(1.25rem+var(--pcdc-floating-cookie-offset,0px))] right-5 z-40"
+          className="lg:hidden fixed bottom-[calc(1.25rem+var(--pcdc-floating-cookie-offset,0px))] right-5 z-40 transition-[bottom] duration-300 ease-out"
         >
           <Link
             href="/reservas"

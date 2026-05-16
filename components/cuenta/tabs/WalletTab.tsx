@@ -43,10 +43,12 @@ export function WalletTab({ walletCents, onPatch }: Props) {
   const [promo, setPromo] = useState("")
 
   function topUp(amount: number) {
-    const next = walletCents + amount * 100
+    const bonus = amount === 100 ? Math.round(amount * 0.05) : 0
+    const credited = amount + bonus
+    const next = walletCents + credited * 100
     onPatch(next)
-    toast.success(`+ ${amount}€ añadidos al wallet`, {
-      description: "Disponible al instante.",
+    toast.success(`+ ${credited}€ añadidos al wallet`, {
+      description: bonus ? `Incluye ${bonus} € de bonus por recarga de 100 €.` : "Disponible al instante.",
     })
   }
 
@@ -67,14 +69,32 @@ export function WalletTab({ walletCents, onPatch }: Props) {
       onPatch(walletCents + 1000)
       toast.success("Promo aplicada", { description: "+10€ al wallet." })
     } else {
-      toast.error("Código no válido", { description: "Prueba con 'CASTILLO10' (demo)." })
+      toast.error("Código no válido", { description: "Prueba con 'CASTILLO10'." })
     }
     setPromo("")
   }
 
   function downloadInvoice(num?: string) {
     if (!num) return
-    toast(`Descargando factura ${num}`, { description: "Demo: en producción descargaría el PDF." })
+    const body = [
+      `PADEL CASTILLO DE AGUIMES`,
+      `C/ Pino n10, P.I. Arinaga, Aguimes (Las Palmas)`,
+      `B-XXXXXXXX`,
+      ``,
+      `Factura: ${num}`,
+      `Fecha: ${new Date().toLocaleDateString("es-ES")}`,
+      ``,
+      `Concepto y desglose disponibles en la app oficial del club.`,
+      ``,
+      `(Documento generado por la web. Para el original solicitalo en recepcion.)`,
+    ].join("\n")
+    const blob = new Blob([body], { type: "text/plain;charset=utf-8" })
+    const a = document.createElement("a")
+    a.href = URL.createObjectURL(blob)
+    a.download = `factura-${num}.txt`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    toast.success(`Factura ${num} descargada`)
   }
 
   // Active bono progress (mock)
@@ -220,12 +240,9 @@ export function WalletTab({ walletCents, onPatch }: Props) {
         <div className="rounded-2xl border border-white/10 bg-[#111111] p-5">
           <div className="flex items-center justify-between mb-4 gap-3">
             <h3 className="text-[#f5f5f0] font-display font-black text-lg">Movimientos</h3>
-            <button
-              type="button"
-              className="text-[10px] uppercase tracking-widest font-bold text-[#3a7d44] hover:text-[#4a9d54]"
-            >
-              Ver todos →
-            </button>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/40">
+              Últimos {(transactions as Tx[]).length}
+            </span>
           </div>
           <ul className="divide-y divide-white/5">
             {(transactions as Tx[]).map((tx) => {
@@ -288,6 +305,11 @@ export function WalletTab({ walletCents, onPatch }: Props) {
             </div>
             <button
               type="button"
+              onClick={() =>
+                toast("Próximamente", {
+                  description: "Podrás añadir nuevas tarjetas cuando conectemos el TPV del club.",
+                })
+              }
               className="text-[10px] uppercase tracking-widest font-bold text-[#3a7d44] hover:text-[#4a9d54]"
             >
               + Añadir

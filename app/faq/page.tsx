@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { FAQAccordion } from "@/components/faq/FAQAccordion"
+import { FaqJsonLd } from "@/components/seo/FaqJsonLd"
 import { FAQ_GROUPS } from "@/data/faq"
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <FaqJsonLd />
       <div className="pt-8 bg-[#111111] border-b border-white/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="mb-6"><Breadcrumbs /></div>

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import type { LucideIcon } from "lucide-react"
-import { Search, X, Calendar, Users, GraduationCap, Trophy, MapPin, Newspaper, Phone, Receipt, Home, Activity, HelpCircle } from "lucide-react"
+import { Search, X, Calendar, Users, GraduationCap, Trophy, MapPin, Newspaper, Phone, Receipt, Home, Activity, HelpCircle, UserCircle } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
 import noticias from "@/data/noticias.json"
 
@@ -18,6 +18,7 @@ type Item = {
 
 const STATIC_ITEMS: Item[] = [
   { id: "home", label: "Inicio", href: "/", icon: Home, keywords: ["home", "principal"] },
+  { id: "cuenta", label: "Mi cuenta", href: "/cuenta", icon: UserCircle, keywords: ["perfil", "reservas", "wallet", "login", "entrar"] },
   { id: "reservas", label: "Reservar pista", href: "/reservas", icon: Calendar, keywords: ["pista", "calendario", "horarios", "book"] },
   {
     id: "disponibilidad",
@@ -71,9 +72,7 @@ export function CommandPalette() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || e.key === "/") {
-        const t = e.target as HTMLElement
-        if (t?.tagName === "INPUT" || t?.tagName === "TEXTAREA") return
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         setOpen((wasOpen) => {
           if (wasOpen) queueMicrotask(() => setQuery(""))

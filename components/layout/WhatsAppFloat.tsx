@@ -34,10 +34,9 @@ export function WhatsAppFloat() {
   }, [])
 
   const onCuenta = pathname?.startsWith("/cuenta")
+  const onReservas = pathname === "/reservas" || pathname?.startsWith("/reservas/")
 
-  if (onCuenta || dismissed) return null
-
-  const onReservas = pathname === "/reservas"
+  if (onCuenta || onReservas || dismissed) return null
 
   function dismiss(e: React.MouseEvent) {
     e.preventDefault()
@@ -58,9 +57,8 @@ export function WhatsAppFloat() {
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className={cn(
             "group fixed left-4 z-[45] flex flex-col items-start gap-1",
-            onReservas
-              ? "bottom-[calc(7rem+env(safe-area-inset-bottom,0px)+var(--pcdc-floating-cookie-offset,0px))] lg:bottom-[calc(1.75rem+var(--pcdc-floating-cookie-offset,0px))]"
-              : "bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px)+var(--pcdc-floating-cookie-offset,0px))] lg:bottom-[calc(1.75rem+var(--pcdc-floating-cookie-offset,0px))]"
+            "bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px)+var(--pcdc-floating-cookie-offset,0px))] lg:bottom-[calc(1.75rem+var(--pcdc-floating-cookie-offset,0px))]",
+            "transition-[bottom] duration-300 ease-out"
           )}
         >
           <a
@@ -91,7 +89,7 @@ export function WhatsAppFloat() {
             type="button"
             onClick={dismiss}
             aria-label="Ocultar WhatsApp"
-            className="pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 transition-opacity rounded-full bg-[#1a1a1a] border border-white/15 text-[#f5f5f0]/70 hover:text-[#f5f5f0] w-7 h-7 flex items-center justify-center text-[10px] ml-0.5"
+            className="opacity-100 lg:pointer-events-none lg:opacity-0 lg:group-hover:pointer-events-auto lg:group-hover:opacity-100 transition-opacity rounded-full bg-[#1a1a1a] border border-white/15 text-[#f5f5f0]/70 hover:text-[#f5f5f0] w-7 h-7 flex items-center justify-center text-[10px] ml-0.5"
           >
             <X size={12} aria-hidden="true" />
           </button>

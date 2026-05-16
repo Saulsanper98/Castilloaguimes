@@ -1,6 +1,6 @@
 "use client"
 
-import { Clock, MapPin, Sparkles, MessageCircle } from "lucide-react"
+import { Clock, MapPin, Sparkles, MessageCircle, Check } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import type { Partido } from "@/types"
@@ -46,6 +46,14 @@ export function MatchCard({ partido, isCloser, isCompatibleLevel, joined, onJoin
           Cerrarías el grupo
         </span>
       )}
+      {isCompatibleLevel && !isCloser && (
+        <span
+          className="absolute -top-2 left-4 inline-flex items-center gap-1 bg-[#3a7d44] text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
+          title="Este partido encaja con tu nivel actual"
+        >
+          Tu nivel
+        </span>
+      )}
 
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
@@ -89,7 +97,7 @@ export function MatchCard({ partido, isCloser, isCompatibleLevel, joined, onJoin
             type="button"
             disabled={isFull || joined}
             onClick={() => onJoin?.(partido.id)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all min-h-[36px] ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all min-h-[36px] inline-flex items-center gap-1.5 ${
               joined
                 ? "bg-[#3a7d44]/20 text-[#3a7d44] border border-[#3a7d44]/50"
                 : isFull
@@ -97,7 +105,14 @@ export function MatchCard({ partido, isCloser, isCompatibleLevel, joined, onJoin
                 : "bg-[#3a7d44] hover:bg-[#4a9d54] text-white"
             }`}
           >
-            {joined ? "Apuntado ✓" : isFull ? "Completo" : "Unirse"}
+            {joined ? (
+              <>
+                <Check size={12} aria-hidden="true" />
+                Apuntado
+              </>
+            ) : (
+              isFull ? "Completo" : "Unirse"
+            )}
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { X, Check, ArrowLeft, ArrowRight, Users, User, CreditCard } from "lucide-react"
 import { toast } from "sonner"
 import type { Campeonato } from "@/types"
+import { appendInscription } from "@/lib/userActivity"
 
 interface Props {
   campeonato: Campeonato | null
@@ -31,13 +32,24 @@ export function InscriptionModal({ campeonato, onClose }: Props) {
   }
 
   function submit() {
-    toast.success("Inscripción enviada (demo)", {
-      description: `${campeonato?.nombre} · ${category} · ${p1} / ${p2}`,
+    if (!campeonato) return
+    appendInscription({
+      tournamentId: campeonato.id,
+      tournamentName: campeonato.nombre,
+      category,
+      player1: p1,
+      player2: p2,
+      email,
+      priceCents: campeonato.precio * 100,
+    })
+    toast.success("Inscripción registrada", {
+      description: `${campeonato.nombre} · ${category} · ${p1} / ${p2}`,
     })
     reset()
   }
 
-  const canNext1 = !!p1 && !!p2 && !!email
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const canNext1 = !!p1 && !!p2 && emailValid
   const canSubmit = canNext1 && agree
 
   return (

@@ -79,7 +79,7 @@ export function LoyaltyTab({ profile, onPatch }: Props) {
               <p className="text-[#f5f5f0] font-display font-black text-xl tabular-nums leading-none">
                 {profile.streakWeeks} sem
               </p>
-              <p className="text-[#f5f5f0]/55 text-[11px]">Racha activa · +20% bonus</p>
+              <p className="text-[#f5f5f0]/55 text-[11px]">Racha activa</p>
             </div>
           </div>
         </div>

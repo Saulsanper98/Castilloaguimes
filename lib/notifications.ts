@@ -20,6 +20,18 @@ export interface AppNotification {
 const STORAGE_KEY = "pcdc-notifications-v1"
 const READ_KEY = "pcdc-notifications-read-v1"
 
+const GUEST_SEED: AppNotification[] = [
+  {
+    id: "n-welcome-guest",
+    type: "club",
+    title: "Bienvenido a Pádel Castillo",
+    body: "Crea tu cuenta para reservar pistas, apuntarte a partidos y ver tus notificaciones reales.",
+    createdAt: new Date(Date.now() - 60_000).toISOString(),
+    href: "/cuenta",
+    read: false,
+  },
+]
+
 const SEED: AppNotification[] = [
   {
     id: "n-welcome",
@@ -67,16 +79,30 @@ const SEED: AppNotification[] = [
   },
 ]
 
+function isAuthed(): boolean {
+  if (typeof window === "undefined") return false
+  try {
+    const raw = localStorage.getItem("pcdc-player-v2")
+    if (!raw) return false
+    const p = JSON.parse(raw) as { name?: string; lastLoginAt?: string }
+    return !!p.lastLoginAt && p.name !== "Invitado"
+  } catch {
+    return false
+  }
+}
+
 export function loadNotifications(): AppNotification[] {
-  if (typeof window === "undefined") return SEED
+  if (typeof window === "undefined") return GUEST_SEED
+  const authed = isAuthed()
+  const fallback = authed ? SEED : GUEST_SEED
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     const readSet = JSON.parse(localStorage.getItem(READ_KEY) || "[]") as string[]
-    const base = raw ? (JSON.parse(raw) as AppNotification[]) : SEED
+    const base = raw ? (JSON.parse(raw) as AppNotification[]) : fallback
     // Sync read flag from READ_KEY (cross-tab)
     return base.map((n) => ({ ...n, read: n.read || readSet.includes(n.id) }))
   } catch {
-    return SEED
+    return fallback
   }
 }
 

@@ -56,16 +56,19 @@ export default function StatsBar() {
   return (
     <div id="stats-bar" ref={ref} className="bg-[#111111] border-y border-[#3a7d44]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-white/10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 lg:divide-x divide-white/10">
           {stats.map((stat, i) => (
             <div
               key={i}
-              className="flex flex-col items-center justify-center py-8 px-4 text-center"
+              className="flex flex-col items-center justify-center py-5 sm:py-6 px-4 text-center"
             >
               <div
-                className="text-[#3a7d44] font-display font-black leading-tight mb-2 whitespace-pre-line"
+                className="text-[#3a7d44] font-display font-black leading-tight mb-1 whitespace-pre-line"
                 style={{
-                  fontSize: stat.numericValue !== null ? "clamp(2rem, 5vw, 3.5rem)" : "clamp(1.1rem, 2.5vw, 1.75rem)",
+                  fontSize:
+                    stat.numericValue !== null
+                      ? "clamp(1.5rem, 3.5vw, 2.4rem)"
+                      : "clamp(0.95rem, 2vw, 1.35rem)",
                   letterSpacing: "-0.02em",
                 }}
               >
@@ -78,7 +81,7 @@ export default function StatsBar() {
                   stat.value
                 )}
               </div>
-              <div className="text-[#f5f5f0]/60 text-xs sm:text-sm font-medium tracking-wide uppercase">
+              <div className="text-[#f5f5f0]/55 text-[10px] sm:text-xs font-medium tracking-widest uppercase">
                 {stat.label}
               </div>
             </div>

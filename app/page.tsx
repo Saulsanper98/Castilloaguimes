@@ -19,12 +19,12 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <SpecialEventBanner />
       <StatsBar />
       <ServicesGrid />
       <ScheduleSection />
       <SocialTestimonials />
       <NewsSection />
+      <SpecialEventBanner />
       <FindUsBlock />
       <AppDownloadSection />
     </>

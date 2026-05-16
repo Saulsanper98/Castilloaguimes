@@ -3,6 +3,7 @@ import { es } from "date-fns/locale"
 import { COURTS } from "@/lib/courts"
 import type { SlotMockStatus } from "@/lib/slotMock"
 import { getSlotMockStatus } from "@/lib/slotMock"
+import { isSlotOccupiedLocally } from "@/lib/userActivity"
 
 export type BookingDuration = 60 | 90 | 120
 
@@ -57,6 +58,7 @@ export function getCourtSlotAvailability(
   dateKey: string,
   slot: string
 ): SlotMockStatus {
+  if (isSlotOccupiedLocally(dateKey, slot, courtId)) return "full"
   return getSlotMockStatus(dateKey, slot, courtId)
 }
 

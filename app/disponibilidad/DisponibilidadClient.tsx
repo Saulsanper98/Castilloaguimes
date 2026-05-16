@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { format, addDays, startOfDay } from "date-fns"
 import { es } from "date-fns/locale"
-import { ArrowRight, Calendar, ChevronLeft, ChevronRight, LogIn } from "lucide-react"
+import { ArrowRight, Calendar, ChevronRight, LogIn } from "lucide-react"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { CourtHeatmap } from "@/components/reservas/CourtHeatmap"
 import { cn } from "@/lib/utils"
@@ -70,9 +70,9 @@ export default function DisponibilidadClient() {
               type="button"
               onClick={() => setDate(today)}
               aria-label="Ir a hoy"
-              className="inline-flex items-center justify-center h-12 w-9 rounded-xl bg-[#1a1a1a] border border-white/10 text-[#f5f5f0]/65 hover:text-[#f5f5f0]"
+              className="inline-flex items-center justify-center h-12 px-3 rounded-xl bg-[#1a1a1a] border border-white/10 text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/65 hover:text-[#f5f5f0]"
             >
-              <ChevronLeft size={14} aria-hidden="true" />
+              Hoy
             </button>
             {days.map((d, i) => {
               const isSelected = d.toDateString() === date.toDateString()

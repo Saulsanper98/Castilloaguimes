@@ -40,7 +40,11 @@ export function PreferenciasTab({ profile, onPatch }: Props) {
             description="Disponible cuando la app oficial del club esté publicada. Mientras tanto, usa email o WhatsApp en recepción."
             checked={profile.notifPush}
             disabled
-            onChange={() => {}}
+            onChange={() =>
+              toast("Aún no disponible", {
+                description: "Activable cuando lancemos la app oficial del club.",
+              })
+            }
           />
           <Toggle
             label="WhatsApp"

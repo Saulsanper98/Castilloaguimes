@@ -84,7 +84,7 @@ export function PostBookExtras({ slot, walletCents, totalEur }: Props) {
                 Te faltan {missing.toFixed(2).replace(".", ",")} €
               </span>
               <Link
-                href="/cuenta"
+                href="/cuenta?tab=wallet"
                 className="block text-[10px] text-[#e8d44d] hover:text-[#f0dc55] underline-offset-2 hover:underline"
               >
                 Recargar wallet →

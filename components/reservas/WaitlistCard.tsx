@@ -1,25 +1,39 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Bell, Check, Clock } from "lucide-react"
 import { toast } from "sonner"
+import { appendWaitlist, loadWaitlist } from "@/lib/userActivity"
 
 interface Props {
   visible: boolean
   slot: string
   courtName: string
+  dateKey?: string
 }
 
 /**
  * Tarjeta de "lista de espera": aparece cuando el usuario intenta seleccionar
  * un slot completo. Permite que le avisemos si se libera.
  */
-export function WaitlistCard({ visible, slot, courtName }: Props) {
+export function WaitlistCard({ visible, slot, courtName, dateKey }: Props) {
   const [subscribed, setSubscribed] = useState(false)
+
+  useEffect(() => {
+    if (!visible) return
+    const raf = requestAnimationFrame(() => {
+      const exists = loadWaitlist().some(
+        (w) => w.slot === slot && w.courtName === courtName && (!dateKey || w.date === dateKey)
+      )
+      setSubscribed(exists)
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [visible, slot, courtName, dateKey])
 
   if (!visible) return null
 
   function subscribe() {
+    appendWaitlist({ slot, courtName, date: dateKey ?? "" })
     setSubscribed(true)
     toast.success("Apuntado a la lista de espera", {
       description: `Te avisaremos si se libera ${courtName} a las ${slot}.`,

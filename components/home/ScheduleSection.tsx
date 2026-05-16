@@ -72,22 +72,18 @@ export default function ScheduleSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section className="py-20 lg:py-28 bg-[#111111]">
+    <section className="py-14 lg:py-20 bg-[#111111]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-3 block">
+        <div className="text-center mb-10">
+          <span className="text-[#3a7d44] text-xs font-bold tracking-[0.4em] uppercase mb-2 block">
             Horarios
           </span>
           <h2
             className="text-[#f5f5f0] font-display font-black tracking-tight"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
+            style={{ fontSize: "clamp(1.6rem, 4vw, 2.6rem)", letterSpacing: "-0.02em" }}
           >
-            ABIERTOS
-            <span className="text-[#3a7d44]"> PARA TI</span>
+            ABIERTOS <span className="text-[#3a7d44]">PARA TI</span>
           </h2>
-          <p className="text-[#f5f5f0]/50 mt-3 text-base max-w-xl mx-auto">
-            El complejo está disponible casi todos los días del año para que nunca te quedes sin jugar.
-          </p>
         </div>
 
         {/* Time axis labels */}
@@ -113,13 +109,13 @@ export default function ScheduleSection() {
                 hidden: { opacity: 0, x: -30 },
                 visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
               }}
-              className={`rounded-2xl border p-5 sm:p-6 ${
+              className={`rounded-xl border p-3 sm:p-4 ${
                 s.accent
                   ? "bg-[#3a7d44]/10 border-[#3a7d44]/40"
                   : "bg-[#1a1a1a] border-white/10"
               }`}
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-black tracking-wider ${

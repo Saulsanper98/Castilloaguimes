@@ -51,15 +51,22 @@ export function SlotGrid({
       {visibleBuckets.map(({ id, label, icon: Icon, range }) => {
         const bucketSlots = slots.filter((s) => bucketOf(s) === id)
         if (bucketSlots.length === 0) return null
+        const overflows = bucketSlots.length > 8
         return (
-          <div key={id} className="rounded-xl border border-white/5 bg-[#0d0d0d]/40 p-3">
+          <div key={id} className="rounded-xl border border-white/5 bg-[#0d0d0d]/40 p-3 relative">
             <div className="mb-2 flex items-center gap-2">
               <Icon size={12} className="text-[#f5f5f0]/55" aria-hidden="true" />
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#f5f5f0]/70">
                 {label}
               </span>
               <span className="text-[9px] text-[#f5f5f0]/35">{range}</span>
+              {overflows && (
+                <span className="ml-auto text-[9px] uppercase tracking-widest font-bold text-[#f5f5f0]/45">
+                  {bucketSlots.length} franjas
+                </span>
+              )}
             </div>
+            <div className="relative">
             <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 max-h-[260px] overflow-y-auto pr-1 no-scrollbar">
               {bucketSlots.map((slot) => {
                 const status = getSlotAggregatedMockStatus(dateKey, slot)
@@ -117,6 +124,13 @@ export function SlotGrid({
                   </button>
                 )
               })}
+            </div>
+            {overflows && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-1 bottom-0 h-6 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/60 to-transparent"
+              />
+            )}
             </div>
           </div>
         )

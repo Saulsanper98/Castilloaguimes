@@ -20,16 +20,18 @@ import { EloSparkline } from "@/components/cuenta/EloSparkline"
 import { InfoTooltip } from "@/components/ui/InfoTooltip"
 import { eloPercentile, tierFor } from "@/lib/player"
 import type { PlayerProfile } from "@/lib/player"
-import userReservas from "@/data/userReservas.json"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import userActivity from "@/data/userActivity.json"
 import partidos from "@/data/partidos.json"
+import { getAllReservas, type MergedReserva } from "@/lib/reservasMerge"
 
 interface Props {
   profile: PlayerProfile
   onGoTab: (id: string) => void
 }
 
-type Reserva = (typeof userReservas)[number]
+type Reserva = MergedReserva
 type Activity = (typeof userActivity)[number]
 
 const ACTIVITY_ICONS: Record<Activity["type"], { icon: LucideIcon; color: string }> = {
@@ -42,9 +44,14 @@ const ACTIVITY_ICONS: Record<Activity["type"], { icon: LucideIcon; color: string
 }
 
 export function DashboardTab({ profile, onGoTab }: Props) {
-  const upcoming: Reserva[] = (userReservas as Reserva[]).filter(
-    (r) => r.status === "upcoming"
-  )
+  const [reservas, setReservas] = useState<Reserva[]>([])
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setReservas(getAllReservas()))
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  const upcoming = reservas.filter((r) => r.status === "upcoming")
   const nextBooking = upcoming[0]
   const tier = tierFor(profile.loyaltyPoints)
   const percentile = eloPercentile(profile.elo)
@@ -52,6 +59,26 @@ export function DashboardTab({ profile, onGoTab }: Props) {
   const monthMatches = (partidos as Array<{ id: number }>).filter((p) =>
     profile.joinedMatchIds.includes(p.id)
   ).length
+
+  // Derived stats from played history
+  const completed = reservas.filter((r) => r.status === "past")
+  const hoursPlayed = Math.round(
+    completed.reduce((acc, r) => acc + (r.duration ?? 0), 0) / 60
+  )
+  const courtCounts: Record<string, number> = {}
+  completed.forEach((r) => {
+    courtCounts[r.courtName] = (courtCounts[r.courtName] ?? 0) + 1
+  })
+  const favouriteCourt = Object.entries(courtCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—"
+  const slotBuckets = { Mañana: 0, Tarde: 0, Noche: 0 }
+  completed.forEach((r) => {
+    const h = parseInt(r.time.split(":")[0]!, 10)
+    if (h < 14) slotBuckets["Mañana"]++
+    else if (h < 18) slotBuckets["Tarde"]++
+    else slotBuckets["Noche"]++
+  })
+  const preferredSlot =
+    Object.entries(slotBuckets).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—"
   const recommendations = (partidos as Array<{
     id: number
     fecha: string
@@ -132,6 +159,7 @@ export function DashboardTab({ profile, onGoTab }: Props) {
                   </button>
                   <button
                     type="button"
+                    onClick={() => downloadIcs(nextBooking)}
                     className="inline-flex items-center gap-1.5 border border-white/15 hover:border-white/30 text-[#f5f5f0]/80 text-xs font-bold px-3 py-2 rounded-lg"
                   >
                     <Download size={12} aria-hidden="true" />
@@ -139,6 +167,7 @@ export function DashboardTab({ profile, onGoTab }: Props) {
                   </button>
                   <button
                     type="button"
+                    onClick={() => shareReserva(nextBooking)}
                     className="inline-flex items-center gap-1.5 border border-white/15 hover:border-white/30 text-[#f5f5f0]/80 text-xs font-bold px-3 py-2 rounded-lg"
                   >
                     <Share2 size={12} aria-hidden="true" />
@@ -220,6 +249,22 @@ export function DashboardTab({ profile, onGoTab }: Props) {
         />
       </div>
 
+      {/* Tus números — derivados de tu historial */}
+      <section className="rounded-2xl border border-white/10 bg-[#111111] p-5">
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <h3 className="text-[#f5f5f0] font-display font-black text-lg">Tus números</h3>
+          <span className="text-[10px] text-[#f5f5f0]/45 uppercase tracking-widest">
+            Desde tu primer partido
+          </span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <MicroStat label="Horas jugadas" value={`${hoursPlayed} h`} />
+          <MicroStat label="Pista favorita" value={favouriteCourt} />
+          <MicroStat label="Cuándo juegas" value={preferredSlot} />
+          <MicroStat label="Racha" value={`${profile.streakWeeks} sem`} tone="#e8d44d" />
+        </div>
+      </section>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Activity feed */}
         <section className="rounded-2xl border border-white/10 bg-[#111111] p-5">
@@ -299,6 +344,30 @@ export function DashboardTab({ profile, onGoTab }: Props) {
   )
 }
 
+function MicroStat({
+  label,
+  value,
+  tone = "#3a7d44",
+}: {
+  label: string
+  value: string
+  tone?: string
+}) {
+  return (
+    <div className="rounded-xl border border-white/5 bg-[#0d0d0d]/60 p-3">
+      <p className="text-[9px] uppercase tracking-widest font-bold text-[#f5f5f0]/55 mb-1">
+        {label}
+      </p>
+      <p
+        className="font-display font-black text-base sm:text-lg tabular-nums leading-tight truncate"
+        style={{ color: tone }}
+      >
+        {value}
+      </p>
+    </div>
+  )
+}
+
 interface KpiProps {
   icon: LucideIcon
   label: string
@@ -329,4 +398,42 @@ function Kpi({ icon: Icon, label, value, sub, tone = "#3a7d44", onClick }: KpiPr
       <p className="text-[#f5f5f0]/55 text-[10px]">{sub}</p>
     </Tag>
   )
+}
+
+function downloadIcs(r: Reserva) {
+  const start = new Date(`${r.date}T${r.time}:00`)
+  const end = new Date(start.getTime() + r.duration * 60_000)
+  const fmt = (d: Date) =>
+    d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//PadelCastillo//ES",
+    "BEGIN:VEVENT",
+    `UID:${r.id}@padelcastillo`,
+    `DTSTAMP:${fmt(new Date())}`,
+    `DTSTART:${fmt(start)}`,
+    `DTEND:${fmt(end)}`,
+    `SUMMARY:Pádel · ${r.courtName}`,
+    `LOCATION:C/ Pino nº10, P.I. Arinaga, Agüimes`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n")
+  const blob = new Blob([ics], { type: "text/calendar" })
+  const a = document.createElement("a")
+  a.href = URL.createObjectURL(blob)
+  a.download = `reserva-${r.id}.ics`
+  a.click()
+  URL.revokeObjectURL(a.href)
+}
+
+function shareReserva(r: Reserva) {
+  const text = `Tengo pista reservada en Pádel Castillo: ${r.courtName} el ${format(parseISO(r.date), "EEE d MMM", { locale: es })} a las ${r.time}. ¿Te vienes?`
+  const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> }
+  if (nav.share) {
+    nav.share({ title: "Reserva Pádel Castillo", text }).catch(() => {})
+  } else {
+    navigator.clipboard?.writeText(text)
+    toast.success("Resumen copiado", { description: "Pégalo en WhatsApp." })
+  }
 }

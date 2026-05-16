@@ -205,12 +205,12 @@ export function GuardadosTab({ profile, onPatch }: Props) {
                   <p className="text-[#f5f5f0] font-bold text-sm">{c.name}</p>
                   <p className="text-[#f5f5f0]/55 text-[11px]">{c.level} · {c.lastPlayed}</p>
                 </div>
-                <button
-                  type="button"
+                <Link
+                  href={`/partidos-abiertos/crear?invitar=${encodeURIComponent(c.name)}`}
                   className="text-[11px] font-bold text-[#3a7d44] hover:text-[#4a9d54] border border-[#3a7d44]/30 hover:border-[#3a7d44]/50 px-3 py-1.5 rounded-lg"
                 >
                   Crear partido
-                </button>
+                </Link>
               </li>
             ))}
           </ul>

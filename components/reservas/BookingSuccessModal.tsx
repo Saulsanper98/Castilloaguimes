@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import type { LucideIcon } from "lucide-react"
-import { Check, Mail, Calendar as CalendarIcon, Bell, Share2, X } from "lucide-react"
+import { Check, Mail, Calendar as CalendarIcon, Bell, Share2, X, Building2 } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 
@@ -17,6 +17,11 @@ interface Props {
   slot: string | null
   duration: 60 | 90 | 120
   total: number | null
+  /**
+   * "online" → modo pago web; "club" → pago en recepción al llegar.
+   * Cambia el copy del recap y muestra una banda explicativa adicional.
+   */
+  payMode?: "online" | "club"
   onShare: () => void
   onDownloadIcs: () => void
 }
@@ -35,6 +40,7 @@ export function BookingSuccessModal({
   slot,
   duration,
   total,
+  payMode = "online",
   onShare,
   onDownloadIcs,
 }: Props) {
@@ -117,8 +123,20 @@ export function BookingSuccessModal({
                 ¡Bien jugado, {first}!
               </h2>
               <p className="text-center text-[#f5f5f0]/65 text-sm mt-2">
-                Tu hueco está bloqueado durante 5 minutos. Confirma desde la app para asegurarlo.
+                {payMode === "club"
+                  ? "Hemos pre-bloqueado la pista a tu nombre. Pasa por recepción a confirmar y pagar."
+                  : "Tu hueco está bloqueado durante 5 minutos. Confirma desde la app para asegurarlo."}
               </p>
+
+              {payMode === "club" && (
+                <div className="mt-5 flex items-start gap-3 rounded-xl border border-[#e8d44d]/35 bg-[#e8d44d]/10 p-3">
+                  <Building2 size={14} className="text-[#e8d44d] mt-0.5 shrink-0" aria-hidden="true" />
+                  <p className="text-[#e8d44d] text-xs leading-relaxed">
+                    <span className="font-bold">Pago al llegar al club.</span> Tienes 24 horas para
+                    confirmar. Si no pasas, la pista queda libre.
+                  </p>
+                </div>
+              )}
 
               {/* Recap */}
               <div className="mt-5 rounded-2xl border border-white/10 bg-[#1a1a1a]/70 p-4">
@@ -166,7 +184,7 @@ export function BookingSuccessModal({
                   Compartir
                 </button>
                 <Link
-                  href="/cuenta"
+                  href="/cuenta?tab=reservas"
                   className="flex-1 inline-flex items-center justify-center bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-colors"
                 >
                   Ver mi reserva

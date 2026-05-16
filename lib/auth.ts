@@ -1,7 +1,8 @@
 /**
  * Auth mock con un único usuario de prueba.
  *
- * Credenciales válidas:
+ * Credenciales válidas (mismas que muestra el formulario de login —
+ * `getDemoCredentials()` lee de aquí, no las duplica):
  *   email:    test@test.com
  *   password: Test!
  */

@@ -22,6 +22,7 @@ interface Props {
   walletCents: number
   onLogout: () => void
   onPickAvatar: () => void
+  onGoTab: (id: string) => void
 }
 
 export function AccountHeader({
@@ -36,6 +37,7 @@ export function AccountHeader({
   walletCents,
   onLogout,
   onPickAvatar,
+  onGoTab,
 }: Props) {
   const greeting = greetingFor()
   const firstName = name.split(" ")[0]
@@ -81,7 +83,10 @@ export function AccountHeader({
                 {firstName}
               </h1>
               <p className="mt-2 text-[11px] text-[#f5f5f0]/55 flex items-center gap-2 flex-wrap">
-                <span className="inline-flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-2 py-0.5">
+                <span
+                  className="inline-flex items-center gap-1"
+                  title={`Nº de socio · ${memberCode}`}
+                >
                   <span
                     className="w-1.5 h-1.5 rounded-full"
                     style={{ background: tier.color }}
@@ -89,13 +94,12 @@ export function AccountHeader({
                   />
                   Socio <span className="text-[#f5f5f0] font-bold">{tier.tier}</span>
                 </span>
+                <span className="text-[#f5f5f0]/35">·</span>
                 <span>
                   {years > 0
                     ? `${years} ${years === 1 ? "año" : "años"} en el club`
-                    : `Socio desde ${format(joined, "MMM yyyy", { locale: es })}`}
+                    : `Desde ${format(joined, "MMM yyyy", { locale: es })}`}
                 </span>
-                <span className="text-[#f5f5f0]/35">·</span>
-                <span className="font-mono tracking-wider">{memberCode}</span>
               </p>
             </div>
           </div>
@@ -122,14 +126,16 @@ export function AccountHeader({
                 : "Sin reservas"
             }
             sub={nextBooking?.courtName ?? "Reserva tu próxima pista"}
-            href={nextBooking ? "#tab-reservas" : "/reservas"}
+            onClick={nextBooking ? () => onGoTab("reservas") : undefined}
+            href={nextBooking ? undefined : "/reservas"}
           />
           <SummaryChip
             icon={Trophy}
             label="Partidos esta semana"
             value={matchesThisWeek > 0 ? `${matchesThisWeek} partido${matchesThisWeek !== 1 ? "s" : ""}` : "Ninguno"}
             sub={matchesThisWeek > 0 ? "Toca a fondo" : "Encuentra uno para tu nivel"}
-            href={matchesThisWeek > 0 ? "#tab-partidos" : "/partidos-abiertos"}
+            onClick={matchesThisWeek > 0 ? () => onGoTab("partidos") : undefined}
+            href={matchesThisWeek > 0 ? undefined : "/partidos-abiertos"}
           />
           <SummaryChip
             icon={Wallet}
@@ -138,7 +144,7 @@ export function AccountHeader({
             sub={
               walletCents > 0 ? "Disponible al instante" : "Recarga y juega sin esperas"
             }
-            href="#tab-wallet"
+            onClick={() => onGoTab("wallet")}
             accent
           />
         </div>
@@ -160,21 +166,46 @@ interface SummaryChipProps {
   label: string
   value: string
   sub: string
-  href: string
+  href?: string
+  onClick?: () => void
   accent?: boolean
 }
 
-function SummaryChip({ icon: Icon, label, value, sub, href, accent }: SummaryChipProps) {
-  const Tag = href.startsWith("#") ? "a" : Link
+function SummaryChip({ icon: Icon, label, value, sub, href, onClick, accent }: SummaryChipProps) {
+  const className = `group flex w-full text-left items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
+    accent
+      ? "border-[#3a7d44]/40 bg-[#3a7d44]/10 hover:bg-[#3a7d44]/15"
+      : "border-white/10 bg-white/[0.03] hover:bg-white/[0.05]"
+  }`
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={className}>
+        <SummaryChipBody Icon={Icon} label={label} value={value} sub={sub} accent={accent} />
+      </button>
+    )
+  }
   return (
-    <Tag
-      href={href}
-      className={`group flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${
-        accent
-          ? "border-[#3a7d44]/40 bg-[#3a7d44]/10 hover:bg-[#3a7d44]/15"
-          : "border-white/10 bg-white/[0.03] hover:bg-white/[0.05]"
-      }`}
-    >
+    <Link href={href ?? "#"} className={className}>
+      <SummaryChipBody Icon={Icon} label={label} value={value} sub={sub} accent={accent} />
+    </Link>
+  )
+}
+
+function SummaryChipBody({
+  Icon,
+  label,
+  value,
+  sub,
+  accent,
+}: {
+  Icon: LucideIcon
+  label: string
+  value: string
+  sub: string
+  accent?: boolean
+}) {
+  return (
+    <>
       <span
         className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
           accent ? "bg-[#3a7d44]/25 text-[#3a7d44]" : "bg-white/5 text-[#f5f5f0]/70"
@@ -187,6 +218,6 @@ function SummaryChip({ icon: Icon, label, value, sub, href, accent }: SummaryChi
         <span className="block text-[#f5f5f0] font-bold text-sm truncate">{value}</span>
         <span className="block text-[#f5f5f0]/55 text-[10px] truncate">{sub}</span>
       </span>
-    </Tag>
+    </>
   )
 }

@@ -16,22 +16,44 @@ interface Message {
 
 const COLORS = ["bg-[#3a7d44]", "bg-blue-600", "bg-purple-600", "bg-orange-600"]
 
-const SEED_MSGS: Record<number, Message[]> = {}
+const STORAGE_PREFIX = "pcdc-chat-"
+
+function storageKey(matchId: number): string {
+  return `${STORAGE_PREFIX}${matchId}`
+}
 
 function seedFor(matchId: number): Message[] {
-  if (SEED_MSGS[matchId]) return SEED_MSGS[matchId]
+  if (typeof window !== "undefined") {
+    try {
+      const raw = localStorage.getItem(storageKey(matchId))
+      if (raw) {
+        const parsed = JSON.parse(raw) as Message[]
+        if (Array.isArray(parsed)) return parsed
+      }
+    } catch {
+      /* ignore */
+    }
+  }
   const base = [
     { author: "Marcos G.", initials: "MG", text: "¡Hola! ¿Llevamos pelotas nuevas?" },
     { author: "Ana R.", initials: "AR", text: "Yo llevo un bote sin abrir 👌" },
     { author: "Juanjo L.", initials: "JL", text: "Confirmado, allí a las y media." },
   ]
-  SEED_MSGS[matchId] = base.map((m, i) => ({
+  return base.map((m, i) => ({
     id: i,
     ...m,
     color: COLORS[i % COLORS.length],
     ts: Date.now() - (3 - i) * 1000 * 60 * 30,
   }))
-  return SEED_MSGS[matchId]
+}
+
+function persistChat(matchId: number, list: Message[]): void {
+  if (typeof window === "undefined") return
+  try {
+    localStorage.setItem(storageKey(matchId), JSON.stringify(list))
+  } catch {
+    /* ignore */
+  }
 }
 
 interface Props {
@@ -49,11 +71,16 @@ export function MatchChat({ matchId, onClose }: Props) {
     if (matchId == null) return
     const raf = requestAnimationFrame(() => setMessages(seedFor(matchId)))
     const focusTimer = setTimeout(() => inputRef.current?.focus(), 50)
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose()
+    }
+    window.addEventListener("keydown", onKey)
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(focusTimer)
+      window.removeEventListener("keydown", onKey)
     }
-  }, [matchId])
+  }, [matchId, onClose])
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
@@ -71,8 +98,9 @@ export function MatchChat({ matchId, onClose }: Props) {
       ts: Date.now(),
       own: true,
     }
-    SEED_MSGS[matchId] = [...(SEED_MSGS[matchId] ?? []), msg]
-    setMessages(SEED_MSGS[matchId])
+    const next = [...messages, msg]
+    setMessages(next)
+    persistChat(matchId, next)
     setText("")
   }
 

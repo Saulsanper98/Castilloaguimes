@@ -7,7 +7,6 @@ import { GOOGLE_MAPS_DIRECTIONS_URL } from "@/lib/site"
 import { useRef } from "react"
 import { SectionEyebrow } from "@/components/brand/SectionEyebrow"
 import { LiveStatusChip } from "@/components/home/LiveStatusChip"
-import { BouncingBall } from "@/components/home/BouncingBall"
 
 export default function HeroSection() {
   const ref = useRef<HTMLElement>(null)
@@ -49,8 +48,6 @@ export default function HeroSection() {
           <line x1="100" y1="300" x2="1100" y2="300" stroke="#3a7d44" strokeWidth="2" />
           <line x1="600" y1="50" x2="600" y2="550" stroke="#3a7d44" strokeWidth="2" strokeDasharray="6,6" />
         </svg>
-        {/* Bouncing decorative ball */}
-        <BouncingBall />
       </motion.div>
 
       {/* Dark overlay gradient */}
@@ -123,16 +120,21 @@ export default function HeroSection() {
         >
           <Link
             href="/reservas"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-7 sm:px-8 py-4 rounded-xl text-base transition-all duration-200 shadow-lg shadow-[#3a7d44]/30 group min-h-[52px]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-8 py-4 rounded-xl text-base sm:text-lg transition-all duration-200 shadow-xl shadow-[#3a7d44]/35 group min-h-[56px]"
           >
             Reservar pista
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
           <Link
             href="/partidos-abiertos"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-white/25 hover:border-white/55 text-[#f5f5f0] font-bold px-7 sm:px-8 py-4 rounded-xl text-base transition-all duration-200 hover:bg-white/5 min-h-[52px]"
+            className="inline-flex items-center gap-1.5 text-[#f5f5f0]/80 hover:text-[#f5f5f0] font-semibold text-sm px-2 py-3 group"
           >
-            Partidos abiertos
+            o únete a un partido abierto
+            <ArrowRight
+              size={14}
+              className="text-[#3a7d44] group-hover:translate-x-1 transition-transform"
+              aria-hidden="true"
+            />
           </Link>
         </motion.div>
 
@@ -149,7 +151,7 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#111111]/60 px-4 py-2.5 text-xs font-bold text-[#f5f5f0]/85 hover:border-[#3a7d44]/50 hover:text-[#f5f5f0] transition-colors backdrop-blur-sm"
           >
             <MapPin size={14} className="text-[#3a7d44] shrink-0" aria-hidden="true" />
-            <span aria-hidden="true">📍</span> Llegar al club
+            Llegar al club
           </a>
           <Link
             href="/disponibilidad"

@@ -31,7 +31,7 @@ export function FloatingGraceTimer({ active, remainSeconds, totalSeconds = 300 }
           animate={reduce ? undefined : { opacity: 1, y: 0 }}
           exit={reduce ? undefined : { opacity: 0, y: -8 }}
           transition={{ duration: 0.25 }}
-          className="hidden lg:flex pointer-events-none fixed top-24 right-4 z-30"
+          className="hidden pointer-events-none fixed top-24 right-4 z-30"
         >
           <div
             className={`pointer-events-auto flex items-center gap-3 px-4 py-2.5 rounded-2xl border backdrop-blur-md shadow-2xl shadow-black/40 ${

@@ -1,10 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import { toast } from "sonner"
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, MessageCircle } from "lucide-react"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { getOpeningStatus } from "@/lib/openingHours"
+
+const DRAFT_KEY = "pcdc-contact-draft-v1"
+
+type FormState = {
+  nombre: string
+  email: string
+  telefono: string
+  asunto: string
+  mensaje: string
+  franjaLlamada: string
+}
+
+const EMPTY_FORM: FormState = {
+  nombre: "",
+  email: "",
+  telefono: "",
+  asunto: "",
+  mensaje: "",
+  franjaLlamada: "",
+}
 
 const SUBJECTS = [
   "Reserva de pistas",
@@ -20,15 +41,35 @@ const FRANJAS = ["", "Mañana (9–14h)", "Tarde (14–20h)", "Cualquier horario
 export default function ContactoPage() {
   const status = getOpeningStatus()
   const [sent, setSent] = useState(false)
-  const [form, setForm] = useState({
-    nombre: "",
-    email: "",
-    telefono: "",
-    asunto: "",
-    mensaje: "",
-    franjaLlamada: "",
-  })
+  const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [sending, setSending] = useState(false)
+
+  // Restore draft on mount (sessionStorage so no se queda eternamente)
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      try {
+        const raw = sessionStorage.getItem(DRAFT_KEY)
+        if (!raw) return
+        const parsed = JSON.parse(raw) as Partial<FormState>
+        setForm((prev) => ({ ...prev, ...parsed }))
+      } catch {
+        /* ignore */
+      }
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  // Persist draft on every change (skip when ya enviado)
+  useEffect(() => {
+    if (sent) return
+    const hasContent = Object.values(form).some((v) => v.trim().length > 0)
+    try {
+      if (hasContent) sessionStorage.setItem(DRAFT_KEY, JSON.stringify(form))
+      else sessionStorage.removeItem(DRAFT_KEY)
+    } catch {
+      /* ignore */
+    }
+  }, [form, sent])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -36,6 +77,12 @@ export default function ContactoPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    // Honeypot: si el bot rellena el campo invisible, ignoramos en silencio.
+    const honeypot = (e.currentTarget as HTMLFormElement).elements.namedItem("hp") as HTMLInputElement | null
+    if (honeypot?.value) {
+      setSent(true)
+      return
+    }
     if (!form.nombre || !form.email || !form.mensaje) {
       toast.error("Por favor, rellena todos los campos obligatorios.")
       return
@@ -44,12 +91,17 @@ export default function ContactoPage() {
     await new Promise((r) => setTimeout(r, 1000))
     setSending(false)
     setSent(true)
+    try {
+      sessionStorage.removeItem(DRAFT_KEY)
+    } catch {
+      /* ignore */
+    }
     toast.success("Mensaje enviado", { description: "Te responderemos en 24–48 horas." })
   }
 
   function resetForm() {
     setSent(false)
-    setForm({ nombre: "", email: "", telefono: "", asunto: "", mensaje: "", franjaLlamada: "" })
+    setForm(EMPTY_FORM)
   }
 
   return (
@@ -67,7 +119,11 @@ export default function ContactoPage() {
             CONTACTO
           </h1>
           <p className="text-[#f5f5f0]/55 mt-2 text-base max-w-2xl">
-            Escríbenos o llámanos. Te atenderemos lo antes posible.
+            Escríbenos o llámanos. Te atenderemos lo antes posible. ¿Duda rápida?{" "}
+            <Link href="/faq" className="text-[#3a7d44] hover:text-[#4a9d54] font-semibold underline underline-offset-2">
+              Mira las preguntas frecuentes
+            </Link>
+            .
           </p>
           <p className="mt-4 text-sm">
             <span className={status.isOpen ? "text-[#3a7d44] font-semibold" : "text-amber-400/90 font-semibold"}>
@@ -210,13 +266,15 @@ export default function ContactoPage() {
                       />
                     </div>
 
-                    {/* Captcha placeholder (anti-spam discreto) */}
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#1a1a1a]/60 border border-white/5 text-xs text-[#f5f5f0]/55">
-                      <span className="w-4 h-4 rounded-sm bg-[#3a7d44]/20 border border-[#3a7d44]/40 inline-flex items-center justify-center" aria-hidden="true">
-                        <span className="w-2 h-2 rounded-sm bg-[#3a7d44]" />
-                      </span>
-                      <span>Protegido contra spam · sin captcha intrusivo</span>
-                    </div>
+                    {/* Honeypot anti-spam (invisible para humanos) */}
+                    <input
+                      type="text"
+                      name="hp"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="absolute -left-[9999px] w-px h-px opacity-0"
+                    />
 
                     <button
                       type="submit"

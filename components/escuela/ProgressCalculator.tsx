@@ -26,7 +26,8 @@ export function ProgressCalculator() {
     return Math.ceil(gap / sessionsPerMonth)
   }, [current, target, freq])
 
-  const goodChoice = current !== target
+  const targetIsHigher = SESSIONS_TO_REACH[target] > SESSIONS_TO_REACH[current]
+  const goodChoice = targetIsHigher
 
   return (
     <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8">

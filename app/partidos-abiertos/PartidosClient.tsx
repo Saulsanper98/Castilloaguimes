@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { Users, Plus, LayoutGrid, Calendar as CalendarIcon, Sparkles, Filter, RotateCcw } from "lucide-react"
 import { format, parseISO, startOfDay, addDays, isSameDay } from "date-fns"
 import { es } from "date-fns/locale"
@@ -13,13 +14,15 @@ import { MatchChat } from "@/components/partidos/MatchChat"
 import { Skeleton } from "@/components/ui/Skeleton"
 import { EmptyState } from "@/components/ui/EmptyState"
 import { loadProfile, patchProfile, compatibleLevels, type PlayerLevel } from "@/lib/player"
+import { loadCreatedMatches } from "@/lib/userActivity"
 import type { Partido } from "@/types"
 
-const partidos = partidosData as Partido[]
+const partidosSeed = partidosData as Partido[]
 
 type ViewMode = "grid" | "calendar"
 
 export default function PartidosClient() {
+  const searchParams = useSearchParams()
   const [filterDate, setFilterDate] = useState("")
   const [filterLevel, setFilterLevel] = useState<"" | PlayerLevel>("")
   const [filterHour, setFilterHour] = useState("")
@@ -29,10 +32,42 @@ export default function PartidosClient() {
   const [loading, setLoading] = useState(true)
   const [joinedIds, setJoinedIds] = useState<number[]>([])
   const [chatId, setChatId] = useState<number | null>(null)
+  const [createdMatches, setCreatedMatches] = useState<Partido[]>([])
+
+  // Apply ?hora=, ?fecha=, ?nivel= from URL (cross-link desde reservas o dashboard).
+  // requestAnimationFrame para evitar set-state-in-effect.
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const hora = searchParams.get("hora")
+      const fecha = searchParams.get("fecha")
+      const nivel = searchParams.get("nivel")
+      if (hora) setFilterHour(hora)
+      if (fecha) setFilterDate(fecha)
+      if (nivel === "Iniciación" || nivel === "Intermedio" || nivel === "Avanzado") {
+        setFilterLevel(nivel)
+      }
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [searchParams])
 
   // Load profile + simulate fetch delay for skeletons
   useEffect(() => {
-    const id = requestAnimationFrame(() => setJoinedIds(loadProfile().joinedMatchIds))
+    const id = requestAnimationFrame(() => {
+      setJoinedIds(loadProfile().joinedMatchIds)
+      // Normalize created matches to Partido shape
+      const created: Partido[] = loadCreatedMatches().map((m, idx) => ({
+        id: 10_000 + idx,
+        fecha: m.date,
+        hora: m.time,
+        pista: "A elegir",
+        nivel: m.level,
+        plazasTotal: 4,
+        plazasOcupadas: 1,
+        precio: 6,
+        descripcion: m.notes || "Partido creado por ti.",
+      }))
+      setCreatedMatches(created)
+    })
     const t = setTimeout(() => setLoading(false), 350)
     return () => {
       cancelAnimationFrame(id)
@@ -40,7 +75,8 @@ export default function PartidosClient() {
     }
   }, [])
 
-  const profile = loadProfile()
+  const profile = useMemo(() => loadProfile(), [])
+  const partidos = useMemo(() => [...createdMatches, ...partidosSeed], [createdMatches])
   const compatibleSet = useMemo(() => new Set(compatibleLevels(profile.level)), [profile.level])
 
   const filtered = partidos.filter((p) => {
@@ -66,7 +102,7 @@ export default function PartidosClient() {
         return a.plazasTotal - a.plazasOcupadas - (b.plazasTotal - b.plazasOcupadas)
       })
       .slice(0, 3)
-  }, [compatibleSet])
+  }, [compatibleSet, partidos])
 
   function join(id: number) {
     if (joinedIds.includes(id)) return

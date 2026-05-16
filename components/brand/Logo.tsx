@@ -5,6 +5,11 @@ interface LogoProps {
   className?: string
   /** "horizontal" muestra mark + texto, "mark" solo el símbolo */
   variant?: "horizontal" | "mark" | "stacked"
+  /**
+   * En "horizontal", colapsa el texto a 0 con fade y mantiene el mark.
+   * Pensado para usar con scroll (transición suave).
+   */
+  compact?: boolean
   /** Si true, no envuelve en <Link> */
   asChild?: boolean
   /** Texto alternativo (a11y) */
@@ -65,6 +70,7 @@ function LogoMark({ className }: { className?: string }) {
 export function Logo({
   className,
   variant = "horizontal",
+  compact = false,
   asChild = false,
   ariaLabel = "Inicio — Pádel Castillo de Agüimes",
 }: LogoProps) {
@@ -82,13 +88,19 @@ export function Logo({
         </span>
       </div>
     ) : (
-      <div className={cn("flex items-center gap-2.5 leading-none", className)}>
+      <div className={cn("flex items-center leading-none", compact ? "gap-0" : "gap-2.5", className)}>
         <LogoMark className="h-9 w-9" />
-        <div className="flex flex-col">
-          <span className="text-[#f5f5f0] font-display font-black text-lg lg:text-xl tracking-[0.18em] leading-none">
+        <div
+          aria-hidden={compact ? "true" : undefined}
+          className={cn(
+            "flex flex-col overflow-hidden transition-[max-width,opacity,margin] duration-300 ease-out",
+            compact ? "max-w-0 opacity-0 ml-0" : "max-w-[160px] opacity-100 ml-0"
+          )}
+        >
+          <span className="text-[#f5f5f0] font-display font-black text-lg lg:text-xl tracking-[0.18em] leading-none whitespace-nowrap">
             CASTILLO
           </span>
-          <span className="text-[#f5f5f0]/60 text-[9px] lg:text-[10px] tracking-[0.3em] uppercase font-medium mt-0.5">
+          <span className="text-[#f5f5f0]/60 text-[9px] lg:text-[10px] tracking-[0.3em] uppercase font-medium mt-0.5 whitespace-nowrap">
             Pádel · Agüimes
           </span>
         </div>

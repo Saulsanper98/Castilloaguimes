@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { format, parseISO, formatDistanceToNow } from "date-fns"
 import { es } from "date-fns/locale"
 import type { LucideIcon } from "lucide-react"
@@ -19,9 +20,10 @@ import {
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { EmptyState } from "@/components/ui/EmptyState"
-import userReservas from "@/data/userReservas.json"
+import { getAllReservas, type MergedReserva } from "@/lib/reservasMerge"
+import { setReservaOverride } from "@/lib/userActivity"
 
-type Reserva = (typeof userReservas)[number]
+type Reserva = MergedReserva
 type Status = Reserva["status"]
 
 const STATUS_LABELS: Record<Status, string> = {
@@ -37,9 +39,25 @@ const COURT_TYPE_COLOR: Record<string, string> = {
 }
 
 export function ReservasTab() {
+  const router = useRouter()
   const [filter, setFilter] = useState<Status>("upcoming")
   const [confirmCancelId, setConfirmCancelId] = useState<string | null>(null)
-  const [items, setItems] = useState<Reserva[]>(userReservas as Reserva[])
+  const [items, setItems] = useState<Reserva[]>([])
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setItems(getAllReservas()))
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  function editReserva(r: Reserva) {
+    const params = new URLSearchParams({
+      fecha: r.date,
+      franja: r.time,
+      pista: String(r.courtId),
+      duracion: String(r.duration),
+    })
+    router.push(`/reservas?${params.toString()}`)
+  }
 
   const filtered = items.filter((r) => r.status === filter)
   const counts: Record<Status, number> = {
@@ -49,11 +67,16 @@ export function ReservasTab() {
   }
 
   function toggleReminder(id: string) {
-    setItems((prev) => prev.map((r) => (r.id === id ? { ...r, reminder: !r.reminder } : r)))
+    const current = items.find((r) => r.id === id)
+    if (!current) return
+    const next = !current.reminder
+    setReservaOverride(id, { reminder: next })
+    setItems((prev) => prev.map((r) => (r.id === id ? { ...r, reminder: next } : r)))
     toast.success("Recordatorio actualizado")
   }
 
   function cancel(id: string) {
+    setReservaOverride(id, { status: "cancelled" })
     setItems((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: "cancelled" as const } : r))
     )
@@ -247,7 +270,7 @@ export function ReservasTab() {
 
               {r.status === "upcoming" && (
                 <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-white/5">
-                  <IconBtn icon={Pencil} label="Editar" />
+                  <IconBtn icon={Pencil} label="Editar" onClick={() => editReserva(r)} />
                   <IconBtn icon={Share2} label="Compartir" onClick={() => share(r)} />
                   <IconBtn icon={Download} label="Calendario" onClick={() => downloadIcs(r)} />
                   <IconBtn

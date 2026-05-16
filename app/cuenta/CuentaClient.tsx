@@ -9,7 +9,6 @@ import {
   Wallet,
   Award,
   Bookmark,
-  ShoppingBag,
   Star,
   User,
   Settings,
@@ -37,11 +36,10 @@ import { PartidosTab } from "@/components/cuenta/tabs/PartidosTab"
 import { WalletTab } from "@/components/cuenta/tabs/WalletTab"
 import { LoyaltyTab } from "@/components/cuenta/tabs/LoyaltyTab"
 import { GuardadosTab } from "@/components/cuenta/tabs/GuardadosTab"
-import { TiendaTab } from "@/components/cuenta/tabs/TiendaTab"
 import { ReseñasTab } from "@/components/cuenta/tabs/ReseñasTab"
 import { PreferenciasTab } from "@/components/cuenta/tabs/PreferenciasTab"
 import { SeguridadTab } from "@/components/cuenta/tabs/SeguridadTab"
-import userReservas from "@/data/userReservas.json"
+import { getAllReservas, getNextReserva } from "@/lib/reservasMerge"
 
 type TabId =
   | "dashboard"
@@ -50,7 +48,6 @@ type TabId =
   | "wallet"
   | "loyalty"
   | "guardados"
-  | "tienda"
   | "reseñas"
   | "perfil"
   | "preferencias"
@@ -63,7 +60,6 @@ const VALID_TABS: TabId[] = [
   "wallet",
   "loyalty",
   "guardados",
-  "tienda",
   "reseñas",
   "perfil",
   "preferencias",
@@ -73,10 +69,25 @@ const VALID_TABS: TabId[] = [
 export default function CuentaClient() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const [tab, setTab] = useState<TabId>("dashboard")
+  const [tab, setTabState] = useState<TabId>("dashboard")
   const [authed, setAuthed] = useState(false)
   const [profile, setProfile] = useState<PlayerProfile | null>(null)
   const [confirmLogout, setConfirmLogout] = useState(false)
+
+  /**
+   * Cambia la tab activa y sincroniza el query string (`?tab=`) sin
+   * recargar la página. Permite compartir enlaces a tabs concretas.
+   */
+  function setTab(next: TabId | string) {
+    const id = next as TabId
+    setTabState(id)
+    if (typeof window === "undefined") return
+    const params = new URLSearchParams(window.location.search)
+    if (id === "dashboard") params.delete("tab")
+    else params.set("tab", id)
+    const qs = params.toString()
+    router.replace(qs ? `/cuenta?${qs}` : "/cuenta", { scroll: false })
+  }
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -84,8 +95,9 @@ export default function CuentaClient() {
       setProfile(p)
       setAuthed(p.name !== "Invitado")
       // Initial tab from query string (?tab=wallet etc.)
+      // Usa setTabState (no setTab) para evitar reescribir la URL al hidratar.
       const t = searchParams.get("tab") as TabId | null
-      if (t && VALID_TABS.includes(t)) setTab(t)
+      if (t && VALID_TABS.includes(t)) setTabState(t)
     })
     return () => cancelAnimationFrame(id)
   }, [searchParams])
@@ -100,12 +112,14 @@ export default function CuentaClient() {
     setProfile(next)
     setAuthed(true)
     setTab("dashboard")
+    const firstName = next.name.split(" ")[0]
     const red = searchParams.get("redirect")
     if (red && red.startsWith("/") && !red.startsWith("//")) {
-      toast.success("Sesión iniciada", { description: "Te llevamos de vuelta." })
+      toast.success(`Bienvenido, ${firstName}`, { description: "Te llevamos de vuelta." })
       router.replace(red)
       return
     }
+    toast.success(`Bienvenido, ${firstName}`)
   }
 
   function logout() {
@@ -149,10 +163,9 @@ export default function CuentaClient() {
     )
   }
 
-  // Build tabs with badges (live counts)
-  const upcomingReservas = (userReservas as Array<{ status: string }>).filter(
-    (r) => r.status === "upcoming"
-  ).length
+  // Build tabs with badges (live counts) — merges seed + user-created + overrides
+  const allReservas = getAllReservas()
+  const upcomingReservas = allReservas.filter((r) => r.status === "upcoming").length
   const tabs: Array<TabDef & { id: TabId }> = [
     { id: "dashboard", label: "Resumen", icon: LayoutDashboard, group: "actividad" },
     { id: "reservas", label: "Reservas", icon: Calendar, group: "actividad", badge: upcomingReservas },
@@ -160,7 +173,6 @@ export default function CuentaClient() {
     { id: "wallet", label: "Wallet", icon: Wallet, group: "club" },
     { id: "loyalty", label: "Fidelización", icon: Award, group: "club", badge: profile.loyaltyPoints > 0 ? undefined : undefined },
     { id: "guardados", label: "Guardados", icon: Bookmark, group: "club", badge: profile.savedNewsSlugs.length + profile.savedCampeonatoIds.length + profile.favouriteCourtIds.length },
-    { id: "tienda", label: "Tienda", icon: ShoppingBag, group: "club" },
     { id: "reseñas", label: "Reseñas", icon: Star, group: "club" },
     { id: "perfil", label: "Perfil", icon: User, group: "tu" },
     { id: "preferencias", label: "Preferencias", icon: Settings, group: "tu" },
@@ -168,7 +180,7 @@ export default function CuentaClient() {
   ]
 
   // Next booking
-  const nextBookingMock = userReservas.find((r) => r.status === "upcoming")
+  const nextBookingMock = getNextReserva()
   const matchesThisWeek = profile.joinedMatchIds.length
 
   return (
@@ -202,11 +214,14 @@ export default function CuentaClient() {
         matchesThisWeek={matchesThisWeek}
         walletCents={profile.walletCents}
         onLogout={() => setConfirmLogout(true)}
-        onPickAvatar={() =>
-          toast("Próximamente", {
-            description: "Pronto podrás subir foto. Usa iniciales mientras tanto.",
-          })
-        }
+        onPickAvatar={() => {
+          const palette = ["#3a7d44", "#e8d44d", "#7c83ff", "#ff8a5b", "#dd6b8e", "#4ec9b0"]
+          const idx = palette.indexOf(profile.avatarColor)
+          const next = palette[(idx + 1) % palette.length]
+          patch({ avatarColor: next })
+          toast.success("Color de avatar actualizado")
+        }}
+        onGoTab={setTab}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -241,7 +256,6 @@ export default function CuentaClient() {
             )}
             {tab === "loyalty" && <LoyaltyTab profile={profile} onPatch={patch} />}
             {tab === "guardados" && <GuardadosTab profile={profile} onPatch={patch} />}
-            {tab === "tienda" && <TiendaTab />}
             {tab === "reseñas" && <ReseñasTab />}
             {tab === "preferencias" && <PreferenciasTab profile={profile} onPatch={patch} />}
             {tab === "seguridad" && (

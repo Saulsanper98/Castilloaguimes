@@ -7,7 +7,7 @@ import { es } from "date-fns/locale"
 import { toast } from "sonner"
 import type { Court } from "@/lib/courts"
 import { COURT_TYPE_LABEL } from "@/lib/courts"
-import { formatEuro, getCancellationPolicyUpdatedLabel } from "@/lib/booking"
+import { formatEuro, getCancellationPolicyUpdatedLabel, slotEndLabel } from "@/lib/booking"
 import { cn } from "@/lib/utils"
 
 type Props = {
@@ -97,7 +97,15 @@ export function ReservasSummaryAside({
             label="Fecha"
             value={selectedDate ? format(selectedDate, "d MMM yyyy", { locale: es }) : "—"}
           />
-          <SummaryRow label="Hora" value={selectedSlot ? `${selectedSlot} (${duration} min)` : "—"} />
+          <SummaryRow
+            label="Hora"
+            value={
+              selectedSlot
+                ? `${selectedSlot} → ${slotEndLabel(selectedSlot, duration as 60 | 90 | 120)}`
+                : "—"
+            }
+            hint={selectedSlot ? `${duration} min` : undefined}
+          />
           {recurring && selectedSlot && <SummaryRow label="Semanas" value={`${recurringWeeks} repeticiones`} />}
           <div className="flex items-center justify-between border-t border-white/10 pt-3">
             <span className="font-bold text-[#f5f5f0]">Total estimado</span>
@@ -168,15 +176,15 @@ export function ReservasSummaryAside({
           disabled={!selectedDate || !selectedSlot || bookingLoading}
           onClick={onBookAtClub}
           className={cn(
-            "mt-2 flex w-full items-center justify-center gap-2 rounded-xl border-2 py-3 text-sm font-bold transition-all",
+            "mt-2 inline-flex w-full items-center justify-center gap-1.5 py-2 text-xs font-semibold transition-colors",
             selectedDate && selectedSlot && !bookingLoading
-              ? "border-[#3a7d44] text-[#f5f5f0] hover:bg-[#3a7d44]/10"
-              : "cursor-not-allowed border-white/10 text-[#f5f5f0]/40"
+              ? "text-[#f5f5f0]/75 hover:text-[#f5f5f0] underline underline-offset-2"
+              : "cursor-not-allowed text-[#f5f5f0]/30"
           )}
           title="Bloquea la pista y paga al llegar al club"
         >
-          <Building2 size={14} aria-hidden />
-          Reservar y pagar en recepción
+          <Building2 size={12} aria-hidden />
+          o pagar al llegar al club
         </button>
         <p className="mt-1.5 text-center text-[10px] text-[#f5f5f0]/45">
           Pago al llegar al club. La pista queda bloqueada a tu nombre.

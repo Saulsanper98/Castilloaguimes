@@ -4,11 +4,13 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
-import { Menu, X, Search, Calendar, Receipt, ChevronRight } from "lucide-react"
+import { Menu, X, Search, Calendar, Receipt, ChevronRight, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/brand/Logo"
 import { UserMenu } from "@/components/layout/UserMenu"
 import { NotificationBell } from "@/components/layout/NotificationBell"
+import { ThemeToggle } from "@/components/layout/ThemeToggle"
+import { HighContrastToggle } from "@/components/layout/HighContrastToggle"
 
 const navLinks = [
   { label: "Inicio", href: "/" },
@@ -19,8 +21,6 @@ const navLinks = [
   { label: "Campeonatos", href: "/campeonatos" },
   { label: "Instalaciones", href: "/instalaciones" },
   { label: "Noticias", href: "/noticias" },
-  { label: "Tarifas", href: "/tarifas" },
-  { label: "FAQ", href: "/faq" },
   { label: "Contacto", href: "/contacto" },
 ] as const
 
@@ -56,7 +56,7 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Principal">
         <div className={cn("flex items-center justify-between transition-all", scrolled ? "h-14 lg:h-16" : "h-16 lg:h-20")}>
-          <Logo variant={scrolled ? "mark" : "horizontal"} />
+          <Logo variant="horizontal" compact={scrolled} />
 
           <div className="hidden lg:flex items-center gap-0">
             {navLinks.map((link) => {
@@ -70,6 +70,7 @@ export default function Navbar() {
                     <Link
                       href={link.href}
                       aria-current={isActive ? "page" : undefined}
+                      aria-haspopup="menu"
                       className={cn(
                         "relative text-[13px] font-medium px-2 py-2 rounded-md transition-colors flex items-center gap-1",
                         isActive
@@ -78,6 +79,11 @@ export default function Navbar() {
                       )}
                     >
                       {link.label}
+                      <ChevronDown
+                        size={11}
+                        aria-hidden="true"
+                        className="text-[#f5f5f0]/45 group-hover:text-[#3a7d44] transition-transform group-hover:rotate-180"
+                      />
                       {isActive && (
                         <motion.span
                           layoutId="nav-underline"
@@ -238,6 +244,15 @@ export default function Navbar() {
               })}
               <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
                 <UserMenu variant="mobile" onNavigate={() => setMobileOpen(false)} />
+              </div>
+              <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10">
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/45">
+                  Preferencias
+                </span>
+                <div className="flex items-center gap-2">
+                  <ThemeToggle />
+                  <HighContrastToggle />
+                </div>
               </div>
             </div>
           </motion.div>

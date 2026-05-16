@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { Check, Save } from "lucide-react"
+import { Check, Save, RefreshCw } from "lucide-react"
 import { CustomSelect } from "@/components/ui/CustomSelect"
 import { InfoTooltip } from "@/components/ui/InfoTooltip"
 import { MemberCard } from "@/components/cuenta/MemberCard"
@@ -70,7 +70,14 @@ export function PerfilTab({ profile, onPatch }: Props) {
     form.hand !== profile.hand ||
     form.position !== profile.position
 
+  const emailValid = form.email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+  const canSave = dirty && emailValid
+
   function save() {
+    if (!emailValid) {
+      toast.error("Email no válido", { description: "Revisa la dirección e inténtalo de nuevo." })
+      return
+    }
     const initials =
       form.name
         .split(" ")
@@ -122,6 +129,7 @@ export function PerfilTab({ profile, onPatch }: Props) {
               value={form.email}
               onChange={(v) => setForm((f) => ({ ...f, email: v }))}
               autoComplete="email"
+              error={!emailValid && form.email !== "" ? "Email no válido" : undefined}
             />
             <Field
               id="prof-phone"
@@ -237,15 +245,21 @@ export function PerfilTab({ profile, onPatch }: Props) {
           <button
             type="button"
             onClick={save}
-            disabled={!dirty}
+            disabled={!canSave}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm shadow-2xl shadow-black/40 transition-all ${
-              dirty
+              canSave
                 ? "bg-[#3a7d44] hover:bg-[#4a9d54] text-white"
                 : "bg-white/10 text-[#f5f5f0]/40 cursor-not-allowed"
             }`}
           >
             {savedField === "all" ? <Check size={14} aria-hidden="true" /> : <Save size={14} aria-hidden="true" />}
-            {savedField === "all" ? "Guardado" : dirty ? "Guardar cambios" : "Sin cambios"}
+            {savedField === "all"
+              ? "Guardado"
+              : !emailValid && form.email !== ""
+                ? "Revisa el email"
+                : dirty
+                  ? "Guardar cambios"
+                  : "Sin cambios"}
           </button>
         </div>
       </div>
@@ -266,9 +280,22 @@ export function PerfilTab({ profile, onPatch }: Props) {
           <p className="text-[10px] uppercase tracking-widest font-bold text-[#3a7d44] mb-1">
             Tarjeta digital
           </p>
-          <p className="text-[#f5f5f0]/65 text-xs leading-relaxed">
+          <p className="text-[#f5f5f0]/65 text-xs leading-relaxed mb-3">
             Enseña este QR en recepción y en el torno de acceso. Si la pierdes, regenérala desde aquí.
           </p>
+          <button
+            type="button"
+            onClick={() => {
+              onPatch({ memberCode: `PCDC-${Date.now().toString(36).toUpperCase().slice(-6)}` })
+              toast.success("Tarjeta regenerada", {
+                description: "Tu QR anterior ha quedado invalidado.",
+              })
+            }}
+            className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#3a7d44] hover:text-[#4a9d54] border border-[#3a7d44]/40 hover:border-[#3a7d44]/60 px-3 py-1.5 rounded-lg"
+          >
+            <RefreshCw size={11} aria-hidden="true" />
+            Regenerar QR
+          </button>
         </div>
       </aside>
     </div>
@@ -283,9 +310,10 @@ interface FieldProps {
   type?: string
   placeholder?: string
   autoComplete?: string
+  error?: string
 }
 
-function Field({ id, label, value, onChange, type = "text", placeholder, autoComplete }: FieldProps) {
+function Field({ id, label, value, onChange, type = "text", placeholder, autoComplete, error }: FieldProps) {
   return (
     <div>
       <label htmlFor={id} className="block text-[10px] uppercase tracking-widest font-bold text-[#f5f5f0]/55 mb-1.5">
@@ -298,8 +326,19 @@ function Field({ id, label, value, onChange, type = "text", placeholder, autoCom
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         autoComplete={autoComplete}
-        className="w-full bg-[#1a1a1a] border border-white/10 focus:border-[#3a7d44]/60 text-[#f5f5f0] text-sm rounded-xl px-3 py-2.5 outline-none transition-colors placeholder:text-[#f5f5f0]/35"
+        aria-invalid={!!error || undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`w-full bg-[#1a1a1a] border text-[#f5f5f0] text-sm rounded-xl px-3 py-2.5 outline-none transition-colors placeholder:text-[#f5f5f0]/35 ${
+          error
+            ? "border-red-500/50 focus:border-red-400"
+            : "border-white/10 focus:border-[#3a7d44]/60"
+        }`}
       />
+      {error && (
+        <p id={`${id}-error`} className="mt-1 text-[10px] text-red-400 font-semibold">
+          {error}
+        </p>
+      )}
     </div>
   )
 }

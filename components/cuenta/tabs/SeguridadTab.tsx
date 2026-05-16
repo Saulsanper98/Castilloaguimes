@@ -8,6 +8,7 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import userSessions from "@/data/userSessions.json"
 import type { PlayerProfile } from "@/lib/player"
 import { clearProfile } from "@/lib/player"
+import { getDemoCredentials } from "@/lib/auth"
 
 interface Props {
   profile: PlayerProfile
@@ -32,8 +33,12 @@ export function SeguridadTab({ profile, onPatch, onLogout }: Props) {
       toast.error("Rellena todos los campos")
       return
     }
-    if (pwd.length < 8) {
-      toast.error("La contraseña debe tener al menos 8 caracteres")
+    if (current !== getDemoCredentials().password) {
+      toast.error("La contraseña actual no es correcta")
+      return
+    }
+    if (pwd.length < 8 || !/[A-Z]/.test(pwd) || !/\d/.test(pwd)) {
+      toast.error("Mínimo 8 caracteres con una mayúscula y un número")
       return
     }
     if (pwd !== pwd2) {

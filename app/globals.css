@@ -187,3 +187,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
   filter: invert(1) opacity(1);
 }
+html.light input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: opacity(0.6);
+}
+html.light input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  filter: opacity(1);
+}

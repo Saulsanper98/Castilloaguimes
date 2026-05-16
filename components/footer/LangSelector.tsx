@@ -1,21 +1,30 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Globe } from "lucide-react"
 import { toast } from "sonner"
+import { loadProfile, patchProfile, type PlayerProfile } from "@/lib/player"
 
-const LANGS = [
+type LangCode = PlayerProfile["language"]
+
+const LANGS: Array<{ code: LangCode; label: string }> = [
   { code: "es", label: "Español" },
   { code: "en", label: "English" },
   { code: "de", label: "Deutsch" },
-] as const
+]
 
 export function LangSelector() {
-  const [current, setCurrent] = useState<(typeof LANGS)[number]["code"]>("es")
+  const [current, setCurrent] = useState<LangCode>("es")
 
-  function pick(code: (typeof LANGS)[number]["code"]) {
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setCurrent(loadProfile().language))
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  function pick(code: LangCode) {
     if (code === current) return
     setCurrent(code)
+    patchProfile({ language: code })
     toast.message("Idioma seleccionado", {
       description: `${LANGS.find((l) => l.code === code)?.label} — la traducción completa estará disponible pronto.`,
     })

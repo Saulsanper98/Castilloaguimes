@@ -22,7 +22,7 @@ export function EasterEgg() {
         if (next.length === SEQUENCE.length && next.every((k, i) => k.toLowerCase() === SEQUENCE[i].toLowerCase())) {
           setOpen(true)
           setBang((b) => b + 1)
-          toast.success("🏆 ¡Has desbloqueado el Konami!", {
+          toast.success("¡Has desbloqueado el Konami!", {
             description: "Has encontrado un pequeño guiño del club.",
           })
           return []

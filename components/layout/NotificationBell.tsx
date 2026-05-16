@@ -150,7 +150,7 @@ export function NotificationBell() {
                           <Icon size={13} />
                         </span>
                         <span className="flex-1 min-w-0">
-                          <span className="block text-[#f5f5f0] font-semibold text-xs leading-tight flex items-center gap-2">
+                          <span className="flex text-[#f5f5f0] font-semibold text-xs leading-tight items-center gap-2">
                             {n.title}
                             {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-[#3a7d44]" aria-label="No leída" />}
                           </span>
