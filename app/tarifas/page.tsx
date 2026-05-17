@@ -24,7 +24,7 @@ const pistaTarifas = [
     nota: "Turno de 1h 30 min",
   },
   {
-    tipo: "Domingos y festivos (09:00–15:00)",
+    tipo: "Domingos (09:00–20:00)",
     precio: "6,50 €/persona",
     nota: "Turno de 1h 30 min",
   },

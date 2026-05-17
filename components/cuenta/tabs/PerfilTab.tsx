@@ -78,13 +78,17 @@ export function PerfilTab({ profile, onPatch }: Props) {
       toast.error("Email no válido", { description: "Revisa la dirección e inténtalo de nuevo." })
       return
     }
+    const parts = form.name.trim().split(/\s+/).filter(Boolean)
     const initials =
-      form.name
-        .split(" ")
-        .map((p) => p[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase() || "IN"
+      parts.length === 0
+        ? "IN"
+        : parts.length === 1
+          ? form.name.slice(0, 2).toUpperCase()
+          : parts
+              .slice(0, 2)
+              .map((p) => p[0])
+              .join("")
+              .toUpperCase()
     onPatch({
       name: form.name || "Invitado",
       initials,

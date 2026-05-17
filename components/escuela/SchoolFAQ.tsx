@@ -1,3 +1,5 @@
+import { FaqJsonLd } from "@/components/seo/FaqJsonLd"
+
 const FAQ = [
   {
     q: "¿Necesito traer mi pala?",
@@ -28,6 +30,7 @@ const FAQ = [
 export function SchoolFAQ() {
   return (
     <div className="space-y-3">
+      <FaqJsonLd items={FAQ} />
       {FAQ.map((item) => (
         <details
           key={item.q}

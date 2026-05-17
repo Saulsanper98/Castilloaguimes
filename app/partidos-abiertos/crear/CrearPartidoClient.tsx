@@ -1,24 +1,50 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { ArrowLeft, ArrowRight, Calendar, Clock, Lock, Users, Check } from "lucide-react"
 import { toast } from "sonner"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { appendCreatedMatch } from "@/lib/userActivity"
+import { loadProfile } from "@/lib/player"
 
 const HOURS = ["08:00", "09:30", "11:00", "12:30", "14:00", "15:30", "17:00", "18:30", "20:00", "21:30"]
 const LEVELS = ["Iniciación", "Intermedio", "Avanzado"] as const
 
 export default function CrearPartidoClient() {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [step, setStep] = useState(1)
   const [fecha, setFecha] = useState("")
   const [hora, setHora] = useState("")
   const [nivel, setNivel] = useState<(typeof LEVELS)[number]>("Intermedio")
   const [visibilidad, setVisibilidad] = useState<"publico" | "privado">("publico")
   const [notas, setNotas] = useState("")
+  const [authChecked, setAuthChecked] = useState(false)
+
+  // Auth gate + prefill desde ?invitar=
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      const p = loadProfile()
+      if (!p.lastLoginAt || p.name === "Invitado") {
+        toast.message("Inicia sesión para crear un partido", {
+          description: "Necesitamos tus datos para añadirte como organizador.",
+        })
+        const q = searchParams.toString()
+        const redirect = `${pathname}${q ? `?${q}` : ""}`
+        router.replace(`/cuenta?redirect=${encodeURIComponent(redirect)}`)
+        return
+      }
+      const invitar = searchParams.get("invitar")
+      if (invitar) {
+        setNotas((prev) => prev || `Invito a ${invitar} 👋`)
+      }
+      setAuthChecked(true)
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [searchParams, router, pathname])
 
   function nextFromStep1() {
     if (!fecha || !hora) {
@@ -40,6 +66,10 @@ export default function CrearPartidoClient() {
       description: "Lo verás en tu listado de Partidos abiertos.",
     })
     router.push("/partidos-abiertos")
+  }
+
+  if (!authChecked) {
+    return <div className="min-h-screen bg-[#0a0a0a]" />
   }
 
   return (

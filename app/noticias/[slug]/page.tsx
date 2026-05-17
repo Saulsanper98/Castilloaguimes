@@ -9,6 +9,7 @@ import { NoticiaShare } from "@/components/noticias/NoticiaShare"
 import { SaveButton } from "@/components/noticias/SaveButton"
 import { Newsletter } from "@/components/noticias/Newsletter"
 import { SITE_URL } from "@/lib/site"
+import { readingTime } from "@/lib/readingTime"
 import { Noticia } from "@/types"
 
 const noticias = noticiasData as Noticia[]
@@ -59,12 +60,30 @@ export default async function NoticiaPage({ params }: Props) {
   const paragraphs = noticia.contenido.split("\n\n")
   const pubDate = new Date(noticia.fecha)
   const fechaRelativa = isValid(pubDate) ? formatRelative(pubDate, new Date(), { locale: es }) : null
-  const words = noticia.contenido.split(/\s+/).filter(Boolean).length
-  const minLectura = Math.max(1, Math.round(words / 200))
+  const minLectura = readingTime(noticia.contenido)
   const canonicalUrl = `${SITE_URL.replace(/\/$/, "")}/noticias/${noticia.slug}`
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: noticia.titulo,
+    datePublished: noticia.fecha,
+    dateModified: noticia.fecha,
+    description: noticia.resumen,
+    articleSection: noticia.categoria,
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+    publisher: {
+      "@type": "Organization",
+      name: "Pádel Castillo de Agüimes",
+      url: SITE_URL,
+    },
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       {/* Hero header */}
       <div className={`pt-20 min-h-[40vh] flex items-end bg-gradient-to-br ${GRADIENT_COLORS[idx % GRADIENT_COLORS.length]} relative`}>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" />

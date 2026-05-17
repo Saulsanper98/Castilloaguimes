@@ -52,10 +52,16 @@ export function UserMenu({ variant = "desktop", onNavigate }: Props) {
         setProfile(p.name === "Invitado" ? null : p)
       }
     }
+    function onLocalPatch() {
+      const p = loadProfile()
+      setProfile(p.name === "Invitado" ? null : p)
+    }
     window.addEventListener("storage", onStorage)
+    window.addEventListener("pcdc:profile-changed", onLocalPatch)
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener("storage", onStorage)
+      window.removeEventListener("pcdc:profile-changed", onLocalPatch)
     }
   }, [])
 

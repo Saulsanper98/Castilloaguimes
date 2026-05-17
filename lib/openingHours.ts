@@ -26,10 +26,27 @@ export interface OpeningStatus {
   openTime?: string
 }
 
+/** Devuelve { day, hours, minutes } de `now` interpretado en hora de Canarias. */
+function toCanary(now: Date): { day: DayKey; hours: number; minutes: number } {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Atlantic/Canary",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(now)
+  const weekday = parts.find((p) => p.type === "weekday")?.value ?? "Mon"
+  const hour = parseInt(parts.find((p) => p.type === "hour")?.value ?? "0", 10)
+  const minute = parseInt(parts.find((p) => p.type === "minute")?.value ?? "0", 10)
+  const dayMap: Record<string, DayKey> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }
+  return { day: dayMap[weekday] ?? 1, hours: hour, minutes: minute }
+}
+
 export function getOpeningStatus(now: Date = new Date()): OpeningStatus {
-  const day = now.getDay() as DayKey
+  const canary = toCanary(now)
+  const day = canary.day
   const today = SCHEDULE[day]
-  const minutes = now.getHours() * 60 + now.getMinutes()
+  const minutes = canary.hours * 60 + canary.minutes
 
   if (today) {
     const openM = today.open * 60
@@ -49,11 +66,20 @@ export function getOpeningStatus(now: Date = new Date()): OpeningStatus {
     }
   }
   // Closed: find next opening
+  const DAY_LABELS: Record<DayKey, string> = {
+    0: "el domingo",
+    1: "el lunes",
+    2: "el martes",
+    3: "el miércoles",
+    4: "el jueves",
+    5: "el viernes",
+    6: "el sábado",
+  }
   for (let offset = 1; offset <= 7; offset++) {
     const next = ((day + offset) % 7) as DayKey
     const slot = SCHEDULE[next]
     if (slot) {
-      const dayLabel = ["mañana", "el lunes", "el martes", "el miércoles", "el jueves", "el viernes", "el sábado", "el domingo"][offset === 1 ? 0 : next]
+      const dayLabel = offset === 1 ? "mañana" : DAY_LABELS[next]
       return {
         isOpen: false,
         hint: `Abre ${dayLabel} a las ${String(slot.open).padStart(2, "0")}:00`,

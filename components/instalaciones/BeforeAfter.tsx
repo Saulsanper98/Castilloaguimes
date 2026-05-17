@@ -68,8 +68,10 @@ export function BeforeAfter({ beforeLabel = "Antes (2022)", afterLabel = "Hoy (2
         max={100}
         value={split}
         onChange={(e) => setSplit(parseInt(e.target.value))}
-        aria-label="Posición del separador"
-        className="sr-only"
+        aria-label="Posición del separador antes/después"
+        aria-valuetext={`${split}% antes / ${100 - split}% después`}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize focus-visible:opacity-100 focus-visible:bg-transparent"
+        style={{ accentColor: "#e8d44d" }}
       />
     </div>
   )

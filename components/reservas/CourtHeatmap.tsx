@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 import { cn } from "@/lib/utils"
 import { COURTS } from "@/lib/courts"
-import { getSlotMockStatus } from "@/lib/slotMock"
+import { getCourtSlotAvailability } from "@/lib/booking"
 
 interface Props {
   dateKey: string
@@ -78,7 +78,7 @@ export function CourtHeatmap({
                 </span>
               </th>
               {slots.map((slot) => {
-                const status = getSlotMockStatus(dateKey, slot, c.id)
+                const status = getCourtSlotAvailability(c.id, dateKey, slot)
                 const isSelected = c.id === selectedCourtId && slot === selectedSlot
                 return (
                   <td key={slot} className="p-0">

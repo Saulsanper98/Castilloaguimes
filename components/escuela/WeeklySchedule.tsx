@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 const DAYS = ["L", "M", "X", "J", "V", "S"] as const
 
 // Cada celda: nivel del grupo (o vacío)
@@ -68,7 +70,11 @@ export function WeeklySchedule() {
         </tbody>
       </table>
       <p className="text-[10px] text-[#f5f5f0]/45 mt-4">
-        Horarios indicativos. Las plazas se confirman al inscribirse. Pregunta por la clase de prueba gratuita.
+        Horarios indicativos. Para reservar plaza o pedir clase de prueba gratuita,{" "}
+        <Link href="/contacto?asunto=Escuela" className="text-[#3a7d44] hover:text-[#4a9d54] font-semibold underline underline-offset-2">
+          escríbenos
+        </Link>
+        .
       </p>
     </div>
   )

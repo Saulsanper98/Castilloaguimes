@@ -129,13 +129,12 @@ export function NotificationBell() {
                 list.map((n) => {
                   const meta = TYPE_META[n.type]
                   const Icon = meta.icon
-                  const Wrapper = n.href ? Link : "div"
+                  const Wrapper = (n.href ? Link : "div") as React.ElementType
                   const wrapperProps = n.href
                     ? { href: n.href, onClick: () => { handleClick(n); setOpen(false) } }
                     : { onClick: () => handleClick(n) }
                   return (
                     <li key={n.id}>
-                      {/* @ts-expect-error - dynamic Wrapper component */}
                       <Wrapper
                         {...wrapperProps}
                         className={`flex gap-3 px-4 py-3 transition-colors cursor-pointer ${

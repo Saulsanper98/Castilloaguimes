@@ -79,7 +79,7 @@ export function WalletTab({ walletCents, onPatch }: Props) {
     const body = [
       `PADEL CASTILLO DE AGUIMES`,
       `C/ Pino n10, P.I. Arinaga, Aguimes (Las Palmas)`,
-      `B-XXXXXXXX`,
+      `(CIF — pendiente)`,
       ``,
       `Factura: ${num}`,
       `Fecha: ${new Date().toLocaleDateString("es-ES")}`,

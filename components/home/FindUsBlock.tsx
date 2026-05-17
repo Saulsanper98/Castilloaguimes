@@ -76,7 +76,7 @@ export function FindUsBlock() {
                 className="inline-flex items-center justify-center gap-2 bg-[#3a7d44] hover:bg-[#4a9d54] text-white font-bold px-5 py-3 rounded-xl text-sm transition-colors"
               >
                 <Navigation size={14} aria-hidden="true" />
-                📍 Cómo llegar
+                Cómo llegar
               </a>
               <a
                 href="tel:+34928753650"

@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
 import CrearPartidoClient from "./CrearPartidoClient"
 
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <CrearPartidoClient />
+  return (
+    <Suspense fallback={null}>
+      <CrearPartidoClient />
+    </Suspense>
+  )
 }

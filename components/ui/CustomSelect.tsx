@@ -27,15 +27,42 @@ export function CustomSelect<T extends string>({
   placeholder = "Seleccionar…",
 }: Props<T>) {
   const [open, setOpen] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      const raf = requestAnimationFrame(() =>
+        setActiveIndex(Math.max(0, options.findIndex((o) => o.value === value)))
+      )
+      return () => cancelAnimationFrame(raf)
+    }
     function onClick(e: MouseEvent) {
       if (!ref.current?.contains(e.target as Node)) setOpen(false)
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false)
+      if (e.key === "Escape") {
+        setOpen(false)
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault()
+        setActiveIndex((i) => (i + 1) % options.length)
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault()
+        setActiveIndex((i) => (i - 1 + options.length) % options.length)
+      } else if (e.key === "Home") {
+        e.preventDefault()
+        setActiveIndex(0)
+      } else if (e.key === "End") {
+        e.preventDefault()
+        setActiveIndex(options.length - 1)
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        const opt = options[activeIndex]
+        if (opt) {
+          onChange(opt.value)
+          setOpen(false)
+        }
+      }
     }
     document.addEventListener("mousedown", onClick)
     document.addEventListener("keydown", onKey)
@@ -43,7 +70,7 @@ export function CustomSelect<T extends string>({
       document.removeEventListener("mousedown", onClick)
       document.removeEventListener("keydown", onKey)
     }
-  }, [open])
+  }, [open, options, activeIndex, value, onChange])
 
   const current = options.find((o) => o.value === value)
 
@@ -73,20 +100,24 @@ export function CustomSelect<T extends string>({
           aria-label={ariaLabel}
           className="absolute z-30 mt-1 left-0 right-0 max-h-60 overflow-auto rounded-xl bg-[#111111] border border-white/10 shadow-2xl shadow-black/40 py-1"
         >
-          {options.map((o) => {
+          {options.map((o, i) => {
             const selected = o.value === value
+            const active = i === activeIndex
             return (
               <li key={o.value} role="option" aria-selected={selected}>
                 <button
                   type="button"
+                  onMouseEnter={() => setActiveIndex(i)}
                   onClick={() => {
                     onChange(o.value)
                     setOpen(false)
                   }}
                   className={`w-full text-left flex items-start gap-2 px-3 py-2 text-sm transition-colors ${
-                    selected
+                    active
                       ? "bg-[#3a7d44]/15 text-[#f5f5f0]"
-                      : "text-[#f5f5f0]/75 hover:bg-white/5"
+                      : selected
+                        ? "bg-[#3a7d44]/10 text-[#f5f5f0]"
+                        : "text-[#f5f5f0]/75 hover:bg-white/5"
                   }`}
                 >
                   <Check

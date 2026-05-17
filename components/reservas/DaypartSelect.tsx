@@ -4,6 +4,7 @@ import * as Select from "@radix-ui/react-select"
 import { Check, ChevronDown, Moon, Sparkles, Sun, Sunset } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Daypart } from "@/components/reservas/DaypartFilter"
+import { DAYPART_RANGES } from "@/lib/booking"
 
 const OPTIONS: {
   value: Daypart
@@ -11,10 +12,10 @@ const OPTIONS: {
   range: string
   icon: typeof Sun
 }[] = [
-  { value: "all", title: "Todo el día", range: "08:00 – 22:30", icon: Sparkles },
-  { value: "morning", title: "Mañana", range: "Hasta 14:00", icon: Sun },
-  { value: "afternoon", title: "Tarde", range: "14:00 – 18:00", icon: Sunset },
-  { value: "evening", title: "Noche", range: "18:00 – 22:30", icon: Moon },
+  { value: "all", title: "Todo el día", range: DAYPART_RANGES.all, icon: Sparkles },
+  { value: "morning", title: "Mañana", range: DAYPART_RANGES.morning, icon: Sun },
+  { value: "afternoon", title: "Tarde", range: DAYPART_RANGES.afternoon, icon: Sunset },
+  { value: "evening", title: "Noche", range: DAYPART_RANGES.evening, icon: Moon },
 ]
 
 interface Props {

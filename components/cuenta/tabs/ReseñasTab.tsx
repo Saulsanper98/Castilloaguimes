@@ -61,21 +61,23 @@ function persistReviews(list: MyReview[]): void {
 }
 
 export function ReseñasTab() {
-  const [reviews, setReviewsRaw] = useState<MyReview[]>(INITIAL_REVIEWS)
-
-  function setReviews(next: MyReview[] | ((prev: MyReview[]) => MyReview[])) {
-    setReviewsRaw((prev) => {
-      const value = typeof next === "function" ? next(prev) : next
-      persistReviews(value)
-      return value
-    })
-  }
+  const [reviews, setReviews] = useState<MyReview[]>(INITIAL_REVIEWS)
+  const [hydrated, setHydrated] = useState(false)
 
   // Hydrate from localStorage on mount
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setReviewsRaw(loadReviews()))
+    const raf = requestAnimationFrame(() => {
+      setReviews(loadReviews())
+      setHydrated(true)
+    })
     return () => cancelAnimationFrame(raf)
   }, [])
+
+  // Persist on every change (post-hydration para no machacar el seed con valores iniciales)
+  useEffect(() => {
+    if (!hydrated) return
+    persistReviews(reviews)
+  }, [reviews, hydrated])
   const [topic, setTopic] = useState(TOPICS[0])
   const [stars, setStars] = useState(5)
   const [text, setText] = useState("")

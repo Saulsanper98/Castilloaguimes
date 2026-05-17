@@ -38,12 +38,13 @@ function GoogleMark({ className }: { className?: string }) {
 export function SocialTestimonials() {
   const reduce = useReducedMotion()
   const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
 
   useEffect(() => {
-    if (reduce) return
+    if (reduce || paused) return
     const id = window.setInterval(() => setIndex((i) => (i + 1) % total), 6000)
     return () => window.clearInterval(id)
-  }, [reduce])
+  }, [reduce, paused])
 
   const avg = (reviews.reduce((acc, r) => acc + r.stars, 0) / total).toFixed(1)
   const current = reviews[index]
@@ -53,7 +54,13 @@ export function SocialTestimonials() {
   }
 
   return (
-    <section className="py-16 lg:py-24 bg-[#0a0a0a] border-t border-white/5">
+    <section
+      className="py-16 lg:py-24 bg-[#0a0a0a] border-t border-white/5"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 lg:gap-16 items-start">
           {/* Aggregate */}

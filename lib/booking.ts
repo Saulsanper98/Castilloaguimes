@@ -84,6 +84,13 @@ export function getSlotAggregatedMockStatus(dateKey: string, slot: string): Slot
   return "full"
 }
 
+export const DAYPART_RANGES: Record<"all" | "morning" | "afternoon" | "evening", string> = {
+  all: "08:00 – 23:00",
+  morning: "Hasta 14:00",
+  afternoon: "14:00 – 18:00",
+  evening: "18:00 – 23:00",
+}
+
 const POLICY_UPDATED = "2026-05-01"
 
 export function getCancellationPolicyUpdatedLabel(): string {

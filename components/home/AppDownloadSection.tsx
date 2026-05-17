@@ -27,7 +27,7 @@ export default function AppDownloadSection() {
                 "Reserva en tiempo real las 14 pistas",
                 "Únete o crea partidos abiertos",
                 "Consulta el historial de partidos",
-                "Recibe alertas de torneos y oferta",
+                "Recibe alertas de torneos y ofertas",
               ].map((feature) => (
                 <li key={feature} className="flex items-center gap-3 text-sm text-[#f5f5f0]/60">
                   <span className="w-5 h-5 rounded-full bg-[#3a7d44]/20 border border-[#3a7d44]/40 flex items-center justify-center flex-shrink-0">

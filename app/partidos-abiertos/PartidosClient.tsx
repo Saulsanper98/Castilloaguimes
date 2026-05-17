@@ -106,6 +106,14 @@ export default function PartidosClient() {
 
   function join(id: number) {
     if (joinedIds.includes(id)) return
+    const p = loadProfile()
+    if (!p.lastLoginAt || p.name === "Invitado") {
+      toast.message("Inicia sesión para apuntarte", {
+        description: "Tus puntos y partidos se asocian a tu cuenta.",
+      })
+      window.location.href = `/cuenta?redirect=${encodeURIComponent("/partidos-abiertos")}`
+      return
+    }
     const next = [...joinedIds, id]
     setJoinedIds(next)
     patchProfile({

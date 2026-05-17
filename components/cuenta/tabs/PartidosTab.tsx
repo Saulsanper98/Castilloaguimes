@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { loadCreatedMatches } from "@/lib/userActivity"
 import Link from "next/link"
 import { Trophy, MessageCircle } from "lucide-react"
 import { toast } from "sonner"
@@ -22,6 +23,18 @@ export function PartidosTab({ joinedIds, onUpdate }: Props) {
   const [bucket, setBucket] = useState<Bucket>("all")
   const [chatId, setChatId] = useState<number | null>(null)
   const [confirmLeaveId, setConfirmLeaveId] = useState<number | null>(null)
+  const [ownIds, setOwnIds] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      // CreatedMatch.id es string `cm_*` y se normaliza a 10_000+ en PartidosClient.
+      // Aquí marcamos como propios los que aparezcan en localStorage de created.
+      const created = loadCreatedMatches()
+      const numeric = created.map((_, i) => 10_000 + i)
+      setOwnIds(new Set(numeric))
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   const joined = (partidos as Partido[]).filter((p) => joinedIds.includes(p.id))
 
@@ -117,10 +130,11 @@ export function PartidosTab({ joinedIds, onUpdate }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filtered.map((p) => (
             <div key={p.id} className="relative">
-              {/* Mark organizer (first joined of each match in mock) */}
-              <span className="absolute -top-2 -left-2 z-10 inline-flex items-center gap-1 bg-[#e8d44d] text-[#0a0a0a] text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg">
-                Tu partido
-              </span>
+              {ownIds.has(p.id) && (
+                <span className="absolute -top-2 -left-2 z-10 inline-flex items-center gap-1 bg-[#e8d44d] text-[#0a0a0a] text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full shadow-lg">
+                  Tu partido
+                </span>
+              )}
               <MatchCard
                 partido={p}
                 joined

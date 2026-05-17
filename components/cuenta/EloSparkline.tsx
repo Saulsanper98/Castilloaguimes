@@ -1,3 +1,7 @@
+"use client"
+
+import { useId } from "react"
+
 interface Props {
   data: number[]
   width?: number
@@ -7,6 +11,7 @@ interface Props {
 
 /** Sparkline minimalista (sin librerías). Trace + área degradada. */
 export function EloSparkline({ data, width = 220, height = 60, ariaLabel = "Evolución ELO" }: Props) {
+  const gradientId = `spark-fill-${useId()}`
   if (data.length === 0) return null
   const min = Math.min(...data)
   const max = Math.max(...data)
@@ -38,12 +43,12 @@ export function EloSparkline({ data, width = 220, height = 60, ariaLabel = "Evol
       className="overflow-visible"
     >
       <defs>
-        <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#3a7d44" stopOpacity="0.4" />
           <stop offset="100%" stopColor="#3a7d44" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={areaPath} fill="url(#spark-fill)" />
+      <path d={areaPath} fill={`url(#${gradientId})`} />
       <path d={linePath} fill="none" stroke="#3a7d44" strokeWidth="2" strokeLinejoin="round" />
       <circle cx={last[0]} cy={last[1]} r="3" fill="#e8d44d" stroke="#0a0a0a" strokeWidth="1.5" />
     </svg>

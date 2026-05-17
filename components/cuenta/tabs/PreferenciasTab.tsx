@@ -13,10 +13,17 @@ interface Props {
   onPatch: (patch: Partial<PlayerProfile>) => void
 }
 
+const SAVED_COPY: Record<PlayerProfile["language"], string> = {
+  es: "Preferencia guardada",
+  en: "Preference saved",
+  de: "Einstellung gespeichert",
+}
+
 export function PreferenciasTab({ profile, onPatch }: Props) {
   function update(k: keyof PlayerProfile, v: PlayerProfile[keyof PlayerProfile]) {
     onPatch({ [k]: v } as Partial<PlayerProfile>)
-    toast.success("Preferencia guardada")
+    const nextLang = (k === "language" ? (v as PlayerProfile["language"]) : profile.language) ?? "es"
+    toast.success(SAVED_COPY[nextLang] ?? SAVED_COPY.es)
   }
 
   return (
@@ -35,17 +42,19 @@ export function PreferenciasTab({ profile, onPatch }: Props) {
             checked={profile.notifEmail}
             onChange={(v) => update("notifEmail", v)}
           />
-          <Toggle
-            label="Notificaciones push"
-            description="Disponible cuando la app oficial del club esté publicada. Mientras tanto, usa email o WhatsApp en recepción."
-            checked={profile.notifPush}
-            disabled
-            onChange={() =>
-              toast("Aún no disponible", {
-                description: "Activable cuando lancemos la app oficial del club.",
-              })
-            }
-          />
+          <div className="py-4 flex items-start gap-3 opacity-60">
+            <div className="flex-1 min-w-0">
+              <p className="text-[#f5f5f0] font-bold text-sm flex items-center gap-2">
+                Notificaciones push
+                <span className="text-[9px] uppercase tracking-widest font-bold bg-white/10 text-[#f5f5f0]/55 px-1.5 py-0.5 rounded-full">
+                  Próximamente
+                </span>
+              </p>
+              <p className="text-[#f5f5f0]/55 text-xs leading-relaxed mt-1">
+                Disponible cuando lancemos la app oficial del club. Mientras tanto, usa email o WhatsApp en recepción.
+              </p>
+            </div>
+          </div>
           <Toggle
             label="WhatsApp"
             description="Avisos por WhatsApp desde la web: en preparación. Indica tu preferencia y lo tendremos en cuenta al migrar a la app."

@@ -26,6 +26,7 @@ export function SocialProof() {
     let cancelled = false
     let i = 0
     let intervalId: number | null = null
+    let innerTimeoutId: number | null = null
     const timeoutId = window.setTimeout(() => {
       if (cancelled) return
       setActive(i % SAMPLE.length)
@@ -33,7 +34,7 @@ export function SocialProof() {
         if (cancelled) return
         i++
         setActive(null)
-        window.setTimeout(() => {
+        innerTimeoutId = window.setTimeout(() => {
           if (!cancelled) setActive(i % SAMPLE.length)
         }, 800)
       }, 14_000)
@@ -41,6 +42,7 @@ export function SocialProof() {
     return () => {
       cancelled = true
       window.clearTimeout(timeoutId)
+      if (innerTimeoutId !== null) window.clearTimeout(innerTimeoutId)
       if (intervalId !== null) window.clearInterval(intervalId)
       setActive(null)
     }

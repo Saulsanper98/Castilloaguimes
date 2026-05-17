@@ -171,7 +171,7 @@ export default function CuentaClient() {
     { id: "reservas", label: "Reservas", icon: Calendar, group: "actividad", badge: upcomingReservas },
     { id: "partidos", label: "Partidos", icon: Trophy, group: "actividad", badge: profile.joinedMatchIds.length },
     { id: "wallet", label: "Wallet", icon: Wallet, group: "club" },
-    { id: "loyalty", label: "Fidelización", icon: Award, group: "club", badge: profile.loyaltyPoints > 0 ? undefined : undefined },
+    { id: "loyalty", label: "Fidelización", icon: Award, group: "club" },
     { id: "guardados", label: "Guardados", icon: Bookmark, group: "club", badge: profile.savedNewsSlugs.length + profile.savedCampeonatoIds.length + profile.favouriteCourtIds.length },
     { id: "reseñas", label: "Reseñas", icon: Star, group: "club" },
     { id: "perfil", label: "Perfil", icon: User, group: "tu" },

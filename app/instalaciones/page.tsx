@@ -202,9 +202,13 @@ export default function InstalacionesPage() {
                 <strong className="text-[#f5f5f0]">Desde el aeropuerto:</strong> 15 minutos por la GC-1.
               </p>
             </div>
-            <div className="bg-[#1a1a1a] border border-white/5 rounded-xl h-40 flex items-center justify-center text-[#f5f5f0]/20 text-sm">
-              [Mapa — Google Maps embed]
-            </div>
+            <iframe
+              title="Mapa del club en Google Maps"
+              src="https://www.google.com/maps?q=Calle+Pino+10+Arinaga+Aguimes+Las+Palmas&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-40 rounded-xl border border-white/5 bg-[#1a1a1a]"
+            />
           </div>
         </section>
       </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Lock, Smartphone, Monitor, AlertTriangle, Check, ShieldCheck } from "lucide-react"
 import { Toggle } from "@/components/ui/Toggle"
@@ -26,6 +26,36 @@ export function SeguridadTab({ profile, onPatch, onLogout }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [confirmCloseAll, setConfirmCloseAll] = useState(false)
   const [sessions, setSessions] = useState<Session[]>(userSessions as Session[])
+
+  const SESSIONS_KEY = "pcdc-sessions-closed-v1"
+
+  // Aplicar cierres persistidos al cargar
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      try {
+        const raw = localStorage.getItem(SESSIONS_KEY)
+        if (!raw) return
+        const closed = JSON.parse(raw) as string[]
+        if (Array.isArray(closed)) {
+          setSessions((prev) => prev.filter((s) => !closed.includes(s.id)))
+        }
+      } catch {
+        /* ignore */
+      }
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  function persistClosed(ids: string[]) {
+    try {
+      const raw = localStorage.getItem(SESSIONS_KEY)
+      const prev = raw ? (JSON.parse(raw) as string[]) : []
+      const merged = Array.from(new Set([...prev, ...ids]))
+      localStorage.setItem(SESSIONS_KEY, JSON.stringify(merged))
+    } catch {
+      /* ignore */
+    }
+  }
 
   async function changePassword(e: React.FormEvent) {
     e.preventDefault()
@@ -61,11 +91,14 @@ export function SeguridadTab({ profile, onPatch, onLogout }: Props) {
 
   function closeSession(id: string) {
     setSessions((prev) => prev.filter((s) => s.id !== id))
+    persistClosed([id])
     toast("Sesión cerrada en ese dispositivo")
   }
 
   function closeAllOther() {
+    const toClose = sessions.filter((s) => !s.current).map((s) => s.id)
     setSessions((prev) => prev.filter((s) => s.current))
+    persistClosed(toClose)
     setConfirmCloseAll(false)
     toast.success("Cerraste sesión en los demás dispositivos")
   }
@@ -107,8 +140,8 @@ export function SeguridadTab({ profile, onPatch, onLogout }: Props) {
           </div>
         </div>
         <form onSubmit={changePassword} className="space-y-3 max-w-md">
-          <Field id="cur-pwd" label="Contraseña actual" value={current} onChange={setCurrent} type="password" />
-          <Field id="new-pwd" label="Nueva contraseña" value={pwd} onChange={setPwd} type="password" />
+          <Field id="cur-pwd" label="Contraseña actual" value={current} onChange={setCurrent} type="password" autoComplete="current-password" />
+          <Field id="new-pwd" label="Nueva contraseña" value={pwd} onChange={setPwd} type="password" autoComplete="new-password" />
           {pwd && (
             <div className="flex items-center gap-2">
               <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
@@ -125,7 +158,7 @@ export function SeguridadTab({ profile, onPatch, onLogout }: Props) {
               </span>
             </div>
           )}
-          <Field id="new-pwd2" label="Repetir nueva contraseña" value={pwd2} onChange={setPwd2} type="password" />
+          <Field id="new-pwd2" label="Repetir nueva contraseña" value={pwd2} onChange={setPwd2} type="password" autoComplete="new-password" />
           <button
             type="submit"
             disabled={updating}
@@ -262,12 +295,14 @@ function Field({
   value,
   onChange,
   type = "text",
+  autoComplete,
 }: {
   id: string
   label: string
   value: string
   onChange: (v: string) => void
   type?: string
+  autoComplete?: string
 }) {
   return (
     <div>
@@ -277,6 +312,7 @@ function Field({
       <input
         id={id}
         type={type}
+        autoComplete={autoComplete}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full bg-[#1a1a1a] border border-white/10 focus:border-[#3a7d44]/60 text-[#f5f5f0] text-sm rounded-xl px-3 py-2.5 outline-none transition-colors"

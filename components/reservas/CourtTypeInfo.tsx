@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { HelpCircle } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
 
@@ -11,11 +11,21 @@ import { AnimatePresence, motion } from "framer-motion"
 export function CourtTypeInfo() {
   const [open, setOpen] = useState(false)
 
+  useEffect(() => {
+    if (!open) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [open])
+
   return (
     <span className="relative inline-flex">
       <button
         type="button"
         aria-label="Diferencia entre tipos de pista"
+        aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#f5f5f0]/55 hover:text-[#3a7d44] transition-colors"
       >
@@ -31,7 +41,7 @@ export function CourtTypeInfo() {
               aria-hidden="true"
             />
             <motion.div
-              role="dialog"
+              role="region"
               aria-label="Tipos de pista"
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}

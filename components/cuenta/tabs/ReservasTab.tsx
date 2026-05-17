@@ -22,6 +22,8 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { EmptyState } from "@/components/ui/EmptyState"
 import { getAllReservas, type MergedReserva } from "@/lib/reservasMerge"
 import { setReservaOverride } from "@/lib/userActivity"
+import { buildIcs, downloadIcs as downloadIcsFile } from "@/lib/ics"
+import { loadProfile, patchProfile } from "@/lib/player"
 
 type Reserva = MergedReserva
 type Status = Reserva["status"]
@@ -76,41 +78,36 @@ export function ReservasTab() {
   }
 
   function cancel(id: string) {
+    const reserva = items.find((r) => r.id === id)
     setReservaOverride(id, { status: "cancelled" })
     setItems((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: "cancelled" as const } : r))
     )
     setConfirmCancelId(null)
+    // Reembolso instantáneo al wallet (simulado, política de cancelación >4h antes)
+    let refundEur: string | null = null
+    if (reserva && reserva.priceCents > 0) {
+      const profile = loadProfile()
+      patchProfile({ walletCents: profile.walletCents + reserva.priceCents })
+      refundEur = (reserva.priceCents / 100).toFixed(2).replace(".", ",")
+    }
     toast.success("Reserva cancelada", {
-      description: "Se reembolsará el importe en el wallet en 24 horas.",
+      description: refundEur
+        ? `Reembolsados ${refundEur} € a tu wallet.`
+        : "La reserva se ha cancelado.",
     })
   }
 
   function downloadIcs(r: Reserva) {
-    const start = new Date(`${r.date}T${r.time}:00`)
-    const end = new Date(start.getTime() + r.duration * 60_000)
-    const fmt = (d: Date) =>
-      d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//PadelCastillo//ES",
-      "BEGIN:VEVENT",
-      `UID:${r.id}@padelcastillo`,
-      `DTSTAMP:${fmt(new Date())}`,
-      `DTSTART:${fmt(start)}`,
-      `DTEND:${fmt(end)}`,
-      `SUMMARY:Pádel · ${r.courtName}`,
-      `LOCATION:C/ Pino nº10, P.I. Arinaga, Agüimes`,
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n")
-    const blob = new Blob([ics], { type: "text/calendar" })
-    const a = document.createElement("a")
-    a.href = URL.createObjectURL(blob)
-    a.download = `reserva-${r.id}.ics`
-    a.click()
-    URL.revokeObjectURL(a.href)
+    const ics = buildIcs({
+      uid: r.id,
+      date: r.date,
+      time: r.time,
+      durationMinutes: r.duration,
+      summary: `Pádel · ${r.courtName}`,
+      location: "C/ Pino nº10, P.I. Arinaga, Agüimes",
+    })
+    downloadIcsFile(`reserva-${r.id}.ics`, ics)
   }
 
   function share(r: Reserva) {

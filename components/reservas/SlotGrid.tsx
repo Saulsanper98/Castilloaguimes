@@ -2,7 +2,7 @@
 
 import { Sun, Sunset, Moon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { getSlotAggregatedMockStatus, slotEndLabel, type BookingDuration } from "@/lib/booking"
+import { getSlotAggregatedMockStatus, slotEndLabel, DAYPART_RANGES, type BookingDuration } from "@/lib/booking"
 
 interface Props {
   slots: string[]
@@ -25,9 +25,9 @@ function bucketOf(slot: string): "morning" | "afternoon" | "evening" {
 }
 
 const BUCKETS = [
-  { id: "morning" as const, label: "Mañana", icon: Sun, range: "Hasta 14:00" },
-  { id: "afternoon" as const, label: "Tarde", icon: Sunset, range: "14:00 – 18:00" },
-  { id: "evening" as const, label: "Noche", icon: Moon, range: "18:00 – 23:00" },
+  { id: "morning" as const, label: "Mañana", icon: Sun, range: DAYPART_RANGES.morning },
+  { id: "afternoon" as const, label: "Tarde", icon: Sunset, range: DAYPART_RANGES.afternoon },
+  { id: "evening" as const, label: "Noche", icon: Moon, range: DAYPART_RANGES.evening },
 ]
 
 /**

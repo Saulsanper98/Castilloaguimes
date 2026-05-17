@@ -42,6 +42,7 @@ import { WaitlistCard } from "@/components/reservas/WaitlistCard"
 import { InfoTooltip } from "@/components/ui/InfoTooltip"
 import { loadProfile } from "@/lib/player"
 import { appendUserReserva, markSlotOccupied } from "@/lib/userActivity"
+import { buildIcs, downloadIcs as downloadIcsFile } from "@/lib/ics"
 import { getDayDemand, demandLevel } from "@/lib/demand"
 import {
   BOOKING_MONTHS_AHEAD,
@@ -381,27 +382,34 @@ export default function ReservasClient() {
   function persistReservation(payMode: "online" | "club") {
     if (!selectedDate || !selectedSlot) return
     const p = loadProfile()
-    const dateKey = format(selectedDate, "yyyy-MM-dd")
-    const initials = p.name
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((s) => s[0]?.toUpperCase() ?? "")
-      .join("") || "SS"
-    appendUserReserva({
-      date: dateKey,
-      time: selectedSlot,
-      duration,
-      courtId: selectedCourt.id,
-      courtName: selectedCourt.name,
-      courtType: selectedCourt.type,
-      players: [{ initials, name: p.name, color: p.avatarColor }],
-      priceCents: (price ?? 0) * 100,
-      status: "upcoming",
-      reminder: true,
-      payMode,
-    })
-    markSlotOccupied(dateKey, selectedSlot, selectedCourt.id)
+    const parts = p.name.split(" ").filter(Boolean)
+    const initials =
+      parts.length === 1
+        ? p.name.slice(0, 2).toUpperCase()
+        : parts
+            .slice(0, 2)
+            .map((s) => s[0]?.toUpperCase() ?? "")
+            .join("") || "SS"
+    const dates = recurring && recurringDatesPreview.length > 0
+      ? recurringDatesPreview
+      : [selectedDate]
+    for (const d of dates) {
+      const dateKey = format(d, "yyyy-MM-dd")
+      appendUserReserva({
+        date: dateKey,
+        time: selectedSlot,
+        duration,
+        courtId: selectedCourt.id,
+        courtName: selectedCourt.name,
+        courtType: selectedCourt.type,
+        players: [{ initials, name: p.name, color: p.avatarColor }],
+        priceCents: (price ?? 0) * 100,
+        status: "upcoming",
+        reminder: true,
+        payMode,
+      })
+      markSlotOccupied(dateKey, selectedSlot, selectedCourt.id)
+    }
   }
 
   async function handleBook() {
@@ -461,32 +469,16 @@ export default function ReservasClient() {
 
   function handleDownloadIcs() {
     if (!selectedDate || !selectedSlot) return
-    const [h, m] = selectedSlot.split(":").map((x) => parseInt(x, 10))
-    const start = new Date(selectedDate)
-    start.setHours(h, m, 0, 0)
-    const end = new Date(start.getTime() + duration * 60_000)
-    const fmt = (d: Date) =>
-      d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//PadelCastillo//ES",
-      "BEGIN:VEVENT",
-      `UID:res-${Date.now()}@padelcastillo`,
-      `DTSTAMP:${fmt(new Date())}`,
-      `DTSTART:${fmt(start)}`,
-      `DTEND:${fmt(end)}`,
-      `SUMMARY:Pádel · ${selectedCourt.name}`,
-      `LOCATION:C/ Pino nº10, P.I. Arinaga, Agüimes`,
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n")
-    const blob = new Blob([ics], { type: "text/calendar" })
-    const a = document.createElement("a")
-    a.href = URL.createObjectURL(blob)
-    a.download = `reserva-${format(selectedDate, "yyyy-MM-dd")}-${selectedSlot.replace(":", "")}.ics`
-    a.click()
-    URL.revokeObjectURL(a.href)
+    const dateKey = format(selectedDate, "yyyy-MM-dd")
+    const ics = buildIcs({
+      uid: `res-${Date.now()}`,
+      date: dateKey,
+      time: selectedSlot,
+      durationMinutes: duration,
+      summary: `Pádel · ${selectedCourt.name}`,
+      location: "C/ Pino nº10, P.I. Arinaga, Agüimes",
+    })
+    downloadIcsFile(`reserva-${dateKey}-${selectedSlot.replace(":", "")}.ics`, ics)
     toast.success("Añadido al calendario")
   }
 
@@ -587,13 +579,6 @@ export default function ReservasClient() {
             Copiar enlace
           </button>
         </div>
-
-        {!selectedDate && (
-          <div className="mb-8 rounded-2xl border border-dashed border-white/15 bg-[#111111]/60 px-5 py-8 text-center">
-            <p className="text-sm font-semibold text-[#f5f5f0]">Empieza por el calendario</p>
-            <p className="mt-2 text-xs text-[#f5f5f0]/50">Selecciona un día disponible para ver franjas y precios.</p>
-          </div>
-        )}
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-start">
           <div className="space-y-8 lg:col-span-2">

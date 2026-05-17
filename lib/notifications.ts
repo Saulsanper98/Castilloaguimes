@@ -91,15 +91,23 @@ function isAuthed(): boolean {
   }
 }
 
+const AUTH_FLAG_KEY = "pcdc-notifications-authed-v1"
+
 export function loadNotifications(): AppNotification[] {
   if (typeof window === "undefined") return GUEST_SEED
   const authed = isAuthed()
   const fallback = authed ? SEED : GUEST_SEED
   try {
+    // Si el estado de auth ha cambiado desde la última carga, invalidar caché
+    const lastAuth = localStorage.getItem(AUTH_FLAG_KEY)
+    const nowAuth = authed ? "1" : "0"
+    if (lastAuth !== nowAuth) {
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.setItem(AUTH_FLAG_KEY, nowAuth)
+    }
     const raw = localStorage.getItem(STORAGE_KEY)
     const readSet = JSON.parse(localStorage.getItem(READ_KEY) || "[]") as string[]
     const base = raw ? (JSON.parse(raw) as AppNotification[]) : fallback
-    // Sync read flag from READ_KEY (cross-tab)
     return base.map((n) => ({ ...n, read: n.read || readSet.includes(n.id) }))
   } catch {
     return fallback

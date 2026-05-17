@@ -7,13 +7,15 @@ export function EventCountdown({ title, targetISO }: { title: string; targetISO:
 
   useEffect(() => {
     const target = new Date(targetISO).getTime()
-    const tick = () => setMs(Math.max(0, target - Date.now()))
+    const tick = () => setMs(target - Date.now())
     tick()
     const id = setInterval(tick, 60_000)
     return () => clearInterval(id)
   }, [targetISO])
 
   if (ms === null) return null
+  // Si el evento ya pasó hace más de 24h, no mostramos nada
+  if (ms < -86_400_000) return null
   const d = Math.floor(ms / 86400000)
   const h = Math.floor((ms % 86400000) / 3600000)
   const m = Math.floor((ms % 3600000) / 60000)

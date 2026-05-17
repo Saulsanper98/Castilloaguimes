@@ -30,7 +30,7 @@ export function Confetti({ trigger, count = 60 }: Props) {
   const triggerRef = useRef(trigger)
 
   useEffect(() => {
-    if (trigger === 0 || trigger === triggerRef.current && particles.length > 0) {
+    if (trigger === 0 || (trigger === triggerRef.current && particles.length > 0)) {
       triggerRef.current = trigger
       return
     }

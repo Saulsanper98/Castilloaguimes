@@ -235,7 +235,7 @@ export function CommandPalette() {
             <div className="px-4 py-2 border-t border-white/10 flex items-center gap-3 text-[10px] text-[#f5f5f0]/40">
               <span><kbd className="font-mono bg-white/5 border border-white/10 rounded px-1">↑↓</kbd> navegar</span>
               <span><kbd className="font-mono bg-white/5 border border-white/10 rounded px-1">↵</kbd> abrir</span>
-              <span className="ml-auto"><kbd className="font-mono bg-white/5 border border-white/10 rounded px-1">⌘K</kbd> o <kbd className="font-mono bg-white/5 border border-white/10 rounded px-1">/</kbd> para abrir</span>
+              <span className="ml-auto"><kbd className="font-mono bg-white/5 border border-white/10 rounded px-1">⌘K</kbd> para abrir</span>
             </div>
           </motion.div>
         </motion.div>

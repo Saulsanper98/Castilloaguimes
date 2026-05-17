@@ -2,6 +2,7 @@
 
 import { Sun, Sunset, Moon, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { DAYPART_RANGES } from "@/lib/booking"
 
 export type Daypart = "all" | "morning" | "afternoon" | "evening"
 
@@ -17,10 +18,10 @@ const OPTIONS: Array<{
   icon: typeof Sun
   hue: string
 }> = [
-  { id: "all", label: "Cualquiera", range: "08:00 – 23:00", icon: Sparkles, hue: "#3a7d44" },
-  { id: "morning", label: "Mañana", range: "Hasta 14:00", icon: Sun, hue: "#e8d44d" },
-  { id: "afternoon", label: "Tarde", range: "14:00 – 18:00", icon: Sunset, hue: "#ff8a5b" },
-  { id: "evening", label: "Noche", range: "18:00 – 23:00", icon: Moon, hue: "#7c83ff" },
+  { id: "all", label: "Cualquiera", range: DAYPART_RANGES.all, icon: Sparkles, hue: "#3a7d44" },
+  { id: "morning", label: "Mañana", range: DAYPART_RANGES.morning, icon: Sun, hue: "#e8d44d" },
+  { id: "afternoon", label: "Tarde", range: DAYPART_RANGES.afternoon, icon: Sunset, hue: "#ff8a5b" },
+  { id: "evening", label: "Noche", range: DAYPART_RANGES.evening, icon: Moon, hue: "#7c83ff" },
 ]
 
 /**

@@ -109,9 +109,12 @@ export function loadProfile(): PlayerProfile {
   }
 }
 
+export const PROFILE_CHANGE_EVENT = "pcdc:profile-changed"
+
 export function saveProfile(p: PlayerProfile): void {
   if (typeof window === "undefined") return
   localStorage.setItem(KEY, JSON.stringify(p))
+  window.dispatchEvent(new CustomEvent(PROFILE_CHANGE_EVENT))
 }
 
 export function patchProfile(patch: Partial<PlayerProfile>): PlayerProfile {

@@ -45,6 +45,8 @@ export function AccountHeader({
   const days = daysSince(joinedAt)
   const years = Math.floor(days / 365)
   const joined = parseISO(joinedAt)
+  // Sentinel "1970-01-01" = perfil sin login real
+  const hasRealJoinedAt = joinedAt && !joinedAt.startsWith("1970-")
 
   return (
     <header className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#0f0f0f] via-[#111111] to-[#0d0d0d]">
@@ -95,11 +97,13 @@ export function AccountHeader({
                   Socio <span className="text-[#f5f5f0] font-bold">{tier.tier}</span>
                 </span>
                 <span className="text-[#f5f5f0]/35">·</span>
-                <span>
-                  {years > 0
-                    ? `${years} ${years === 1 ? "año" : "años"} en el club`
-                    : `Desde ${format(joined, "MMM yyyy", { locale: es })}`}
-                </span>
+                {hasRealJoinedAt && (
+                  <span>
+                    {years > 0
+                      ? `${years} ${years === 1 ? "año" : "años"} en el club`
+                      : `Desde ${format(joined, "MMM yyyy", { locale: es })}`}
+                  </span>
+                )}
               </p>
             </div>
           </div>

@@ -14,8 +14,13 @@ import {
 
 export type MergedReserva = UserReserva
 
+type SeedReserva = Omit<UserReserva, "createdAt" | "payMode">
+
 export function getAllReservas(): MergedReserva[] {
-  const seed = userReservasSeed as MergedReserva[]
+  const seed = (userReservasSeed as SeedReserva[]).map((r) => ({
+    ...r,
+    createdAt: `${r.date}T${r.time}:00.000Z`,
+  })) as MergedReserva[]
   const user = loadUserReservas()
   const overrides = loadReservaOverrides()
   const all = [...user, ...seed]

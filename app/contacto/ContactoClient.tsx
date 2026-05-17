@@ -36,13 +36,19 @@ const SUBJECTS = [
   "Otro",
 ]
 
-const FRANJAS = ["", "Mañana (9–14h)", "Tarde (14–20h)", "Cualquier horario"]
+const FRANJAS = ["", "Mañana (8–14h)", "Tarde (14–20h)", "Cualquier horario"]
 
 export default function ContactoPage() {
-  const status = getOpeningStatus()
+  const [status, setStatus] = useState(() => getOpeningStatus())
   const [sent, setSent] = useState(false)
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [sending, setSending] = useState(false)
+
+  // Refresh opening status cada minuto
+  useEffect(() => {
+    const id = window.setInterval(() => setStatus(getOpeningStatus()), 60_000)
+    return () => window.clearInterval(id)
+  }, [])
 
   // Restore draft on mount (sessionStorage so no se queda eternamente)
   useEffect(() => {

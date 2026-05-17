@@ -22,6 +22,7 @@ import { eloPercentile, tierFor } from "@/lib/player"
 import type { PlayerProfile } from "@/lib/player"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { buildIcs, downloadIcs as downloadIcsFile } from "@/lib/ics"
 import userActivity from "@/data/userActivity.json"
 import partidos from "@/data/partidos.json"
 import { getAllReservas, type MergedReserva } from "@/lib/reservasMerge"
@@ -401,30 +402,15 @@ function Kpi({ icon: Icon, label, value, sub, tone = "#3a7d44", onClick }: KpiPr
 }
 
 function downloadIcs(r: Reserva) {
-  const start = new Date(`${r.date}T${r.time}:00`)
-  const end = new Date(start.getTime() + r.duration * 60_000)
-  const fmt = (d: Date) =>
-    d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")
-  const ics = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//PadelCastillo//ES",
-    "BEGIN:VEVENT",
-    `UID:${r.id}@padelcastillo`,
-    `DTSTAMP:${fmt(new Date())}`,
-    `DTSTART:${fmt(start)}`,
-    `DTEND:${fmt(end)}`,
-    `SUMMARY:Pádel · ${r.courtName}`,
-    `LOCATION:C/ Pino nº10, P.I. Arinaga, Agüimes`,
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n")
-  const blob = new Blob([ics], { type: "text/calendar" })
-  const a = document.createElement("a")
-  a.href = URL.createObjectURL(blob)
-  a.download = `reserva-${r.id}.ics`
-  a.click()
-  URL.revokeObjectURL(a.href)
+  const ics = buildIcs({
+    uid: r.id,
+    date: r.date,
+    time: r.time,
+    durationMinutes: r.duration,
+    summary: `Pádel · ${r.courtName}`,
+    location: "C/ Pino nº10, P.I. Arinaga, Agüimes",
+  })
+  downloadIcsFile(`reserva-${r.id}.ics`, ics)
 }
 
 function shareReserva(r: Reserva) {
